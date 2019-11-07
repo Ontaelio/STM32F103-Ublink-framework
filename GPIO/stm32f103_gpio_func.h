@@ -1,8 +1,12 @@
 /*
- * stm32f103_gpio_func.h
+ * STM32F103 GPIO and AFIO functions library header
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 28 окт. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 
 #ifndef STM32F103_GPIO_FUNC_H_

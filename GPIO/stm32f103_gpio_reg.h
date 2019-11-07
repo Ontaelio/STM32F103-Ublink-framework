@@ -1,8 +1,12 @@
 /*
- * stm32f103_gpio_reg.h
+ * STM32F103 GPIO and AFIO register definitions
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 26 окт. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 
 #ifndef STM32F103_GPIO_REG_H_

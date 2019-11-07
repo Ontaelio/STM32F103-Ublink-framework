@@ -1,8 +1,12 @@
 /*
- * stm32f103_i2c_reg.h
+ * STM32F103 I2C register definitions
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 26 окт. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 #include <stdio.h>
 
