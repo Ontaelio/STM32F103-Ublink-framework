@@ -2,13 +2,12 @@
  * STM32F103 GPIO and AFIO functions library
  * Part of STM32F103 register and peripherals library
  *
- * Dpcumentation available in the provided MD file.
+ * Documentation available in the provided MD file.
  *
  * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
  *
  * Can be freely used according to the GNU GPL license.
  */
-
 
 #include <stdio.h>
 #include <stm32f103_gpio_reg.h>

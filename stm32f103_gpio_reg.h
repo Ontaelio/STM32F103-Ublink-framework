@@ -12,7 +12,7 @@
 #ifndef STM32F103_GPIO_REG_H_
 #define STM32F103_GPIO_REG_H_
 
-
+#include <stdio.h>
 
 //ports
 #define _GPIOA_(mem_offset) (*(volatile uint32_t *)(0x40010800 + (mem_offset)))
@@ -43,6 +43,8 @@
 #define AFIO_EXTICR3 0x10
 #define AFIO_EXTICR4 0x14
 #define AFIO_MAPR2	 0x1C
+
+#ifndef __STM32F10x_H //avoid redefining
 
 //bits
 #define AFIO_EVCR_PORT	0x000F //mask
@@ -89,6 +91,8 @@
 #define AFIO_EXTICR4_EXTI14	0x0F00 //mask
 #define AFIO_EXTICR4_EXTI15	0xF000 //mask
 
+#endif //CMSIS lib
+
 //MAPR2 bits 4:0 reserved
 #define AFIO_MAPR2_TIM9_REMAP	0x0020
 #define AFIO_MAPR2_TIM10_REMAP	0x0040
@@ -97,6 +101,7 @@
 #define AFIO_MAPR2_TIM14_REMAP	0x0200
 #define AFIO_MAPR2_FSMC_NADV	0x0400
 //the rest reserved
+
 
 //CRL and CRH values
 

@@ -8,6 +8,7 @@
  *
  * Can be freely used according to the GNU GPL license.
  */
+
 #include <stdio.h>
 
 #ifndef STM32F103_I2C_REG_H_
@@ -25,6 +26,15 @@
 #define I2C_SR2 0x18
 #define I2C_CCR 0x1C
 #define I2C_TRISE 0x20
+
+//bits and masks different from CMSIS
+//OAR1
+#define I2C_OAR1_ADD_7    0x00FE //mask for a 7-bit address
+#define I2C_OAR1_ADD_10   0x03FF //mask for a 10-bit address
+
+#define I2C_SR2_PECBYTE 0xFF00 //mask for upper 8 bits
+
+#ifndef __STM32F10x_H ////avoid redefining if CMSIS library present
 
 //CR1
 #define I2C_CR1_PE      0x0001
@@ -57,9 +67,6 @@
 //reserved      0x4000
 //reserved		0x8000
 
-//OAR1
-#define I2C_OAR1_ADD_7    0x00FE //mask for a 7-bit address
-#define I2C_OAR1_ADD_10   0x03FF //mask for a 10-bit address
 #define I2C_OAR1_ADDMODE  0x8000
 
 //OAR2
@@ -94,7 +101,6 @@
 #define I2C_SR2_SMBDEFAULT 0x0020
 #define I2C_SR2_SMBHOST 0x0040
 #define I2C_SR2_DUALF   0x0080
-#define I2C_SR2_PECBYTE 0xFF00 //mask for upper 8 bits
 
 //CCR
 #define I2C_CCR_CCR     0x0FFF
@@ -103,5 +109,7 @@
 
 //TRISE
 #define I2C_TRISE_TRISE		0x003F
+
+#endif //CMSIS lib
 
 #endif /* STM32F103_I2C_REG_H_ */

@@ -26,6 +26,7 @@
 #define RCC_BDCR 0x20
 #define RCC_CSR 0x24
 
+#ifndef __STM32F10x_H //avoid redefining if CMSIS library present
 
 // values
 #define RCC_APB2RSTR_AFIORST 0x0001
@@ -77,8 +78,8 @@
 #define RCC_APB1RSTR_I2C2RST   0x00400000
 #define RCC_APB1RSTR_USBRST    0x00800000
 //reserved
-#define RCC_APB1RSTR_CANRST    0x02000000
-//reserved
+#define RCC_APB1RSTR_CAN1RST   0x02000000
+#define RCC_APB1RSTR_CAN2RST   0x02000000
 #define RCC_APB1RSTR_BKPRST    0x08000000
 #define RCC_APB1RSTR_PWRRST    0x10000000
 #define RCC_APB1RSTR_DACRST    0x20000000
@@ -134,13 +135,18 @@
 #define RCC_APB1ENR_I2C2EN   0x00400000
 #define RCC_APB1ENR_USBEN    0x00800000
 //reserved
-#define RCC_APB1ENR_CANEN    0x02000000
-//reserved
+#define RCC_APB1ENR_CAN1EN   0x02000000
+#define RCC_APB1ENR_CAN2EN   0x04000000
 #define RCC_APB1ENR_BKPEN    0x08000000
 #define RCC_APB1ENR_PWREN    0x10000000
 #define RCC_APB1ENR_DACEN    0x20000000
 //reserved
 //reserved
 
+#endif //CMSIS stuff
+
+//CMSIS defines these as CAN1
+#define RCC_APB1RSTR_CANRST  0x02000000
+#define RCC_APB1ENR_CANEN    0x02000000
 
 #endif /* STM32F103_RCC_REG_H_ */

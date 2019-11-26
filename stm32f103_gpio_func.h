@@ -12,6 +12,8 @@
 #ifndef STM32F103_GPIO_FUNC_H_
 #define STM32F103_GPIO_FUNC_H_
 
+#include <stdio.h>
+#include <stm32f103_gpio_reg.h>
 #include <stm32f103_rcc_reg.h>
 
 //MODEX
@@ -30,8 +32,28 @@
 #define PULLUP		 9
 #define PULLDOWN	 8
 
+class gpio_pin
+{
+public:
+//	gpio_pin(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
+//	gpio_pin(uint8_t pinnum);
+//	gpio_pin();
+	//virtual void init() =0;
+	//virtual void set() =0;
+	virtual void high() =0;
+	//virtual void reset() =0;
+	virtual void low() =0;
+	//virtual void invert() =0;
+	virtual uint8_t read() =0;
+	//virtual void write(uint8_t val) =0;
+	virtual void mode(uint8_t speed, uint8_t cnf = 4) =0;
+	uint8_t pin;
+	//virtual void setAll(uint32_t BSRR_value) =0;
+	//virtual void resetAll(uint32_t BRR_value) =0;
+	//virtual uint32_t readAll() =0;
+};
 
-class gpioA
+class gpioA : public gpio_pin
 {
 public:
 	gpioA(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
@@ -49,7 +71,7 @@ public:
 	uint8_t read();
 	void write(uint8_t val);
 	void mode(uint8_t speed, uint8_t cnf = 4);
-	uint8_t pin;
+//	uint8_t pin;
 
 	//these functions are to avoid compiler warnings
 
@@ -74,7 +96,7 @@ public:
 	*/
 };
 
-class gpioB
+class gpioB : public gpio_pin
 {
 public:
 	gpioB(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
@@ -92,7 +114,7 @@ public:
 	uint8_t read();
 	void write(uint8_t val);
 	void mode(uint8_t speed, uint8_t cnf = 4);
-	uint8_t pin;
+	//uint8_t pin;
 	void setAll(uint32_t BSRR_value)
 	{
 		_GPIOB_(GPIOX_BSRR) = BSRR_value;
@@ -112,7 +134,7 @@ public:
 	*/
 };
 
-class gpioC
+class gpioC : public gpio_pin
 {
 public:
 	gpioC(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
@@ -130,7 +152,7 @@ public:
 	uint8_t read();
 	void write(uint8_t val);
 	void mode(uint8_t speed, uint8_t cnf = 4);
-	uint8_t pin;
+	//uint8_t pin;
 
 	void setAll(uint32_t BSRR_value)
 	{
