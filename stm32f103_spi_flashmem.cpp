@@ -1,8 +1,12 @@
 /*
- * stm32f103_spi_flashmem.cpp
+ * STM32F103 SPI Flash memory sub-ibrary source file
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 16 но€б. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 
 #include <stm32f103_spi_reg.h>

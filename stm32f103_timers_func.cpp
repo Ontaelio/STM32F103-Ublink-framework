@@ -1,8 +1,12 @@
 /*
- * stm32f103_timers_func.cpp
+ * STM32F103 Timers and IRQ library source file
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 17 но€б. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 
 #include <stm32f103_timers_func.h>

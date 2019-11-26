@@ -1,8 +1,12 @@
 /*
- * stm32f103_timers_reg.h
+ * STM32F103 Timers and IRQ register definitions
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 16 но€б. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 
 #ifndef STM32F103_TIMERS_REG_H_

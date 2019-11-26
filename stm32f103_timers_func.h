@@ -1,8 +1,12 @@
 /*
- * stm32f103_timers_func.h
+ * STM32F103 Timers and IRQ library header file
+ * Part of STM32F103 register and peripherals library
  *
- *  Created on: 17 но€б. 2019 г.
- *      Author: Ontaelio
+ * Dpcumentation available in the provided MD file.
+ *
+ * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ *
+ * Can be freely used according to the GNU GPL license.
  */
 
 #ifndef STM32F103_TIMERS_FUNC_H_
@@ -251,7 +255,7 @@ public:
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
 
-	//for consistency, these point to update event
+	//for consistency with other timers. Here they enable the update event IRQ
 	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM1_UP;}
 	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM1_UP;}
 
