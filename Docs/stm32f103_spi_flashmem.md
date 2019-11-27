@@ -29,7 +29,7 @@ Enables writes on the flash memory chip. All write/erase functions of this libra
 * void **writeDisable()**
 
 Disables writes on the flash memory chip.
-*Note: writes get automatically disabled after each write/erase operation, so `writeDisable()` is generally not needed.`
+*Note: writes get automatically disabled after each write/erase operation, so `writeDisable()` is generally not needed.*
 
 * uint8_t **busy()**
 
