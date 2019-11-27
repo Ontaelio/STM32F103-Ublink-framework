@@ -72,14 +72,7 @@ The following variables are commented out in the source code because they produc
 
 The following were machine-generated.
 
-_X is A, B or C for GPIOA, GPIOB and GPIOC_
-_N is the pin number, 0..15_
-_PU = Pull Up_
-_PD = Pull Down_
-_OD = Open Drain_
-_PP = Push Pull_
-_AF = Alternate Function_
-_2, 10 and 50 is the speed in MHz_
+_X is A, B or C for GPIOA, GPIOB and GPIOC_; _N is the pin number, 0..15_; _PU = Pull Up_; _PD = Pull Down_; _OD = Open Drain_; _PP = Push Pull_; _AF = Alternate Function_; _2, 10 and 50 is the speed in MHz_.
 
 ```c++
 //modes
