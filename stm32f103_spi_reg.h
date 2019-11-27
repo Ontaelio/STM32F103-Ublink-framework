@@ -16,7 +16,8 @@
 #define _SPI2_(mem_offset) (*(volatile uint32_t *)(0x40003800 + (mem_offset)))
 #define _SPI3_(mem_offset) (*(volatile uint32_t *)(0x40003C00 + (mem_offset)))
 
-#define _BBSPI_(mem_offset) (*(volatile uint32_t *)(0x42260000 + (mem_offset)))
+#define _BBSPI1_(mem_offset) (*(volatile uint32_t *)(0x42260000 + (mem_offset)))
+#define _BBSPI2_(mem_offset) (*(volatile uint32_t *)(0x42070000 + (mem_offset)))
 #define BB_SPI_CR1  0x0000
 #define BB_SPI_CR1_SPE 0x18
 

@@ -36,11 +36,13 @@
 #define CLK_HIGHRISE	0x0003
 
 
-
-
 void spi1_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode = 0, uint8_t sc = 1, uint8_t af = 0);
 void spi1_init(uint8_t af = 0);
 
+void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode = 0, uint8_t sc = 1, uint8_t af = 0);
+void spi2_init();
+
+/************** abstract class *****************/
 class spi_slave
 {
 public:
@@ -72,7 +74,8 @@ protected:
 	uint16_t cr1_config;
 };
 
-//template <class gpio_pin>
+/************ SPI1 *****************/
+
 class spi1_slave : public spi_slave
 {
 public:
@@ -104,38 +107,47 @@ public:
 
 private:
 	uint16_t static const default_config = 0x0300;
-/*
+
+};
+
+/************ SPI2 *****************/
+
+class spi2_slave : public spi_slave
+{
+public:
+	spi2_slave(gpio_pin* gpin): spi_slave(gpin){}
+	void init(uint16_t conf = default_config);
+	void enable();
+	void disable()
+	{
+		_SPI2_(SPI_CR1) &= ~SPI_CR1_SPE;
+	}
+	void write(uint16_t dat);
+	void writeStream(void* stuff, uint16_t num);
+	void writeData(uint16_t dat)
+	{
+	    _SPI2_(SPI_DR) = dat; //send a byte or two
+	    while (!(_SPI2_(SPI_SR) & SPI_SR_TXE)); //wait until it's sent
+	}
+	uint16_t read();
+	void readStream(void* stuff, uint16_t num);
+	uint16_t readData()
+	{
+		while (!(_SPI2_(SPI_SR) & SPI_SR_RXNE)); //wait until data is received
+		return _SPI2_(SPI_DR);
+	}
+	uint16_t transfer(uint16_t dat_out);
+	void transferStream(void* arr_out, void* arr_in, uint16_t num);
+
+	void seqTransfer(uint8_t* arr_out, uint16_t num_out, uint8_t* arr_in, uint16_t num_in);
+
 private:
-	gpio_pin* ss_pin;
-	uint16_t cr1_config;
 	uint16_t static const default_config = 0x0300;
-*/
+
 };
 
 
-/*
-void spi1_polarity(uint16_t pol)
-{
-	_SPI1_ (SPI_CR1) &= ~SPI_CR1_SPE; //disable SPI
-	if (pol) _SPI1_(SPI_CR1) |= SPI_CR1_CPOL;
-	else _SPI1_(SPI_CR1) &= ~SPI_CR1_CPOL;
-	_SPI1_ (SPI_CR1) |= SPI_CR1_SPE; //enable SPI
-}
-
-void spi1_phase(uint16_t edge)
-{
-	_SPI1_ (SPI_CR1) &= ~SPI_CR1_SPE; //disable SPI
-	if (edge) _SPI1_(SPI_CR1) |= SPI_CR1_CPHA;
-	else _SPI1_(SPI_CR1) &= ~SPI_CR1_CPHA;
-	_SPI1_ (SPI_CR1) |= SPI_CR1_SPE; //enable SPI
-}
-
-void spi1_LSBfirst(uint16_t lsb)
-{
-	if (lsb) _SPI1_ (SPI_CR1) |= SPI_CR1_LSBFIRST;
-	else _SPI1_(SPI_CR1) &= ~SPI_CR1_LSBFIRST;
-}
-*/
+/************ LOWER LEVEL *******************/
 
 inline void spi1_writeData(uint16_t dat)
 {
@@ -166,5 +178,34 @@ inline uint16_t spi1_readData()
 
 uint16_t spi1_writeReadData(uint16_t dat_out);
 
+
+inline void spi2_writeData(uint16_t dat)
+{
+	//continuous transmission, ss should be low already
+    _SPI2_(SPI_DR) = dat; //send a byte or two
+    while (!(_SPI2_(SPI_SR) & SPI_SR_TXE)); //wait until it's sent
+    //don't wait until BSY is cleared
+    //don't change ss state
+}
+
+inline void spi2_transferStart(uint16_t dat)
+{
+	_SPI2_(SPI_DR) = dat;
+}
+
+uint16_t spi2_transferData(uint16_t dat_out);
+
+inline uint16_t spi2_transferEnd()
+{
+	return _SPI2_(SPI_DR);
+}
+
+inline uint16_t spi2_readData()
+{
+	while (!(_SPI2_(SPI_SR) & SPI_SR_RXNE)); //wait until data is received
+	return _SPI2_(SPI_DR);
+}
+
+uint16_t spi2_writeReadData(uint16_t dat_out);
 
 #endif /* STM32F103_SPI_FUNC_H_ */
