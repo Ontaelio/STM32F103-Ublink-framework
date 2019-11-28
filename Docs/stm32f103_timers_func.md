@@ -3,8 +3,11 @@
 The timer_func library provides some basic means to deal with timers, PWMs and interrupts. This guide consists of the following sections:
 
 [SysTick timer](#systick-timer) - dealing with the ARM core timer
+
 [Timer initialization](#timer-initialization) - Timer init() function
+
 [PWM pin class](#pwm-pin-class) - a simple way to create PWM pins
+
 [Timer class](#timer-class) - more comprehensive timers and interrupts control class
 
 ## SysTick timer
