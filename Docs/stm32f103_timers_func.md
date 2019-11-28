@@ -492,5 +492,7 @@ tim3.enable(); //enable slave first.
 tim2.enable();
 
 tim2.IRQenable(); // enable IRQ in the ARM core
+
+while(1){};
 }
 ```
