@@ -12,6 +12,8 @@ The timer_func library provides some basic means to deal with timers, PWMs and i
 
 [Timer class](#timer-class) - more comprehensive timers and interrupts control class
 
+[Code examples](#examples) - SysTick ISR, PWM & delays, Master/slave timers with interrupts
+
 ----
 
 ## SysTick timer
