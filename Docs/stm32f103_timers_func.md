@@ -446,3 +446,51 @@ int main()
 	}
 }
 ```
+
+3) Master, slave and IRQ
+
+```c++
+/*
+the setup:
+timer3 outputs a 18 MHz signal to an external device
+It's slaved to timer2 in gated mode: it should shut up for a small time when
+timer2 ISR is being called doing some mysterious magick stuff
+*/
+
+timer2 tim2(0,0x702F); //timer2: prescaler = 0; ARR = 0x702F
+timer3 tim3(0,0x0001); //timer3: prescaler = 0; ARR = 0x0001
+
+extern "C"
+{
+void TIM2_IRQHandler(void)
+{
+	refresh(); // magick here!
+	tim2.clearUpdate(); // the flag must be cleared
+}
+}
+
+int main()
+{
+    tim2.init(); // init timer peripheral clocks and AFIO
+	tim3.init();
+
+	//tim2 = master, tim3 =slave, gated mode on C1
+	tim2.master(MMS_COMP1, OCM_PWM2);
+	tim3.slave(SMS_GATED, ITR_TIM2);
+	
+    tim2.setCC1value(0x0030); //will be low until this
+
+	tim2.setUpdateIRQ(); //set up the IRQ
+
+	tim3.setCC3value(0x0001); // PWM gererates a freq of 36/2 MHz
+
+	tim3.pwmChannel(3, 2, 0, 1); // channel 3, PWM mode 2, polarity 0, push-pull
+	tim3.pwmEnable(3); // enable channel 3 output 
+                       // (won't start yet as the timer is disabled)
+
+	tim3.enable(); //enable slave first.
+	tim2.enable();
+
+	tim2.IRQenable(); // enable IRQ in the ARM core
+}
+```
