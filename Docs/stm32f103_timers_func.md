@@ -406,11 +406,11 @@ PB6.invert();
 
 int main()
 {
-	gpioB_init();
-	PB6.mode(OUTPUT);
-	sysTick_intEnable();
-	sysTick_start(9000000, 0);
-	while(1){};
+gpioB_init();
+PB6.mode(OUTPUT);
+sysTick_intEnable();
+sysTick_start(9000000, 0);
+while(1){};
 }
 ```
 
@@ -422,16 +422,16 @@ tim4_pwm pwm2(1);
 int main()
 {
 
-	timer4_init();
-	pwm2.init();
-	pwm2.polarity = 0;
-	//pwm2.depth(1);
-	//pwm2.prescaler(0xFFFF);
-	pwm2.enable();
-	pwm2.write(1000);
+timer4_init();
+pwm2.init();
+pwm2.polarity = 0;
+//pwm2.depth(1);
+//pwm2.prescaler(0xFFFF);
+pwm2.enable();
+pwm2.write(1000);
 
-	while(1)
-	{
+while(1)
+{
 	for (uint16_t k = 0xFFFF; k>0; --k)
 	{
 		pwm2.write(k);
@@ -464,33 +464,33 @@ extern "C"
 {
 void TIM2_IRQHandler(void)
 {
-	refresh(); // magick here!
-	tim2.clearUpdate(); // the flag must be cleared
+refresh(); // magick here!
+tim2.clearUpdate(); // the flag must be cleared
 }
 }
 
 int main()
 {
-    tim2.init(); // init timer peripheral clocks and AFIO
-	tim3.init();
+tim2.init(); // init timer peripheral clocks and AFIO
+tim3.init();
 
-	//tim2 = master, tim3 =slave, gated mode on C1
-	tim2.master(MMS_COMP1, OCM_PWM2);
-	tim3.slave(SMS_GATED, ITR_TIM2);
-	
-    tim2.setCC1value(0x0030); //will be low until this
+//tim2 = master, tim3 =slave, gated mode on C1
+tim2.master(MMS_COMP1, OCM_PWM2);
+tim3.slave(SMS_GATED, ITR_TIM2);
 
-	tim2.setUpdateIRQ(); //set up the IRQ
+tim2.setCC1value(0x0030); //will be low until this
 
-	tim3.setCC3value(0x0001); // PWM gererates a freq of 36/2 MHz
+tim2.setUpdateIRQ(); //set up the IRQ
 
-	tim3.pwmChannel(3, 2, 0, 1); // channel 3, PWM mode 2, polarity 0, push-pull
-	tim3.pwmEnable(3); // enable channel 3 output 
-                       // (won't start yet as the timer is disabled)
+tim3.setCC3value(0x0001); // PWM gererates a freq of 36/2 MHz
 
-	tim3.enable(); //enable slave first.
-	tim2.enable();
+tim3.pwmChannel(3, 2, 0, 1); // channel 3, PWM mode 2, polarity 0, push-pull
+tim3.pwmEnable(3); // enable channel 3 output 
+                   // (won't start yet as the timer is disabled)
 
-	tim2.IRQenable(); // enable IRQ in the ARM core
+tim3.enable(); //enable slave first.
+tim2.enable();
+
+tim2.IRQenable(); // enable IRQ in the ARM core
 }
 ```
