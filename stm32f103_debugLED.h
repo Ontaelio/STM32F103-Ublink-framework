@@ -8,7 +8,7 @@
 #ifndef STM32F103_DEBUGLED_H_
 #define STM32F103_DEBUGLED_H_
 
-#include <stm32f103_gpio_func.h>
+#include <stm32f103_gpio_reg.h>
 
 
 inline void setDebugLED()
