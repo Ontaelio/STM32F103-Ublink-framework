@@ -43,11 +43,12 @@ inline void sysTick_intDisable()
 //**** STM timers stuff
 
 //center mode and direction values, CR1
-#define CENTER_UP	0x0002
-#define CENTER_DOWN 0x0004
-#define CENTER_BOTH 0x0006
-#define UPCOUNTER	0x0000
-#define DOWNCOUNTER	0x0001
+#define CENTER_UP	 0x0002
+#define CENTER_DOWN  0x0004
+#define CENTER_BOTH  0x0006
+#define PHASECORRECT 0x0006 //Arduino term
+#define UPCOUNTER	 0x0000
+#define DOWNCOUNTER	 0x0001
 
 //master-slave modes defaults
 //master mode, CR2 <<4
@@ -297,7 +298,7 @@ public:
 	void CC4event() {BB_TIM1_EGR_CC4G = 1;}
 	void COMevent() {BB_TIM1_EGR_COMG = 1;}
 	void triggerEvent() {BB_TIM1_EGR_TG = 1;}
-	void breakevent() {BB_TIM1_EGR_BG = 1;}
+	void breakEvent() {BB_TIM1_EGR_BG = 1;}
 
 	//interrupt flag cleaners, should use BB for these most certainly
 	void clearUpdate() {BB_TIM1_SR_UIF = 0;}

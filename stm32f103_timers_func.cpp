@@ -436,6 +436,7 @@ void timer1::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 &= ~TIMX_CR1_CMS;
 	CR1 |= center<<5;
 	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
+    CR1 |= TIMX_CR1_ARPE;
 }
 
 void timer1::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
@@ -530,6 +531,7 @@ void timer2::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 &= ~TIMX_CR1_CMS;
 	CR1 |= center<<5;
 	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
+	CR1 |= TIMX_CR1_ARPE;
 }
 
 void timer2::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
@@ -625,6 +627,7 @@ void timer3::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 &= ~TIMX_CR1_CMS;
 	CR1 |= center<<5;
 	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
+	CR1 |= TIMX_CR1_ARPE;
 }
 
 void timer3::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
@@ -719,6 +722,7 @@ void timer4::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 &= ~TIMX_CR1_CMS;
 	CR1 |= center<<5;
 	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
+	CR1 |= TIMX_CR1_ARPE;
 }
 
 void timer4::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
