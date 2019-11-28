@@ -1,7 +1,7 @@
 # SPI Flash Memory sub-library
 #### Part of the STM32 peripherals and registers library
 
-A simple example library to work with the `25` line of SPI flash memory chips using the stm32f103_spi_func peripheral library. It provides a `spi_flash` class on top of a `spi_slave` object to write, read and erase flash memory via SPI.
+A simple example library to work with the `25` line of SPI flash memory chips using the [stm32f103_spi_func peripheral library](https://github.com/Ontaelio/STM32F103-libraries/blob/master/Docs/stm32f103_spi_func.md). It provides a `spi_flash` class on top of a `spi_slave` object to write, read and erase flash memory via SPI.
 
 
 Constructor:
@@ -29,7 +29,7 @@ Enables writes on the flash memory chip. All write/erase functions of this libra
 * void **writeDisable()**
 
 Disables writes on the flash memory chip.
-*Note: writes get automatically disabled after each write/erase operation, so `writeDisable()` is generally not needed.`
+*Note: writes get automatically disabled after each write/erase operation, so `writeDisable()` is generally not needed.*
 
 * uint8_t **busy()**
 
