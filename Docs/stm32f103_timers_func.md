@@ -18,6 +18,7 @@ The timer_func library provides some basic means to deal with timers, PWMs and i
 
 #### SysTick defined symbolic names
 Register addresses:
+
 Register name | `#define`
 -|-
 SysTick Control and Status Register | `SYSTICK_CSR`
