@@ -452,7 +452,7 @@ int main()
 ```c++
 /*
 the setup:
-timer3 outputs a 18 MHz signal to an external device
+timer3 outputs an 18 MHz signal to an external device
 It's slaved to timer2 in gated mode: it should shut up for a small time when
 timer2 ISR is being called doing some mysterious magick stuff
 */
