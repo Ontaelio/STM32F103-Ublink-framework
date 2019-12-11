@@ -134,7 +134,12 @@ Disables the output of the PWM channel.
 
 * void **write(uint16_t pwm_val)**
 
-Sets the PWM output to the provided `value`. Can be used before `enable` to pre-set the compare value.
+Sets the PWM output duty cycle to the provided `value`. Can be used before `enable` to pre-set the compare value.
+
+#### `timX_pwm` type conversion and overloaded operators
+
+`timX_pwm` can be converted to `uint16_t`, returning the current PWM duty cycle or setting it, e.g. `pinA8pwm = 0x00FF` will set the duty cycle of the `pinX_pwm` object `pinA8pwm` to 255. Additionally, overloaded operators `++`, `--`, `+=`, and `-=` are provided to adjust the duty cycle of the `timX_pwm` object. Postfix and prefix `++`/`--` operators behave identically (i.e. they don't change the object itself, only the value in the CCR register).
+
 
 ----
 
@@ -179,6 +184,8 @@ Configures and enables the timer, optionally setting the CNT counter register to
 * uint16_t **read()**
 
 Returns the current counter value.
+
+*Note: the current counter value can also be obtained using one-way type conversion, e.g. `uint16_t a = Tim1` returns the CNT of the `timerX` object `Tim1`. The reverse operation, setting the counter with a type conversion, is not available.*
 
 #### Setup member functions
 

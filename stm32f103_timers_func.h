@@ -134,6 +134,14 @@ public:
 	void enable();
 	void disable() {_TIM1_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM1_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM1_(ch_addr);}
+	tim1_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim1_pwm& operator++ () {write (_TIM1_(ch_addr) + 1); return *this;}
+	tim1_pwm operator++ (int) {write (_TIM1_(ch_addr) + 1); return *this;}
+	tim1_pwm& operator-- () {write (_TIM1_(ch_addr) - 1); return *this;}
+	tim1_pwm operator-- (int) {write (_TIM1_(ch_addr) - 1); return *this;}
+	tim1_pwm& operator+= (const uint16_t& a) {write (_TIM1_(ch_addr) + a); return *this;}
+	tim1_pwm& operator-= (const uint16_t& a) {write (_TIM1_(ch_addr) - a); return *this;}
 	uint8_t pwmMode, centerMode, direction, polarity;
 	uint16_t prescaler, depth;
 
@@ -150,6 +158,14 @@ public:
 	void enable();
 	void disable() {_TIM2_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM2_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM2_(ch_addr);}
+	tim2_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim2_pwm& operator++ () {write (_TIM2_(ch_addr) + 1); return *this;}
+	tim2_pwm operator++ (int) {write (_TIM2_(ch_addr) + 1); return *this;}
+	tim2_pwm& operator-- () {write (_TIM2_(ch_addr) - 1); return *this;}
+	tim2_pwm operator-- (int) {write (_TIM2_(ch_addr) - 1); return *this;}
+	tim2_pwm& operator+= (const uint16_t& a) {write (_TIM2_(ch_addr) + a); return *this;}
+	tim2_pwm& operator-= (const uint16_t& a) {write (_TIM2_(ch_addr) - a); return *this;}
 	uint8_t pwmMode, centerMode, direction, polarity;
 	uint16_t prescaler, depth;
 
@@ -166,6 +182,14 @@ public:
 	void enable();
 	void disable() {_TIM3_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM3_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM3_(ch_addr);}
+	tim3_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim3_pwm& operator++ () {write (_TIM3_(ch_addr) + 1); return *this;}
+	tim3_pwm operator++ (int) {write (_TIM3_(ch_addr) + 1); return *this;}
+	tim3_pwm& operator-- () {write (_TIM3_(ch_addr) - 1); return *this;}
+	tim3_pwm operator-- (int) {write (_TIM3_(ch_addr) - 1); return *this;}
+	tim3_pwm& operator+= (const uint16_t& a) {write (_TIM3_(ch_addr) + a); return *this;}
+	tim3_pwm& operator-= (const uint16_t& a) {write (_TIM3_(ch_addr) - a); return *this;}
 	uint8_t pwmMode, centerMode, direction, polarity;
 	uint16_t prescaler, depth;
 
@@ -182,6 +206,14 @@ public:
 	void enable();
 	void disable() {_TIM4_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM4_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM4_(ch_addr);}
+	tim4_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim4_pwm& operator++ () {write (_TIM4_(ch_addr) + 1); return *this;}
+	tim4_pwm operator++ (int) {write (_TIM4_(ch_addr) + 1); return *this;}
+	tim4_pwm& operator-- () {write (_TIM4_(ch_addr) - 1); return *this;}
+	tim4_pwm operator-- (int) {write (_TIM4_(ch_addr) - 1); return *this;}
+	tim4_pwm& operator+= (const uint16_t& a) {write (_TIM4_(ch_addr) + a); return *this;}
+	tim4_pwm& operator-= (const uint16_t& a) {write (_TIM4_(ch_addr) - a); return *this;}
 	uint8_t pwmMode, centerMode, direction, polarity;
 	uint16_t prescaler, depth;
 
@@ -226,6 +258,7 @@ public:
 	void enable(uint16_t count = 0);
 	void disable() {BB_TIM1_CR1_CEN = 0;}
 	uint16_t read() {return _TIM1_(TIMX_CNT);}
+	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
@@ -351,6 +384,7 @@ public:
 	void enable(uint16_t count = 0);
 	void disable() {BB_TIM2_CR1_CEN = 0;}
 	uint16_t read() {return _TIM2_(TIMX_CNT);}
+	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
@@ -458,6 +492,7 @@ public:
 	void enable(uint16_t count = 0);
 	void disable() {BB_TIM3_CR1_CEN = 0;}
 	uint16_t read() {return _TIM3_(TIMX_CNT);}
+	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
@@ -565,6 +600,7 @@ public:
 	void enable(uint16_t count = 0);
 	void disable() {BB_TIM4_CR1_CEN = 0;}
 	uint16_t read() {return _TIM4_(TIMX_CNT);}
+	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
