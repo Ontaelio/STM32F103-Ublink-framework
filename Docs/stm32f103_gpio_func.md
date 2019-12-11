@@ -65,6 +65,37 @@ The following variables are commented out in the source code because they produc
 * `volatile uint32_t* BSRR` points at the BSRR register.
 * `volatile uint32_t* IDR` points at the IDR register.
 
+### Type conversions
+
+`gpioX_pin` class provides conversion to and from `uint8_t`, or `bool` type. Thus
+
+* `uint8_t a = PA11` returns `1` if the input on `gpioX_pin` PA11 is high and `0` otherwise;
+* `PA11 = a` sets output `gpioX_pin` A11 high if `a>0` and low otherwise.
+
+The following examples turn the LED on pin A11 on when the button on pin A10 is pressed:
+
+```c++
+gpioA_pin A10(10);
+gpioA_pin A11(11);
+
+int main()
+{
+	gpioA_init();
+	A10.mode(INPUT, PULLUP);
+	A11.mode(OUTPUT);
+	while(1) {A11 = (uint8_t)A10;} //explicit type conversion
+}
+```
+or, using `if`:
+```c++
+int main()
+{
+	gpioA_init();
+	A10.mode(INPUT, PULLUP);
+	A11.mode(OUTPUT);
+	while(1) {if (A10) A11.high(); else A11.low();}
+}
+```
 
 ## Lower abstraction level inline functions
 

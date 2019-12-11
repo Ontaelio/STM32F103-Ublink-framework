@@ -88,6 +88,9 @@ public:
 		return(_GPIOA_(GPIOX_IDR));
 	}
 
+	operator uint8_t() {return read();}
+	gpioA& operator= (const uint8_t& a) {write(a); return *this;}
+
 	// these below are better and work; but produce warnings from the compiler
 	/*
 	volatile uint32_t* BRR = (uint32_t*)  (0x40010814);
@@ -127,6 +130,10 @@ public:
 	{
 		return(_GPIOB_(GPIOX_IDR));
 	}
+
+	operator uint8_t() {return read();}
+	gpioB& operator= (const uint8_t& a) {write(a); return *this;}
+
 	/*
 	volatile uint32_t* BRR = (uint32_t*)  (0x40010C14);
 	volatile uint32_t* BSRR = (uint32_t*) (0x40010C10);
@@ -166,6 +173,9 @@ public:
 	{
 		return(_GPIOC_(GPIOX_IDR));
 	}
+
+	operator uint8_t() {return read();}
+	gpioC& operator= (const uint8_t& a) {write(a); return *this;}
 
 	/*
 	volatile uint32_t* BRR = (uint32_t*)  (0x40011014);
