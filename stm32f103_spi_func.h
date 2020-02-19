@@ -39,7 +39,7 @@
 void spi1_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode = 0, uint8_t sc = 1, uint8_t af = 0);
 void spi1_init(uint8_t af = 0);
 
-void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode = 0, uint8_t sc = 1, uint8_t af = 0);
+void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode = 0, uint8_t sc = 1);
 void spi2_init();
 
 /************** abstract class *****************/

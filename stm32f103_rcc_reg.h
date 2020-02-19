@@ -12,6 +12,8 @@
 #ifndef STM32F103_RCC_REG_H_
 #define STM32F103_RCC_REG_H_
 
+#include <stdio.h>
+
 #define _RCC_(mem_offset) (*(volatile uint32_t *)(0x40021000 + (mem_offset)))
 
 // registers
@@ -29,6 +31,55 @@
 #ifndef __STM32F10x_H //avoid redefining if CMSIS library present
 
 // values
+#define RCC_CR_HSION		0x00000001
+#define RCC_CR_HSIRDY		0x00000001
+//reserved
+#define RCC_CR_HSITRIM		0x000000F8 //mask
+#define RCC_CR_HSICAL		0x0000FF00 //mask
+#define RCC_CR_HSEON		0x00010000
+#define RCC_CR_HSERDY		0x00020000
+#define RCC_CR_HSEBYP		0x00040000
+#define RCC_CR_CSSON		0x00080000
+//4 bits reserved
+#define RCC_CR_PLLON		0x01000000
+#define RCC_CR_PLLRDY		0x02000000
+//the rest reserved
+
+#define RCC_CFGR_SW			0x00000003 //mask
+#define RCC_CFGR_SWS		0x0000000C //mask
+#define RCC_CFGR_HPRE		0x000000F0 //mask
+#define RCC_CFGR_PPRE1		0x00000700 //mask
+#define RCC_CFGR_PPRE2		0x00003800 //mask
+#define RCC_CFGR_ADCPRE		0x0000C000 //mask
+#define RCC_CFGR_PLLSRC		0x00010000
+#define RCC_CFGR_PLLXTPRE	0x00020000
+#define RCC_CFGR_PLLMUL		0x003C0000 //mask
+#define RCC_CFGR_USBPRE		0x00400000
+//reserved
+#define RCC_CFGR_MCO		0x07000000 //mask
+
+#define RCC_CIR_LSIRDYF		0x00000001
+#define RCC_CIR_LSERDYF		0x00000002
+#define RCC_CIR_HSIRDYF		0x00000004
+#define RCC_CIR_HSERDYF		0x00000008
+#define RCC_CIR_PLLRDYF		0x00000010
+//reserved x2
+#define RCC_CIR_CSSF		0x00000080
+#define RCC_CIR_LSIRDYIE	0x00000100
+#define RCC_CIR_LSERDYIE	0x00000200
+#define RCC_CIR_HSIRDYIE	0x00000400
+#define RCC_CIR_HSERDYIE	0x00000800
+#define RCC_CIR_PLLRDYIE	0x00001000
+//reserved x3
+#define RCC_CIR_LSIRDYC		0x00010000
+#define RCC_CIR_LSERDYC		0x00020000
+#define RCC_CIR_HSIRDYC		0x00040000
+#define RCC_CIR_HSERDYC		0x00080000
+#define RCC_CIR_PLLRDYC		0x00100000
+//reserved x2
+#define RCC_CIR_CSSC		0x00800000
+//the rest reserved
+
 #define RCC_APB2RSTR_AFIORST 0x0001
 //reserved
 #define RCC_APB2RSTR_IOPARST 0x0004
@@ -86,6 +137,19 @@
 //reserved
 //reserved
 
+#define RCC_AHBENR_DMA1EN	0x0001
+#define RCC_AHBENR_DMA2EN	0x0002
+#define RCC_AHBENR_SRAMEN	0x0004
+//reserved
+#define RCC_AHBENR_FLITFEN	0x0010
+//reserved
+#define RCC_AHBENR_CRCEN	0x0040
+//reserved
+#define RCC_AHBENR_FSMCEN	0x0100
+//reserved
+#define RCC_AHBENR_SDIOEN	0x0400
+//reserved x5
+
 #define RCC_APB2ENR_AFIOEN 0x0001
 //reserved
 #define RCC_APB2ENR_IOPAEN 0x0004
@@ -142,6 +206,28 @@
 #define RCC_APB1ENR_DACEN    0x20000000
 //reserved
 //reserved
+
+#define RCC_BDCR_LSEON		0x00000001
+#define RCC_BDCR_LSERDY		0x00000002
+#define RCC_BDCR_LSEBYP		0x00000004
+//reserved x5
+#define RCC_BDCR_RTCSEL		0x00000300 //mask
+//reserved x5
+#define RCC_BDCR_RTCEN		0x00008000
+#define RCC_BDCR_BDRST		0x00010000
+//reserved to the end
+
+#define RCC_CSR_LSION		0x00000001
+#define RCC_CSR_LSIRDY		0x00000002
+//reserved x22
+#define RCC_CSR_RMVF		0x01000000
+//reserved
+#define RCC_CSR_PINRSTF		0x04000000
+#define RCC_CSR_PORRSTF		0x08000000
+#define RCC_CSR_SFTRSTF		0x10000000
+#define RCC_CSR_IWDGRSTF	0x20000000
+#define RCC_CSR_WWDGRSTF	0x40000000
+#define RCC_CSR_LPWRRSTF	0x80000000
 
 #endif //CMSIS stuff
 

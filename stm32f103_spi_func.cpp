@@ -1,5 +1,5 @@
 /*
- * STM32F103 GPIO and AFIO functions library
+ * STM32F103 SPI functions library
  * Part of STM32F103 register and peripherals library
  *
  * Documentation available in the provided MD file.
@@ -430,7 +430,7 @@ void spi1_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode, ui
 	_SPI1_ (SPI_CR1) |= bitmode;
 
 	//set prescaler
-	_SPI1_ (SPI_CR1) |= prescaler;// pclk/4 works ok. 3 bits (BR_1 and BR_2)
+	_SPI1_ (SPI_CR1) |= prescaler;// 3 bits
 
 	//software control of SS
 	if (sc) _SPI1_ (SPI_CR1) |= SPI_CR1_SSM | SPI_CR1_SSI; //enable software control of SS, SS high
@@ -483,7 +483,7 @@ void spi2_init()
 	_RCC_(RCC_APB2ENR) |= RCC_APB1ENR_SPI2EN;
 }
 
-void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode, uint8_t sc, uint8_t af)
+void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode, uint8_t sc)
 {
 	spi2_init();
 	//clear CR1 and set bidi or unidi mode
@@ -493,7 +493,7 @@ void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode, ui
 	_SPI2_ (SPI_CR1) |= bitmode;
 
 	//set prescaler
-	_SPI2_ (SPI_CR1) |= prescaler;// pclk/4 works ok. 3 bits (BR_1 and BR_2)
+	_SPI2_ (SPI_CR1) |= prescaler; //3 bits
 
 	//software control of SS
 	if (sc) _SPI2_ (SPI_CR1) |= SPI_CR1_SSM | SPI_CR1_SSI; //enable software control of SS, SS high

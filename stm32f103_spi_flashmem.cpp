@@ -1,5 +1,5 @@
 /*
- * STM32F103 SPI Flash memory sub-ibrary source file
+ * STM32F103 SPI Flash memory sub-library source file
  * Part of STM32F103 register and peripherals library
  *
  * Dpcumentation available in the provided MD file.

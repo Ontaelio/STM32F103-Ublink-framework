@@ -4,7 +4,7 @@
  *
  * Dpcumentation available in the provided MD file.
  *
- * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ * (c) 2019-2020 Dmitry Reznikov ontaelio(at)gmail.com
  *
  * Can be freely used according to the GNU GPL license.
  */
@@ -125,106 +125,32 @@ inline void timer4_init()
 	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
 }
 
-class tim1_pwm
+// abstract classes
+
+class tim_pwm
 {
-public:
-	tim1_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
+protected:
+	tim_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
 							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
-	void init(uint8_t pushpull = 0);
-	void enable();
-	void disable() {_TIM1_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
-	void write(uint16_t pwm_val) {_TIM1_(ch_addr) = pwm_val;}
-	operator uint16_t() {return _TIM1_(ch_addr);}
-	tim1_pwm& operator= (const uint16_t& a) {write(a); return *this;}
-	tim1_pwm& operator++ () {write (_TIM1_(ch_addr) + 1); return *this;}
-	tim1_pwm operator++ (int) {write (_TIM1_(ch_addr) + 1); return *this;}
-	tim1_pwm& operator-- () {write (_TIM1_(ch_addr) - 1); return *this;}
-	tim1_pwm operator-- (int) {write (_TIM1_(ch_addr) - 1); return *this;}
-	tim1_pwm& operator+= (const uint16_t& a) {write (_TIM1_(ch_addr) + a); return *this;}
-	tim1_pwm& operator-= (const uint16_t& a) {write (_TIM1_(ch_addr) - a); return *this;}
+
+public:
 	uint8_t pwmMode, centerMode, direction, polarity;
 	uint16_t prescaler, depth;
 
-private:
+	virtual ~tim_pwm() {}
+	virtual void init(uint8_t pushpull = 0) =0;
+	virtual void enable() =0;
+	virtual void disable() =0;
+	virtual void write(uint16_t pwm_val) =0;
+
+protected:
 	uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
 };
 
-class tim2_pwm
+class timer
 {
-public:
-	tim2_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
-							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
-	void init(uint8_t pushpull = 0);
-	void enable();
-	void disable() {_TIM2_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
-	void write(uint16_t pwm_val) {_TIM2_(ch_addr) = pwm_val;}
-	operator uint16_t() {return _TIM2_(ch_addr);}
-	tim2_pwm& operator= (const uint16_t& a) {write(a); return *this;}
-	tim2_pwm& operator++ () {write (_TIM2_(ch_addr) + 1); return *this;}
-	tim2_pwm operator++ (int) {write (_TIM2_(ch_addr) + 1); return *this;}
-	tim2_pwm& operator-- () {write (_TIM2_(ch_addr) - 1); return *this;}
-	tim2_pwm operator-- (int) {write (_TIM2_(ch_addr) - 1); return *this;}
-	tim2_pwm& operator+= (const uint16_t& a) {write (_TIM2_(ch_addr) + a); return *this;}
-	tim2_pwm& operator-= (const uint16_t& a) {write (_TIM2_(ch_addr) - a); return *this;}
-	uint8_t pwmMode, centerMode, direction, polarity;
-	uint16_t prescaler, depth;
-
-private:
-	uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
-};
-
-class tim3_pwm
-{
-public:
-	tim3_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
-							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
-	void init(uint8_t pushpull = 0);
-	void enable();
-	void disable() {_TIM3_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
-	void write(uint16_t pwm_val) {_TIM3_(ch_addr) = pwm_val;}
-	operator uint16_t() {return _TIM3_(ch_addr);}
-	tim3_pwm& operator= (const uint16_t& a) {write(a); return *this;}
-	tim3_pwm& operator++ () {write (_TIM3_(ch_addr) + 1); return *this;}
-	tim3_pwm operator++ (int) {write (_TIM3_(ch_addr) + 1); return *this;}
-	tim3_pwm& operator-- () {write (_TIM3_(ch_addr) - 1); return *this;}
-	tim3_pwm operator-- (int) {write (_TIM3_(ch_addr) - 1); return *this;}
-	tim3_pwm& operator+= (const uint16_t& a) {write (_TIM3_(ch_addr) + a); return *this;}
-	tim3_pwm& operator-= (const uint16_t& a) {write (_TIM3_(ch_addr) - a); return *this;}
-	uint8_t pwmMode, centerMode, direction, polarity;
-	uint16_t prescaler, depth;
-
-private:
-	uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
-};
-
-class tim4_pwm
-{
-public:
-	tim4_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
-							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
-	void init(uint8_t pushpull = 0);
-	void enable();
-	void disable() {_TIM4_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
-	void write(uint16_t pwm_val) {_TIM4_(ch_addr) = pwm_val;}
-	operator uint16_t() {return _TIM4_(ch_addr);}
-	tim4_pwm& operator= (const uint16_t& a) {write(a); return *this;}
-	tim4_pwm& operator++ () {write (_TIM4_(ch_addr) + 1); return *this;}
-	tim4_pwm operator++ (int) {write (_TIM4_(ch_addr) + 1); return *this;}
-	tim4_pwm& operator-- () {write (_TIM4_(ch_addr) - 1); return *this;}
-	tim4_pwm operator-- (int) {write (_TIM4_(ch_addr) - 1); return *this;}
-	tim4_pwm& operator+= (const uint16_t& a) {write (_TIM4_(ch_addr) + a); return *this;}
-	tim4_pwm& operator-= (const uint16_t& a) {write (_TIM4_(ch_addr) - a); return *this;}
-	uint8_t pwmMode, centerMode, direction, polarity;
-	uint16_t prescaler, depth;
-
-private:
-	uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
-};
-
-class timer1
-{
-public:
-	timer1(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
+protected:
+	timer(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
 			 CR1	(0x0000), //basic configuration and enable (bit 0)
 			 CR2	(0x0000), //master mode and Hall sensor
 			 SMCR	(0x0000), //slave mode control
@@ -237,22 +163,207 @@ public:
 			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
 			 PSC	(prsclr), //prescaler
 			 ARR	(depth),  //depth of the counter aka auto-reload
-			 RCR	(0x0000), //tim1 only, repeat counter, only one byte
+			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
 			 CCR1	(0x0000), //capture/compare value. Read-only in input
 			 CCR2	(0x0000),
 			 CCR3	(0x0000),
 			 CCR4	(0x0000),
-			 BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
+			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
 			 DCR	(0x0000), //dma control
 			 DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
 			 {};
 
-	uint16_t CR1, CR2, SMCR, DIER, // SR, EGR,
+public:
+
+    uint16_t CR1, CR2, SMCR, DIER, // SR, EGR,
 			CCMR1, CCMR2, CCER, PSC, ARR, RCR, // CNT,
-			CCR1, CCR2, CCR3, CCR4, BDTR, DCR;//, DMAR;
+			CCR1, CCR2, CCR3, CCR4, DCR; //,BDTR;
 	uint32_t DMAR; //32 bits in tim1 only
 
- 	void init() {timer1_init();}
+	virtual ~timer() {}
+ 	virtual void init() =0;
+	virtual void config() =0;
+	virtual void enableOnly() =0;
+	virtual void enable(uint16_t count = 0)  =0;
+	virtual void disable() =0;
+	virtual uint16_t read() =0;
+	//operator uint16_t() {return _TIM1_(TIMX_CNT);}
+
+	virtual void master(uint16_t mms, uint16_t ccmr = 0) =0;
+	virtual void slave(uint16_t sms, uint16_t ts) =0;
+
+	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
+
+	void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
+	void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
+	void setCC2IRQ(uint8_t bit=1)		{DIER &= ~0x0004; DIER |= bit<<2;}
+	void setCC3IRQ(uint8_t bit=1)		{DIER &= ~0x0008; DIER |= bit<<3;}
+	void setCC4IRQ(uint8_t bit=1)		{DIER &= ~0x0010; DIER |= bit<<4;}
+	void setTriggerIRQ(uint8_t bit=1)	{DIER &= ~0x0040; DIER |= bit<<6;}
+
+	void setCC1value(uint16_t val) {CCR1 = val;}
+	void setCC2value(uint16_t val) {CCR2 = val;}
+	void setCC3value(uint16_t val) {CCR3 = val;}
+	void setCC4value(uint16_t val) {CCR4 = val;}
+
+	void setDepth(uint16_t val) {ARR = val;}
+	void setPrescaler(uint16_t val) {PSC = val;}
+
+	virtual void pwmSetup(uint8_t center, uint8_t dir)  =0;
+	virtual void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0) =0;// {tim2_pwm a(ch_num); a.init();}
+	virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
+	virtual void pwmEnable(uint8_t ch_num) =0;
+	virtual void pwmDisable(uint8_t ch_num) =0;
+
+	virtual void IRQenable() =0;
+	virtual void IRQdisable() =0;
+
+	virtual void writeCC1(uint16_t val) =0;
+	virtual void writeCC2(uint16_t val) =0;
+	virtual void writeCC3(uint16_t val) =0;
+	virtual void writeCC4(uint16_t val) =0;
+
+	//BB (atomic) stuff
+	//update event enable/disable (CR1->UDIS)
+	virtual void updateDisable() =0;
+	virtual void updateEnable() =0;
+
+	//fast interrupt enable/disable (1 or 0)
+	virtual void updateInterrupt(uint8_t bit) =0;
+	virtual void CC1interrupt(uint8_t bit) =0;
+	virtual void CC2interrupt(uint8_t bit) =0;
+	virtual void CC3interrupt(uint8_t bit) =0;
+	virtual void CC4interrupt(uint8_t bit) =0;
+	virtual void triggerInterrupt(uint8_t bit) =0;
+
+	//event generators
+	virtual void updateEvent() =0;
+	virtual void CC1event() =0;
+	virtual void CC2event() =0;
+	virtual void CC3event() =0;
+	virtual void CC4event() =0;
+	virtual void triggerEvent() =0;
+
+	//interrupt flag cleaners, should use BB for these most certainly
+	virtual void clearUpdate() =0;
+	virtual void clearCC1() =0;
+	virtual void clearCC2() =0;
+	virtual void clearCC3() =0;
+	virtual void clearCC4() =0;
+	virtual void clearTrigger() =0;
+	virtual void clearAll() =0;
+
+};
+
+// inherited classes
+
+class tim1_pwm : public tim_pwm
+{
+public:
+//	tim1_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
+//							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
+	tim1_pwm(uint8_t ch_num): tim_pwm(ch_num){}
+	void init(uint8_t pushpull = 0);
+	void enable();
+	void disable() {_TIM1_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
+	void write(uint16_t pwm_val) {_TIM1_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM1_(ch_addr);}
+	tim1_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim1_pwm& operator++ () {write (_TIM1_(ch_addr) + 1); return *this;}
+	tim1_pwm operator++ (int) {write (_TIM1_(ch_addr) + 1); return *this;}
+	tim1_pwm& operator-- () {write (_TIM1_(ch_addr) - 1); return *this;}
+	tim1_pwm operator-- (int) {write (_TIM1_(ch_addr) - 1); return *this;}
+	tim1_pwm& operator+= (const uint16_t& a) {write (_TIM1_(ch_addr) + a); return *this;}
+	tim1_pwm& operator-= (const uint16_t& a) {write (_TIM1_(ch_addr) - a); return *this;}
+	//uint8_t pwmMode, centerMode, direction, polarity;
+	//uint16_t prescaler, depth;
+
+private:
+	//uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
+};
+
+class tim2_pwm : public tim_pwm
+{
+public:
+//	tim2_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
+//							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
+	tim2_pwm(uint8_t ch_num): tim_pwm(ch_num){}
+	void init(uint8_t pushpull = 0);
+	void enable();
+	void disable() {_TIM2_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
+	void write(uint16_t pwm_val) {_TIM2_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM2_(ch_addr);}
+	tim2_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim2_pwm& operator++ () {write (_TIM2_(ch_addr) + 1); return *this;}
+	tim2_pwm operator++ (int) {write (_TIM2_(ch_addr) + 1); return *this;}
+	tim2_pwm& operator-- () {write (_TIM2_(ch_addr) - 1); return *this;}
+	tim2_pwm operator-- (int) {write (_TIM2_(ch_addr) - 1); return *this;}
+	tim2_pwm& operator+= (const uint16_t& a) {write (_TIM2_(ch_addr) + a); return *this;}
+	tim2_pwm& operator-= (const uint16_t& a) {write (_TIM2_(ch_addr) - a); return *this;}
+	//uint8_t pwmMode, centerMode, direction, polarity;
+	//uint16_t prescaler, depth;
+
+private:
+	//uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
+};
+
+class tim3_pwm : public tim_pwm
+{
+public:
+//	tim3_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
+//							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
+	tim3_pwm(uint8_t ch_num): tim_pwm(ch_num){}
+	void init(uint8_t pushpull = 0);
+	void enable();
+	void disable() {_TIM3_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
+	void write(uint16_t pwm_val) {_TIM3_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM3_(ch_addr);}
+	tim3_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim3_pwm& operator++ () {write (_TIM3_(ch_addr) + 1); return *this;}
+	tim3_pwm operator++ (int) {write (_TIM3_(ch_addr) + 1); return *this;}
+	tim3_pwm& operator-- () {write (_TIM3_(ch_addr) - 1); return *this;}
+	tim3_pwm operator-- (int) {write (_TIM3_(ch_addr) - 1); return *this;}
+	tim3_pwm& operator+= (const uint16_t& a) {write (_TIM3_(ch_addr) + a); return *this;}
+	tim3_pwm& operator-= (const uint16_t& a) {write (_TIM3_(ch_addr) - a); return *this;}
+	//uint8_t pwmMode, centerMode, direction, polarity;
+	//uint16_t prescaler, depth;
+
+private:
+	//uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
+};
+
+class tim4_pwm : public tim_pwm
+{
+public:
+//	tim4_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
+//							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
+	tim4_pwm(uint8_t ch_num): tim_pwm(ch_num){}
+	void init(uint8_t pushpull = 0);
+	void enable();
+	void disable() {_TIM4_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
+	void write(uint16_t pwm_val) {_TIM4_(ch_addr) = pwm_val;}
+	operator uint16_t() {return _TIM4_(ch_addr);}
+	tim4_pwm& operator= (const uint16_t& a) {write(a); return *this;}
+	tim4_pwm& operator++ () {write (_TIM4_(ch_addr) + 1); return *this;}
+	tim4_pwm operator++ (int) {write (_TIM4_(ch_addr) + 1); return *this;}
+	tim4_pwm& operator-- () {write (_TIM4_(ch_addr) - 1); return *this;}
+	tim4_pwm operator-- (int) {write (_TIM4_(ch_addr) - 1); return *this;}
+	tim4_pwm& operator+= (const uint16_t& a) {write (_TIM4_(ch_addr) + a); return *this;}
+	tim4_pwm& operator-= (const uint16_t& a) {write (_TIM4_(ch_addr) - a); return *this;}
+	//uint8_t pwmMode, centerMode, direction, polarity;
+	//uint16_t prescaler, depth;
+
+private:
+	//uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
+};
+
+class timer1: public timer
+{
+public:
+	timer1(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF): timer(prsclr, depth) {}
+	uint16_t BDTR;
+
+	void init() {timer1_init();}
 	void config();
 	void enableOnly() {BB_TIM1_CR1_CEN = 1;}
 	void enable(uint16_t count = 0);
@@ -263,25 +374,8 @@ public:
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
 
-	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
-
-	void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
-	void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
-	void setCC2IRQ(uint8_t bit=1)		{DIER &= ~0x0004; DIER |= bit<<2;}
-	void setCC3IRQ(uint8_t bit=1)		{DIER &= ~0x0008; DIER |= bit<<3;}
-	void setCC4IRQ(uint8_t bit=1)		{DIER &= ~0x0010; DIER |= bit<<4;}
 	void setCOMIRQ(uint8_t bit=1)		{DIER &= ~0x0020; DIER |= bit<<5;} //tim1 only
-	void setTriggerIRQ(uint8_t bit=1)	{DIER &= ~0x0040; DIER |= bit<<6;}
 	void setBreakIRQ(uint8_t bit=1)		{DIER &= ~0x0080; DIER |= bit<<7;} //tim1 only
-
-	void setCC1value(uint16_t val) {CCR1 = val;}
-	void setCC2value(uint16_t val) {CCR2 = val;}
-	void setCC3value(uint16_t val) {CCR3 = val;}
-	void setCC4value(uint16_t val) {CCR4 = val;}
-
-	void setDepth(uint16_t val) {ARR = val;}
-	void setPrescaler(uint16_t val) {PSC = val;}
-	void setRepetitions(uint16_t val) {RCR = val;} //tim1 only
 
 	void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);
@@ -347,36 +441,10 @@ public:
 private:
 };
 
-class timer2
+class timer2: public timer
 {
 public:
-	timer2(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
-			 CR1	(0x0000), //basic configuration and enable (bit 0)
-			 CR2	(0x0000), //master mode and Hall sensor
-			 SMCR	(0x0000), //slave mode control
-			 DIER	(0x0000), //interrupt enable
-			 //SR	(0x0000), //status, non-configurable, bits must be cleared inside ISRs.
-			 //EGR	(0x0000), //event generator. UG here, the rest emulates events (non-configurable)
-			 CCMR1	(0x0000), //capture/compare mode
-			 CCMR2	(0x0000),
-			 CCER	(0x0000), //capture/compare enable
-			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
-			 PSC	(prsclr), //prescaler
-			 ARR	(depth),  //depth of the counter aka auto-reload
-			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
-			 CCR1	(0x0000), //capture/compare value. Read-only in input
-			 CCR2	(0x0000),
-			 CCR3	(0x0000),
-			 CCR4	(0x0000),
-			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
-			 DCR	(0x0000), //dma control
-			 DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
-			 {};
-
-	uint16_t CR1, CR2, SMCR, DIER, // SR, EGR,
-			CCMR1, CCMR2, CCER, PSC, ARR, RCR, // CNT,
-			CCR1, CCR2, CCR3, CCR4, BDTR, DCR, DMAR;
-	//uint32_t DMAR; //32 bits in tim1 only
+	timer2(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF): timer(prsclr, depth) {}
 
  	void init() {timer2_init();}
 	void config();
@@ -388,23 +456,6 @@ public:
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
-
-	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
-
-	void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
-	void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
-	void setCC2IRQ(uint8_t bit=1)		{DIER &= ~0x0004; DIER |= bit<<2;}
-	void setCC3IRQ(uint8_t bit=1)		{DIER &= ~0x0008; DIER |= bit<<3;}
-	void setCC4IRQ(uint8_t bit=1)		{DIER &= ~0x0010; DIER |= bit<<4;}
-	void setTriggerIRQ(uint8_t bit=1)	{DIER &= ~0x0040; DIER |= bit<<6;}
-
-	void setCC1value(uint16_t val) {CCR1 = val;}
-	void setCC2value(uint16_t val) {CCR2 = val;}
-	void setCC3value(uint16_t val) {CCR3 = val;}
-	void setCC4value(uint16_t val) {CCR4 = val;}
-
-	void setDepth(uint16_t val) {ARR = val;}
-	void setPrescaler(uint16_t val) {PSC = val;}
 
 	void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);// {tim2_pwm a(ch_num); a.init();}
@@ -455,36 +506,10 @@ private:
 
 };
 
-class timer3
+class timer3: public timer
 {
 public:
-	timer3(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
-			 CR1	(0x0000), //basic configuration and enable (bit 0)
-			 CR2	(0x0000), //master mode and Hall sensor
-			 SMCR	(0x0000), //slave mode control
-			 DIER	(0x0000), //interrupt enable
-			 //SR	(0x0000), //status, non-configurable, bits must be cleared inside ISRs.
-			 //EGR	(0x0000), //event generator. UG here, the rest emulates events (non-configurable)
-			 CCMR1	(0x0000), //capture/compare mode
-			 CCMR2	(0x0000),
-			 CCER	(0x0000), //capture/compare enable
-			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
-			 PSC	(prsclr), //prescaler
-			 ARR	(depth),  //depth of the counter aka auto-reload
-			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
-			 CCR1	(0x0000), //capture/compare value. Read-only in input
-			 CCR2	(0x0000),
-			 CCR3	(0x0000),
-			 CCR4	(0x0000),
-			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
-			 DCR	(0x0000), //dma control
-			 DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
-			 {};
-
-	uint16_t CR1, CR2, SMCR, DIER, // SR, EGR,
-			CCMR1, CCMR2, CCER, PSC, ARR, RCR, // CNT,
-			CCR1, CCR2, CCR3, CCR4, BDTR, DCR, DMAR;
-	//uint32_t DMAR; //32 bits in tim1 only
+	timer3(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF): timer(prsclr, depth) {}
 
  	void init() {timer3_init();}
 	void config();
@@ -496,23 +521,6 @@ public:
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
-
-	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
-
-	void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
-	void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
-	void setCC2IRQ(uint8_t bit=1)		{DIER &= ~0x0004; DIER |= bit<<2;}
-	void setCC3IRQ(uint8_t bit=1)		{DIER &= ~0x0008; DIER |= bit<<3;}
-	void setCC4IRQ(uint8_t bit=1)		{DIER &= ~0x0010; DIER |= bit<<4;}
-	void setTriggerIRQ(uint8_t bit=1)	{DIER &= ~0x0040; DIER |= bit<<6;}
-
-	void setCC1value(uint16_t val) {CCR1 = val;}
-	void setCC2value(uint16_t val) {CCR2 = val;}
-	void setCC3value(uint16_t val) {CCR3 = val;}
-	void setCC4value(uint16_t val) {CCR4 = val;}
-
-	void setDepth(uint16_t val) {ARR = val;}
-	void setPrescaler(uint16_t val) {PSC = val;}
 
 	void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);
@@ -563,36 +571,10 @@ private:
 
 };
 
-class timer4
+class timer4: public timer
 {
 public:
-	timer4(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
-			 CR1	(0x0000), //basic configuration and enable (bit 0)
-			 CR2	(0x0000), //master mode and Hall sensor
-			 SMCR	(0x0000), //slave mode control
-			 DIER	(0x0000), //interrupt enable
-			 //SR	(0x0000), //status, non-configurable, bits must be cleared inside ISRs.
-			 //EGR	(0x0000), //event generator. UG here, the rest emulates events (non-configurable)
-			 CCMR1	(0x0000), //capture/compare mode
-			 CCMR2	(0x0000),
-			 CCER	(0x0000), //capture/compare enable
-			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
-			 PSC	(prsclr), //prescaler
-			 ARR	(depth),  //depth of the counter aka auto-reload
-			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
-			 CCR1	(0x0000), //capture/compare value. Read-only in input
-			 CCR2	(0x0000),
-			 CCR3	(0x0000),
-			 CCR4	(0x0000),
-			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
-			 DCR	(0x0000), //dma control
-			 DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
-			 {};
-
-	uint16_t CR1, CR2, SMCR, DIER, // SR, EGR,
-			CCMR1, CCMR2, CCER, PSC, ARR, RCR, // CNT,
-			CCR1, CCR2, CCR3, CCR4, BDTR, DCR, DMAR;
-	//uint32_t DMAR; //32 bits in tim1 only
+	timer4(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF): timer(prsclr, depth) {}
 
  	void init() {timer4_init();}
 	void config();
@@ -604,23 +586,6 @@ public:
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
-
-	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
-
-	void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
-	void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
-	void setCC2IRQ(uint8_t bit=1)		{DIER &= ~0x0004; DIER |= bit<<2;}
-	void setCC3IRQ(uint8_t bit=1)		{DIER &= ~0x0008; DIER |= bit<<3;}
-	void setCC4IRQ(uint8_t bit=1)		{DIER &= ~0x0010; DIER |= bit<<4;}
-	void setTriggerIRQ(uint8_t bit=1)	{DIER &= ~0x0040; DIER |= bit<<6;}
-
-	void setCC1value(uint16_t val) {CCR1 = val;}
-	void setCC2value(uint16_t val) {CCR2 = val;}
-	void setCC3value(uint16_t val) {CCR3 = val;}
-	void setCC4value(uint16_t val) {CCR4 = val;}
-
-	void setDepth(uint16_t val) {ARR = val;}
-	void setPrescaler(uint16_t val) {PSC = val;}
 
 	void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);// {tim2_pwm a(ch_num); a.init();}
