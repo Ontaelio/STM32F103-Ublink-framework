@@ -107,7 +107,7 @@ Timer4 Channel 4 | PB9 |
 
 * void **init([uint8_t pushpull = 0])**
 
-Initializes the SS pin and its GPIO port. If `pushpull` is non-zero, the pin will be configured as a push-pull output, else an open drain output (default). `init()` checks whether the timer outputs were remapped and adjusts accordingly. Timer1 complementary outputs not supported.
+Initializes the PWM output pin and its GPIO port. If `pushpull` is non-zero, the pin will be configured as a push-pull output, else an open drain output (default). `init()` checks whether the timer outputs were remapped and adjusts accordingly. Timer1 complementary outputs not supported.
 
 *Note: `init` doesn't initialize the timer, `timerX_init()` must be used.*
 
@@ -175,7 +175,7 @@ Enables the timer setting the `CEN` bit in CR1.
 
 * void **disable()**
 
-Enables the timer resetting the `CEN` bit in CR1.
+Disables the timer resetting the `CEN` bit in CR1.
 
 * void **enable([uint16_t count = 0])**
 
@@ -308,7 +308,7 @@ Set (1, default) or reset (0) the corresponding interrupt enable bits (DIER).
 
 * void **pwmSetup(uint8_t center, uint8_t dir)**
 
-Sets up PWM mode. `center` corresponds to the CMS bits in CR1; `dir` is the DIR bit. `center == 1` selects center-aligned mode, while `dir` selects the counter direction if `center` is zero. Sets the ARPE bit in CR1. This functions doesn't write into the actual register and is similar to the `setMode` function.
+Sets up PWM aligment. `center` corresponds to the CMS bits in CR1; `dir` is the DIR bit. `center == 1` selects center-aligned mode, while `dir` selects the counter direction if `center` is zero (1 == downcounter). Sets the ARPE bit in CR1. This functions doesn't write into the actual register and is similar to the `setMode` function (i.e. `timerX.enable` or `timerX.config` must be used to set up the control registers).
 
 * void **pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty [, uint8_t pushpull = 0])**
 
@@ -397,6 +397,17 @@ Clear the SR register (all the interrupt/overcapture flags are reset).
 * void **breakEvent()** *Timer1 only*
 
 Generate an event (set a bit in the EGR register).
+
+## Abstract classes
+
+The library provides two abstract classes:
+
+* `tim_pwm`
+* `timer`
+
+These classes contain definitions for all the functions and variables of the corresponding enherited objects described above except for the overloaded operators, type conversions and functions/variables specific for the Timer 1 only. These abstract classes can be used in third-party libraries and functions that need objects of `timX_pwm` or `timerX` types as variable pointers not tied to a specific timer.
+
+Also, the default constructors and all the `set` functions that change internal variables and do not write directly into the registers are defined in the abstract classes.
 
 ## Examples
 
