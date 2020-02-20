@@ -4,7 +4,7 @@
  *
  * Dpcumentation available in the provided MD file.
  *
- * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
+ * (c) 2020 Dmitry Reznikov ontaelio(at)gmail.com
  *
  * Can be freely used according to the GNU GPL license.
  */
@@ -38,6 +38,8 @@
 #define ADC_JDR3	0x44
 #define ADC_JDR4	0x48
 #define ADC_DR		0x4C
+
+#ifndef __STM32F10x_H ////avoid redefining if CMSIS library present
 
 //ADC values
 #define ADC_SR_AWD		(uint32_t)0x00000001
@@ -73,11 +75,11 @@
 //reserved
 #define ADC_CR2_EXTSEL	(uint32_t)0x000E0000 //mask
 #define ADC_CR2_EXTTRIG	(uint32_t)0x00100000
-#define ADC_CR2_JSWSTART(uint32_t)0x00200000
+#define ADC_CR2_JSWSTART	(uint32_t)0x00200000
 #define ADC_CR2_SWSTART	(uint32_t)0x00400000
 #define ADC_CR2_TSVREFE	(uint32_t)0x00800000
 
-
+#endif //CMSIS end
 
 
 

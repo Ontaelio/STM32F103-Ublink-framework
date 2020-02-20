@@ -56,12 +56,24 @@ public:
 	void start() {_ADC1_(ADC_CR2) |= ADC_CR2_CONT;	_ADC1_(ADC_CR2) |= ADC_CR2_ADON;}
 	void stop() {_ADC1_(ADC_CR2) &= ~ADC_CR2_CONT;}
 	void read() {_ADC1_(ADC_CR2) |= ADC_CR2_ADON;} //convert once
-	void speed(uint_fast8_t cha, uint8_t cycles)
-			{_ADC1_(ADC_SMPR2) &= ~(7 << cha*3);_ADC1_(ADC_SMPR2) |= cycles << (cha*3);}
+	void speed(uint_fast8_t cha, uint8_t cycles);
 	void priority(uint8_t pri) {_DMA1_(DMA_CCR1) &= ~DMA_CCR_PL; _DMA1_(DMA_CCR1) |= (pri << 12);}
 
-protected:
+	void external(uint8_t regtrig);
+	void externalStart() {_ADC1_(ADC_CR2) |= ADC_CR2_CONT; _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
+	void externalRead() { _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
 
+	void injectInit(uint8_t jtrigger = 7);
+	void inject(uint8_t cha1);
+	void inject(uint8_t cha1, uint8_t cha2);
+	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3);
+	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3, uint8_t cha4);
+	void injectStart(uint_fast8_t dowait = 1);
+	void injectClear() {_ADC1_(ADC_SR) &= ~ADC_SR_JEOC;}
+	uint16_t injectRead(uint_fast8_t jcha);
+
+private:
+	void injectWaitForResult();
 };
 
 //single injected channel object
@@ -69,8 +81,9 @@ class analog_inject
 {
 	analog_inject(uint_fast8_t dadcma, uint_fast8_t cha) :
 			cnum (cha), adc ((volatile uint32_t *)(0x40012400 + 0x0000400 * (dadcma - 1))) {}
-	void init(uint8_t cycles = 0);
-	uint16_t read();
+	void init(uint8_t jtrigger = 7, uint8_t cycles = 0);
+	void inject();
+	uint16_t read(uint8_t jch) {return *(adc + ADC_JSQR/4 + jch);} //JSQR is right before JDR1
 	void autoInject(uint8_t b = 1);
 
 protected:
@@ -78,18 +91,12 @@ protected:
 	volatile uint32_t* adc;
 };
 
-class analog_watchdog
-{
-
-};
-
-class adc2
-{
-
-};
 
 void adc1_init();
 void adc2_init();
+
+void adc1_injectSetup(uint_fast8_t jtrigger);
+
 
 
 #endif /* STM32F103_ADC_FUNC_H_ */
