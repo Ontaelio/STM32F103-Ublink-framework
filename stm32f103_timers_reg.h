@@ -118,10 +118,31 @@
 #define BB_TIM4_CR1_CEN     *(volatile uint32_t *) 0x42010000
 
 //Update disable (UDIS)
-#define BB_TIM1_CR1_UDIS     *(volatile uint32_t *) 0x42258004
-#define BB_TIM2_CR1_UDIS     *(volatile uint32_t *) 0x42000004
-#define BB_TIM3_CR1_UDIS     *(volatile uint32_t *) 0x42008004
-#define BB_TIM4_CR1_UDIS     *(volatile uint32_t *) 0x42010004
+#define BB_TIM1_CR1_UDIS	*(volatile uint32_t *) 0x42258004
+#define BB_TIM2_CR1_UDIS	*(volatile uint32_t *) 0x42000004
+#define BB_TIM3_CR1_UDIS	*(volatile uint32_t *) 0x42008004
+#define BB_TIM4_CR1_UDIS	*(volatile uint32_t *) 0x42010004
+
+//Capture/Compare output enables
+#define BB_TIM1_CCER_CC1E	*(volatile uint32_t *) 0x42258400
+#define BB_TIM1_CCER_CC2E	*(volatile uint32_t *) 0x42258410
+#define BB_TIM1_CCER_CC3E	*(volatile uint32_t *) 0x42258420
+#define BB_TIM1_CCER_CC4E	*(volatile uint32_t *) 0x42258430
+
+#define BB_TIM2_CCER_CC1E	*(volatile uint32_t *) 0x42000400
+#define BB_TIM2_CCER_CC2E	*(volatile uint32_t *) 0x42000410
+#define BB_TIM2_CCER_CC3E	*(volatile uint32_t *) 0x42000420
+#define BB_TIM2_CCER_CC4E	*(volatile uint32_t *) 0x42000430
+
+#define BB_TIM3_CCER_CC1E	*(volatile uint32_t *) 0x42008400
+#define BB_TIM3_CCER_CC2E	*(volatile uint32_t *) 0x42008410
+#define BB_TIM3_CCER_CC3E	*(volatile uint32_t *) 0x42008420
+#define BB_TIM3_CCER_CC4E	*(volatile uint32_t *) 0x42008430
+
+#define BB_TIM4_CCER_CC1E	*(volatile uint32_t *) 0x42010400
+#define BB_TIM4_CCER_CC2E	*(volatile uint32_t *) 0x42010410
+#define BB_TIM4_CCER_CC3E	*(volatile uint32_t *) 0x42010420
+#define BB_TIM4_CCER_CC4E	*(volatile uint32_t *) 0x42010430
 
 //timer1 interrupts
 #define BB_TIM1_DIER_UIE 	*(volatile uint32_t *) 0x42258180
@@ -392,5 +413,12 @@
 #define TIMX_DCR_DBA	0x001F //mask
 #define TIMX_DCR_DBL	0x1F00 //mask
 
+//EXTI registers
+#define EXTI_IMR	*(volatile uint32_t *) 0x40010400
+#define EXTI_EMR	*(volatile uint32_t *) 0x40010404
+#define EXTI_RTSR	*(volatile uint32_t *) 0x40010408
+#define EXTI_FTSR	*(volatile uint32_t *) 0x4001040C
+#define EXTI_SWIER	*(volatile uint32_t *) 0x40010410
+#define EXTI_PR		*(volatile uint32_t *) 0x40010414
 
 #endif /* STM32F103_TIMERS_REG_H_ */

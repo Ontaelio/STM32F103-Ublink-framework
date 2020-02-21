@@ -193,6 +193,10 @@ public:
 	virtual void slave(uint16_t sms, uint16_t ts) =0;
 
 	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
+	void setCC1mode(uint16_t mode, uint8_t plrty = 0, uint8_t oe = 1);
+	void setCC2mode(uint16_t mode, uint8_t plrty = 0, uint8_t oe = 1);
+	void setCC3mode(uint16_t mode, uint8_t plrty = 0, uint8_t oe = 1);
+	void setCC4mode(uint16_t mode, uint8_t plrty = 0, uint8_t oe = 1);
 
 	void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
 	void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
@@ -360,7 +364,7 @@ private:
 class timer1: public timer
 {
 public:
-	timer1(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF): timer(prsclr, depth) {}
+	timer1(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF): timer(prsclr, depth), BDTR(TIMX_BDTR_MOE) {}
 	uint16_t BDTR;
 
 	void init() {timer1_init();}
@@ -397,10 +401,16 @@ public:
 	void IRQ_TRG_COM_disable() {IRQ_0TO31_CER |= IRQ_TIM1_TRG_COM;}
 	void IRQ_CC_disable() {IRQ_0TO31_CER |= IRQ_TIM1_CC;}
 
+	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM1_(TIMX_CCR1) = val;}
 	void writeCC2(uint16_t val) {_TIM1_(TIMX_CCR2) = val;}
 	void writeCC3(uint16_t val) {_TIM1_(TIMX_CCR3) = val;}
 	void writeCC4(uint16_t val) {_TIM1_(TIMX_CCR4) = val;}
+
+	void CC1output(uint8_t bit) {BB_TIM1_CCER_CC1E = bit;}
+	void CC2output(uint8_t bit) {BB_TIM1_CCER_CC2E = bit;}
+	void CC3output(uint8_t bit) {BB_TIM1_CCER_CC3E = bit;}
+	void CC4output(uint8_t bit) {BB_TIM1_CCER_CC4E = bit;}
 
 	//BB (atomic) stuff
 	//update event enable/disable (CR1->UDIS)
@@ -466,10 +476,16 @@ public:
 	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM2;}
 	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM2;}
 
+	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM2_(TIMX_CCR1) = val;}
 	void writeCC2(uint16_t val) {_TIM2_(TIMX_CCR2) = val;}
 	void writeCC3(uint16_t val) {_TIM2_(TIMX_CCR3) = val;}
 	void writeCC4(uint16_t val) {_TIM2_(TIMX_CCR4) = val;}
+
+	void CC1output(uint8_t bit) {BB_TIM2_CCER_CC1E = bit;}
+	void CC2output(uint8_t bit) {BB_TIM2_CCER_CC2E = bit;}
+	void CC3output(uint8_t bit) {BB_TIM2_CCER_CC3E = bit;}
+	void CC4output(uint8_t bit) {BB_TIM2_CCER_CC4E = bit;}
 
 	//BB (atomic) stuff
 	//update event enable/disable (CR1->UDIS)
@@ -531,10 +547,16 @@ public:
 	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM3;}
 	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM3;}
 
+	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM3_(TIMX_CCR1) = val;}
 	void writeCC2(uint16_t val) {_TIM3_(TIMX_CCR2) = val;}
 	void writeCC3(uint16_t val) {_TIM3_(TIMX_CCR3) = val;}
 	void writeCC4(uint16_t val) {_TIM3_(TIMX_CCR4) = val;}
+
+	void CC1output(uint8_t bit) {BB_TIM3_CCER_CC1E = bit;}
+	void CC2output(uint8_t bit) {BB_TIM3_CCER_CC2E = bit;}
+	void CC3output(uint8_t bit) {BB_TIM3_CCER_CC3E = bit;}
+	void CC4output(uint8_t bit) {BB_TIM3_CCER_CC4E = bit;}
 
 	//BB (atomic) stuff
 	//update event enable/disable (CR1->UDIS)
@@ -596,10 +618,16 @@ public:
 	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM4;}
 	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM4;}
 
+	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM4_(TIMX_CCR1) = val;}
 	void writeCC2(uint16_t val) {_TIM4_(TIMX_CCR2) = val;}
 	void writeCC3(uint16_t val) {_TIM4_(TIMX_CCR3) = val;}
 	void writeCC4(uint16_t val) {_TIM4_(TIMX_CCR4) = val;}
+
+	void CC1output(uint8_t bit) {BB_TIM4_CCER_CC1E = bit;}
+	void CC2output(uint8_t bit) {BB_TIM4_CCER_CC2E = bit;}
+	void CC3output(uint8_t bit) {BB_TIM4_CCER_CC3E = bit;}
+	void CC4output(uint8_t bit) {BB_TIM4_CCER_CC4E = bit;}
 
 	//BB (atomic) stuff
 	//update event enable/disable (CR1->UDIS)

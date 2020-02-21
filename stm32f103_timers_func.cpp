@@ -46,6 +46,39 @@ void sysTick_start(uint32_t val, uint8_t intext)
 }
 
 
+void timer::setCC1mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+{
+	CCMR1 &= ~TIMX_CCMR1_OC1M; //clear
+	CCMR1 |= mode<<4; //set CC1 mode
+	if (plrty) CCER |= TIMX_CCER_CC1P; else CCER &= ~(TIMX_CCER_CC1P);
+	if (oe) CCER |= TIMX_CCER_CC1E; else CCER &= ~(TIMX_CCER_CC1E);
+}
+
+void timer::setCC2mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+{
+	CCMR1 &= ~TIMX_CCMR1_OC2M; //clear
+	CCMR1 |= mode<<12; //set CC1 mode
+	if (plrty) CCER |= TIMX_CCER_CC2P; else CCER &= ~(TIMX_CCER_CC2P);
+	if (oe) CCER |= TIMX_CCER_CC2E; else CCER &= ~(TIMX_CCER_CC2E);
+}
+
+void timer::setCC3mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+{
+	CCMR2 &= ~TIMX_CCMR2_OC3M; //clear
+	CCMR2 |= mode<<4; //set CC1 mode
+	if (plrty) CCER |= TIMX_CCER_CC3P; else CCER &= ~(TIMX_CCER_CC3P);
+	if (oe) CCER |= TIMX_CCER_CC3E; else CCER &= ~(TIMX_CCER_CC3E);
+}
+
+void timer::setCC4mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+{
+	CCMR2 &= ~TIMX_CCMR2_OC4M; //clear
+	CCMR2 |= mode<<12; //set CC1 mode
+	if (plrty) CCER |= TIMX_CCER_CC4P; else CCER &= ~(TIMX_CCER_CC4P);
+	if (oe) CCER |= TIMX_CCER_CC4E; else CCER &= ~(TIMX_CCER_CC4E);
+}
+
+
 void tim1_pwm::init(uint8_t pushpull)
 {
 	gpioA_init();
