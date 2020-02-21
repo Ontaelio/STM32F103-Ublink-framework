@@ -1077,14 +1077,14 @@ inline void pinB8_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<0);
 _GPIOB_(GPIOX_CRH) |= (8)<<0;
-_GPIOB_(GPIOX_ODR) |= (1)<<0;
+_GPIOB_(GPIOX_ODR) |= (1)<<8;
 }
 
 inline void pinB8_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<0);
 _GPIOB_(GPIOX_CRH) |= (8)<<0;
-_GPIOB_(GPIOX_ODR) &= ~(1<<0);
+_GPIOB_(GPIOX_ODR) &= ~(1<<8);
 }
 
 inline void pinB8_Analog()
@@ -1185,14 +1185,14 @@ inline void pinB9_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<4);
 _GPIOB_(GPIOX_CRH) |= (8)<<4;
-_GPIOB_(GPIOX_ODR) |= (1)<<1;
+_GPIOB_(GPIOX_ODR) |= (1)<<9;
 }
 
 inline void pinB9_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<4);
 _GPIOB_(GPIOX_CRH) |= (8)<<4;
-_GPIOB_(GPIOX_ODR) &= ~(1<<1);
+_GPIOB_(GPIOX_ODR) &= ~(1<<9);
 }
 
 inline void pinB9_Analog()
@@ -1293,14 +1293,14 @@ inline void pinB10_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<8);
 _GPIOB_(GPIOX_CRH) |= (8)<<8;
-_GPIOB_(GPIOX_ODR) |= (1)<<2;
+_GPIOB_(GPIOX_ODR) |= (1)<<10;
 }
 
 inline void pinB10_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<8);
 _GPIOB_(GPIOX_CRH) |= (8)<<8;
-_GPIOB_(GPIOX_ODR) &= ~(1<<2);
+_GPIOB_(GPIOX_ODR) &= ~(1<<10);
 }
 
 inline void pinB10_Analog()
@@ -1401,14 +1401,14 @@ inline void pinB11_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<12);
 _GPIOB_(GPIOX_CRH) |= (8)<<12;
-_GPIOB_(GPIOX_ODR) |= (1)<<3;
+_GPIOB_(GPIOX_ODR) |= (1)<<11;
 }
 
 inline void pinB11_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<12);
 _GPIOB_(GPIOX_CRH) |= (8)<<12;
-_GPIOB_(GPIOX_ODR) &= ~(1<<3);
+_GPIOB_(GPIOX_ODR) &= ~(1<<11);
 }
 
 inline void pinB11_Analog()
@@ -1509,14 +1509,14 @@ inline void pinB12_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<16);
 _GPIOB_(GPIOX_CRH) |= (8)<<16;
-_GPIOB_(GPIOX_ODR) |= (1)<<4;
+_GPIOB_(GPIOX_ODR) |= (1)<<12;
 }
 
 inline void pinB12_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<16);
 _GPIOB_(GPIOX_CRH) |= (8)<<16;
-_GPIOB_(GPIOX_ODR) &= ~(1<<4);
+_GPIOB_(GPIOX_ODR) &= ~(1<<12);
 }
 
 inline void pinB12_Analog()
@@ -1617,14 +1617,14 @@ inline void pinB13_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<20);
 _GPIOB_(GPIOX_CRH) |= (8)<<20;
-_GPIOB_(GPIOX_ODR) |= (1)<<5;
+_GPIOB_(GPIOX_ODR) |= (1)<<13;
 }
 
 inline void pinB13_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<20);
 _GPIOB_(GPIOX_CRH) |= (8)<<20;
-_GPIOB_(GPIOX_ODR) &= ~(1<<5);
+_GPIOB_(GPIOX_ODR) &= ~(1<<13);
 }
 
 inline void pinB13_Analog()
@@ -1725,14 +1725,14 @@ inline void pinB14_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<24);
 _GPIOB_(GPIOX_CRH) |= (8)<<24;
-_GPIOB_(GPIOX_ODR) |= (1)<<6;
+_GPIOB_(GPIOX_ODR) |= (1)<<14;
 }
 
 inline void pinB14_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<24);
 _GPIOB_(GPIOX_CRH) |= (8)<<24;
-_GPIOB_(GPIOX_ODR) &= ~(1<<6);
+_GPIOB_(GPIOX_ODR) &= ~(1<<14);
 }
 
 inline void pinB14_Analog()
@@ -1833,14 +1833,14 @@ inline void pinB15_Input_PU()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<28);
 _GPIOB_(GPIOX_CRH) |= (8)<<28;
-_GPIOB_(GPIOX_ODR) |= (1)<<7;
+_GPIOB_(GPIOX_ODR) |= (1)<<15;
 }
 
 inline void pinB15_Input_PD()
 {
 _GPIOB_(GPIOX_CRH) &= ~((4+2+1)<<28);
 _GPIOB_(GPIOX_CRH) |= (8)<<28;
-_GPIOB_(GPIOX_ODR) &= ~(1<<7);
+_GPIOB_(GPIOX_ODR) &= ~(1<<15);
 }
 
 inline void pinB15_Analog()
@@ -3045,14 +3045,14 @@ inline void pinA8_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<0);
 _GPIOA_(GPIOX_CRH) |= (8)<<0;
-_GPIOA_(GPIOX_ODR) |= (1)<<0;
+_GPIOA_(GPIOX_ODR) |= (1)<<8;
 }
 
 inline void pinA8_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<0);
 _GPIOA_(GPIOX_CRH) |= (8)<<0;
-_GPIOA_(GPIOX_ODR) &= ~(1<<0);
+_GPIOA_(GPIOX_ODR) &= ~(1<<8);
 }
 
 inline void pinA8_Analog()
@@ -3153,14 +3153,14 @@ inline void pinA9_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<4);
 _GPIOA_(GPIOX_CRH) |= (8)<<4;
-_GPIOA_(GPIOX_ODR) |= (1)<<1;
+_GPIOA_(GPIOX_ODR) |= (1)<<9;
 }
 
 inline void pinA9_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<4);
 _GPIOA_(GPIOX_CRH) |= (8)<<4;
-_GPIOA_(GPIOX_ODR) &= ~(1<<1);
+_GPIOA_(GPIOX_ODR) &= ~(1<<9);
 }
 
 inline void pinA9_Analog()
@@ -3261,14 +3261,14 @@ inline void pinA10_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<8);
 _GPIOA_(GPIOX_CRH) |= (8)<<8;
-_GPIOA_(GPIOX_ODR) |= (1)<<2;
+_GPIOA_(GPIOX_ODR) |= (1)<<10;
 }
 
 inline void pinA10_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<8);
 _GPIOA_(GPIOX_CRH) |= (8)<<8;
-_GPIOA_(GPIOX_ODR) &= ~(1<<2);
+_GPIOA_(GPIOX_ODR) &= ~(1<<10);
 }
 
 inline void pinA10_Analog()
@@ -3369,14 +3369,14 @@ inline void pinA11_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<12);
 _GPIOA_(GPIOX_CRH) |= (8)<<12;
-_GPIOA_(GPIOX_ODR) |= (1)<<3;
+_GPIOA_(GPIOX_ODR) |= (1)<<11;
 }
 
 inline void pinA11_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<12);
 _GPIOA_(GPIOX_CRH) |= (8)<<12;
-_GPIOA_(GPIOX_ODR) &= ~(1<<3);
+_GPIOA_(GPIOX_ODR) &= ~(1<<11);
 }
 
 inline void pinA11_Analog()
@@ -3477,14 +3477,14 @@ inline void pinA12_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<16);
 _GPIOA_(GPIOX_CRH) |= (8)<<16;
-_GPIOA_(GPIOX_ODR) |= (1)<<4;
+_GPIOA_(GPIOX_ODR) |= (1)<<12;
 }
 
 inline void pinA12_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<16);
 _GPIOA_(GPIOX_CRH) |= (8)<<16;
-_GPIOA_(GPIOX_ODR) &= ~(1<<4);
+_GPIOA_(GPIOX_ODR) &= ~(1<<12);
 }
 
 inline void pinA12_Analog()
@@ -3585,14 +3585,14 @@ inline void pinA13_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<20);
 _GPIOA_(GPIOX_CRH) |= (8)<<20;
-_GPIOA_(GPIOX_ODR) |= (1)<<5;
+_GPIOA_(GPIOX_ODR) |= (1)<<13;
 }
 
 inline void pinA13_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<20);
 _GPIOA_(GPIOX_CRH) |= (8)<<20;
-_GPIOA_(GPIOX_ODR) &= ~(1<<5);
+_GPIOA_(GPIOX_ODR) &= ~(1<<13);
 }
 
 inline void pinA13_Analog()
@@ -3693,14 +3693,14 @@ inline void pinA14_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<24);
 _GPIOA_(GPIOX_CRH) |= (8)<<24;
-_GPIOA_(GPIOX_ODR) |= (1)<<6;
+_GPIOA_(GPIOX_ODR) |= (1)<<14;
 }
 
 inline void pinA14_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<24);
 _GPIOA_(GPIOX_CRH) |= (8)<<24;
-_GPIOA_(GPIOX_ODR) &= ~(1<<6);
+_GPIOA_(GPIOX_ODR) &= ~(1<<14);
 }
 
 inline void pinA14_Analog()
@@ -3801,14 +3801,14 @@ inline void pinA15_Input_PU()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<28);
 _GPIOA_(GPIOX_CRH) |= (8)<<28;
-_GPIOA_(GPIOX_ODR) |= (1)<<7;
+_GPIOA_(GPIOX_ODR) |= (1)<<15;
 }
 
 inline void pinA15_Input_PD()
 {
 _GPIOA_(GPIOX_CRH) &= ~((4+2+1)<<28);
 _GPIOA_(GPIOX_CRH) |= (8)<<28;
-_GPIOA_(GPIOX_ODR) &= ~(1<<7);
+_GPIOA_(GPIOX_ODR) &= ~(1<<15);
 }
 
 inline void pinA15_Analog()
@@ -5013,14 +5013,14 @@ inline void pinC8_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<0);
 _GPIOC_(GPIOX_CRH) |= (8)<<0;
-_GPIOC_(GPIOX_ODR) |= (1)<<0;
+_GPIOC_(GPIOX_ODR) |= (1)<<8;
 }
 
 inline void pinC8_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<0);
 _GPIOC_(GPIOX_CRH) |= (8)<<0;
-_GPIOC_(GPIOX_ODR) &= ~(1<<0);
+_GPIOC_(GPIOX_ODR) &= ~(1<<8);
 }
 
 inline void pinC8_Analog()
@@ -5121,14 +5121,14 @@ inline void pinC9_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<4);
 _GPIOC_(GPIOX_CRH) |= (8)<<4;
-_GPIOC_(GPIOX_ODR) |= (1)<<1;
+_GPIOC_(GPIOX_ODR) |= (1)<<9;
 }
 
 inline void pinC9_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<4);
 _GPIOC_(GPIOX_CRH) |= (8)<<4;
-_GPIOC_(GPIOX_ODR) &= ~(1<<1);
+_GPIOC_(GPIOX_ODR) &= ~(1<<9);
 }
 
 inline void pinC9_Analog()
@@ -5229,14 +5229,14 @@ inline void pinC10_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<8);
 _GPIOC_(GPIOX_CRH) |= (8)<<8;
-_GPIOC_(GPIOX_ODR) |= (1)<<2;
+_GPIOC_(GPIOX_ODR) |= (1)<<10;
 }
 
 inline void pinC10_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<8);
 _GPIOC_(GPIOX_CRH) |= (8)<<8;
-_GPIOC_(GPIOX_ODR) &= ~(1<<2);
+_GPIOC_(GPIOX_ODR) &= ~(1<<10);
 }
 
 inline void pinC10_Analog()
@@ -5337,14 +5337,14 @@ inline void pinC11_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<12);
 _GPIOC_(GPIOX_CRH) |= (8)<<12;
-_GPIOC_(GPIOX_ODR) |= (1)<<3;
+_GPIOC_(GPIOX_ODR) |= (1)<<11;
 }
 
 inline void pinC11_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<12);
 _GPIOC_(GPIOX_CRH) |= (8)<<12;
-_GPIOC_(GPIOX_ODR) &= ~(1<<3);
+_GPIOC_(GPIOX_ODR) &= ~(1<<11);
 }
 
 inline void pinC11_Analog()
@@ -5445,14 +5445,14 @@ inline void pinC12_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<16);
 _GPIOC_(GPIOX_CRH) |= (8)<<16;
-_GPIOC_(GPIOX_ODR) |= (1)<<4;
+_GPIOC_(GPIOX_ODR) |= (1)<<12;
 }
 
 inline void pinC12_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<16);
 _GPIOC_(GPIOX_CRH) |= (8)<<16;
-_GPIOC_(GPIOX_ODR) &= ~(1<<4);
+_GPIOC_(GPIOX_ODR) &= ~(1<<12);
 }
 
 inline void pinC12_Analog()
@@ -5553,14 +5553,14 @@ inline void pinC13_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<20);
 _GPIOC_(GPIOX_CRH) |= (8)<<20;
-_GPIOC_(GPIOX_ODR) |= (1)<<5;
+_GPIOC_(GPIOX_ODR) |= (1)<<13;
 }
 
 inline void pinC13_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<20);
 _GPIOC_(GPIOX_CRH) |= (8)<<20;
-_GPIOC_(GPIOX_ODR) &= ~(1<<5);
+_GPIOC_(GPIOX_ODR) &= ~(1<<13);
 }
 
 inline void pinC13_Analog()
@@ -5661,14 +5661,14 @@ inline void pinC14_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<24);
 _GPIOC_(GPIOX_CRH) |= (8)<<24;
-_GPIOC_(GPIOX_ODR) |= (1)<<6;
+_GPIOC_(GPIOX_ODR) |= (1)<<14;
 }
 
 inline void pinC14_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<24);
 _GPIOC_(GPIOX_CRH) |= (8)<<24;
-_GPIOC_(GPIOX_ODR) &= ~(1<<6);
+_GPIOC_(GPIOX_ODR) &= ~(1<<14);
 }
 
 inline void pinC14_Analog()
@@ -5769,14 +5769,14 @@ inline void pinC15_Input_PU()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<28);
 _GPIOC_(GPIOX_CRH) |= (8)<<28;
-_GPIOC_(GPIOX_ODR) |= (1)<<7;
+_GPIOC_(GPIOX_ODR) |= (1)<<15;
 }
 
 inline void pinC15_Input_PD()
 {
 _GPIOC_(GPIOX_CRH) &= ~((4+2+1)<<28);
 _GPIOC_(GPIOX_CRH) |= (8)<<28;
-_GPIOC_(GPIOX_ODR) &= ~(1<<7);
+_GPIOC_(GPIOX_ODR) &= ~(1<<15);
 }
 
 inline void pinC15_Analog()
@@ -6106,7 +6106,5 @@ inline void resetPinC15()
 {
 _GPIOC_(GPIOX_BRR) = (1<<15);
 }
-
-
 
 #endif /* STM32F103_GPIO_FUNC_H_ */
