@@ -43,6 +43,20 @@ public:
 	uint16_t read() {return *(adc + 19);}
 	operator uint16_t() {return *(adc + 19);}
 
+	void injectInit(uint8_t jtrigger = 7); //start triggered
+	void injectAuto() {*(adc + ADC_CR2/4) &= ~(ADC_CR2_JEXTTRIG); *(adc + ADC_CR1/4) |= ADC_CR1_JAUTO;} //start auto
+	void injectTriggered() {*(adc + ADC_CR2/4) |= ADC_CR2_JEXTTRIG; *(adc + ADC_CR1/4) &= ~(ADC_CR1_JAUTO);} //turn off auto
+	void inject(uint8_t cha1);
+	void inject(uint8_t cha1, uint8_t cha2);
+	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3);
+	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3, uint8_t cha4);
+	void injectStart(uint_fast8_t dowait = 1); //manually trigger with JSWSTART and wait for result with dowait==1
+	void injectClear() {*(adc + ADC_SR/4) &= ~ADC_SR_JEOC;}
+	uint16_t injectRead(uint_fast8_t jcha);
+
+private:
+	void injectWaitForResult();
+
 protected:
 	uint_fast8_t cnum;
 	volatile uint32_t* adc;
@@ -65,17 +79,16 @@ public:
 	void externalStart() {_ADC1_(ADC_CR2) |= ADC_CR2_CONT; _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
 	void externalRead() { _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
 
-	void injectInit(uint8_t jtrigger = 7);
+	void injectInit(uint8_t jtrigger = 7); //start triggered
+	void injectAuto() {_ADC1_(ADC_CR2) &= ~(ADC_CR2_JEXTTRIG); _ADC1_(ADC_CR1) |= ADC_CR1_JAUTO;} //start auto
+	void injectTriggered() {_ADC1_(ADC_CR2) |= ADC_CR2_JEXTTRIG; _ADC1_(ADC_CR1) &= ~(ADC_CR1_JAUTO);} //turn off auto
 	void inject(uint8_t cha1);
 	void inject(uint8_t cha1, uint8_t cha2);
 	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3);
 	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3, uint8_t cha4);
-	void injectAuto() {_ADC1_(ADC_CR2) &= ~(ADC_CR2_JEXTTRIG); _ADC1_(ADC_CR1) |= ADC_CR1_JAUTO;}
-	void injectTriggered() {_ADC1_(ADC_CR2) |= ADC_CR2_JEXTTRIG; _ADC1_(ADC_CR1) &= ~(ADC_CR1_JAUTO);} //turn off auto
-	void injectStart(uint_fast8_t dowait = 1);
+	void injectStart(uint_fast8_t dowait = 1); //manually trigger with JSWSTART and wait for result with dowait==1
 	void injectClear() {_ADC1_(ADC_SR) &= ~ADC_SR_JEOC;}
 	uint16_t injectRead(uint_fast8_t jcha);
-
 
 private:
 	void injectWaitForResult();

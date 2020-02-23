@@ -11,6 +11,8 @@
 
 #include <stm32f103_adc_func.h>
 
+/******* BASIC MODE, ADC2 **********/
+
 void analog_pin::init(uint8_t cycles)
 {
 	adc2_init();
@@ -26,6 +28,8 @@ uint16_t analog_pin::read()
 	uint32_t res = _ADC2_(ADC_DR);
 	return (uint16_t)(res & 0xFFFF);
 }
+
+/******* CONTINUOUS MODE, ADC1 and ADC2 **********/
 
 void analog_cont::init(uint8_t cycles)
 {
@@ -47,6 +51,53 @@ void analog_cont::start()
 	*(adc + ADC_CR2/4) |= ADC_CR2_ADON; // start regular conversion
 	while(!(*(adc) & ADC_SR_EOC)); // ADC_SR = 0, wait for first conversion to complete
 }
+
+void analog_cont::injectInit(uint8_t jtrigger)
+{
+	*(adc + ADC_CR2/4) |= ADC_CR2_JEXTTRIG;
+	*(adc + ADC_CR2/4) &= ~(ADC_CR2_JEXTSEL);
+	*(adc + ADC_CR2/4) |= (jtrigger << 12); //set JEXTSEL
+}
+
+void analog_cont::injectWaitForResult()
+{
+	while (!(*(adc + ADC_SR/4) & ADC_SR_JEOC)) {}
+	*(adc + ADC_SR/4) &= ~ADC_SR_JEOC;
+}
+
+void analog_cont::inject(uint8_t cha1)
+{
+	*(adc + ADC_JSQR/4) = cha1 << 15;
+}
+
+void analog_cont::inject(uint8_t cha1, uint8_t cha2)
+{
+	*(adc + ADC_JSQR/4) = (1 << 20) | (cha1 << 10) | (cha2 << 15);
+}
+
+void analog_cont::inject(uint8_t cha1, uint8_t cha2, uint8_t cha3)
+{
+	*(adc + ADC_JSQR/4) = (2 << 20) | (cha1 << 5) | (cha2 << 10) | (cha3 << 15);
+}
+
+void analog_cont::inject(uint8_t cha1, uint8_t cha2, uint8_t cha3, uint8_t cha4)
+{
+	*(adc + ADC_JSQR/4) = (2 << 20) | (cha1) | (cha2 << 5) | (cha3 << 10) | (cha4 << 15);
+}
+
+void analog_cont::injectStart(uint_fast8_t dowait)
+{
+	*(adc + ADC_CR2/4) |= ADC_CR2_JSWSTART;
+	if (dowait) injectWaitForResult();
+}
+
+uint16_t analog_cont::injectRead(uint_fast8_t jcha)
+{
+	uint16_t res = *(adc + 0x38/4 + jcha*4);
+	return res;
+}
+
+/******* SCAN MODE, ADC1 **********/
 
 void analog_scan::init(uint16_t* targ, uint_fast8_t num, ...)
 {
