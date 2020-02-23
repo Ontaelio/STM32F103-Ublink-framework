@@ -17,6 +17,19 @@
 #define _ADC1_(mem_offset) (*(volatile uint32_t *)(0x40012400 + (mem_offset)))
 #define _ADC2_(mem_offset) (*(volatile uint32_t *)(0x40012800 + (mem_offset)))
 
+//bitband atomic access addresses
+//base addresses
+#define BB_ADC1_BASE		*(volatile uint32_t *) 0x42248000
+#define BB_ADC2_BASE		*(volatile uint32_t *) 0x42250000
+
+//IRQs
+#define BB_ADC1_CR1_EOCIE	*(volatile uint32_t *) 0x42248094
+#define BB_ADC1_CR1_AWDIE	*(volatile uint32_t *) 0x42248098
+#define BB_ADC1_CR1_JEOCIE	*(volatile uint32_t *) 0x4224809C
+#define BB_ADC2_CR1_EOCIE	*(volatile uint32_t *) 0x42250094
+#define BB_ADC2_CR1_AWDIE	*(volatile uint32_t *) 0x42250098
+#define BB_ADC2_CR1_JEOCIE	*(volatile uint32_t *) 0x4225009C
+
 //ADC registers
 #define ADC_SR		0x00
 #define ADC_CR1		0x04

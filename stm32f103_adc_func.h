@@ -59,7 +59,9 @@ public:
 	void speed(uint_fast8_t cha, uint8_t cycles);
 	void priority(uint8_t pri) {_DMA1_(DMA_CCR1) &= ~DMA_CCR_PL; _DMA1_(DMA_CCR1) |= (pri << 12);}
 
+	//external trigger on regular channels
 	void external(uint8_t regtrig);
+	//these for use only in mode 7 (SWSTART)
 	void externalStart() {_ADC1_(ADC_CR2) |= ADC_CR2_CONT; _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
 	void externalRead() { _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
 
@@ -68,34 +70,69 @@ public:
 	void inject(uint8_t cha1, uint8_t cha2);
 	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3);
 	void inject(uint8_t cha1, uint8_t cha2, uint8_t cha3, uint8_t cha4);
+	void injectAuto() {_ADC1_(ADC_CR2) &= ~(ADC_CR2_JEXTTRIG); _ADC1_(ADC_CR1) |= ADC_CR1_JAUTO;}
+	void injectTriggered() {_ADC1_(ADC_CR2) |= ADC_CR2_JEXTTRIG; _ADC1_(ADC_CR1) &= ~(ADC_CR1_JAUTO);} //turn off auto
 	void injectStart(uint_fast8_t dowait = 1);
 	void injectClear() {_ADC1_(ADC_SR) &= ~ADC_SR_JEOC;}
 	uint16_t injectRead(uint_fast8_t jcha);
+
 
 private:
 	void injectWaitForResult();
 };
 
-//single injected channel object
-class analog_inject
-{
-	analog_inject(uint_fast8_t dadcma, uint_fast8_t cha) :
-			cnum (cha), adc ((volatile uint32_t *)(0x40012400 + 0x0000400 * (dadcma - 1))) {}
-	void init(uint8_t jtrigger = 7, uint8_t cycles = 0);
-	void inject();
-	uint16_t read(uint8_t jch) {return *(adc + ADC_JSQR/4 + jch);} //JSQR is right before JDR1
-	void autoInject(uint8_t b = 1);
-
-protected:
-	uint_fast8_t cnum;
-	volatile uint32_t* adc;
-};
-
-
 void adc1_init();
 void adc2_init();
 
-void adc1_injectSetup(uint_fast8_t jtrigger);
+// status bits: check for event, clead event
+inline uint8_t adc1_Start() {return ((_ADC1_(ADC_SR) & (ADC_SR_STRT))>>4);}
+inline uint8_t adc1_JStart() {return ((_ADC1_(ADC_SR) & (ADC_SR_JSTRT))>>3);}
+inline uint8_t adc1_JEOC() {return ((_ADC1_(ADC_SR) & (ADC_SR_JEOC))>>2);}
+inline uint8_t adc1_EOC() {return ((_ADC1_(ADC_SR) & (ADC_SR_EOC))>>1);}
+inline uint8_t adc1_WD() {return ((_ADC1_(ADC_SR) & (ADC_SR_AWD)));}
+inline void adc1_clearStart() {_ADC1_(ADC_SR) &= ~(ADC_SR_STRT);}
+inline void adc1_clearJStart() {_ADC1_(ADC_SR) &= ~(ADC_SR_JSTRT);}
+inline void adc1_clearJEOC() {_ADC1_(ADC_SR) &= ~(ADC_SR_JEOC);}
+inline void adc1_clearEOC() {_ADC1_(ADC_SR) &= ~(ADC_SR_EOC);}
+inline void adc1_clearWD() {_ADC1_(ADC_SR) &= ~(ADC_SR_AWD);}
+
+inline uint8_t adc2_Start() {return ((_ADC2_(ADC_SR) & (ADC_SR_STRT))>>4);}
+inline uint8_t adc2_JStart() {return ((_ADC2_(ADC_SR) & (ADC_SR_JSTRT))>>3);}
+inline uint8_t adc2_JEOC() {return ((_ADC2_(ADC_SR) & (ADC_SR_JEOC))>>2);}
+inline uint8_t adc2_EOC() {return ((_ADC2_(ADC_SR) & (ADC_SR_EOC))>>1);}
+inline uint8_t adc2_WD() {return ((_ADC2_(ADC_SR) & (ADC_SR_AWD)));}
+inline void adc2_clearStart() {_ADC2_(ADC_SR) &= ~(ADC_SR_STRT);}
+inline void adc2_clearJStart() {_ADC2_(ADC_SR) &= ~(ADC_SR_JSTRT);}
+inline void adc2_clearJEOC() {_ADC2_(ADC_SR) &= ~(ADC_SR_JEOC);}
+inline void adc2_clearEOC() {_ADC2_(ADC_SR) &= ~(ADC_SR_EOC);}
+inline void adc2_clearWD() {_ADC2_(ADC_SR) &= ~(ADC_SR_AWD);}
+
+//watchdogs
+void adc1_watchdog(uint32_t low, uint32_t high);
+void adc1_watchdog(uint8_t cha, uint32_t low, uint32_t high);
+void adc1_injectWatchdog(uint32_t low, uint32_t high);
+void adc1_injectWatchdog(uint8_t cha, uint32_t low, uint32_t high);
+inline void adc1_watchdog() {_ADC1_(ADC_CR1) |= ADC_CR1_AWDEN;}
+inline void adc1_injectWatchdog() {_ADC1_(ADC_CR1) |= ADC_CR1_JAWDEN;}
+inline void adc1_watchdogHigh(uint32_t high) {_ADC1_(ADC_HTR) = high;}
+inline void adc1_watchdogLow(uint32_t low) {_ADC1_(ADC_LTR) = low;}
+inline void adc1_watchdogLowHigh(uint32_t low, uint32_t high) {_ADC1_(ADC_LTR) = low; _ADC1_(ADC_HTR) = high;}
+
+
+//interrupts - global
+inline void adc_IRQenable() {IRQ_0TO31_SER |= IRQ_ADC1_2;}
+inline void adc_IRQdisable() {IRQ_0TO31_CER |= IRQ_ADC1_2;}
+
+//interrupts - STM, bit banding
+inline void adc1_WDinterrupt(uint8_t bit) {BB_ADC1_CR1_AWDIE = bit;}
+inline void adc1_EOCintterrupt(uint8_t bit) {BB_ADC1_CR1_EOCIE = bit;}
+inline void adc1_JEOCinterrupt(uint8_t bit) {BB_ADC1_CR1_JEOCIE = bit;}
+inline void adc2_WDinterrupt(uint8_t bit) {BB_ADC2_CR1_AWDIE = bit;}
+inline void adc2_EOCintterrupt(uint8_t bit) {BB_ADC2_CR1_EOCIE = bit;}
+inline void adc2_JEOCinterrupt(uint8_t bit) {BB_ADC2_CR1_JEOCIE = bit;}
+
+inline void adc1_dualMode(uint8_t dmode) {_ADC1_(ADC_CR1) |= dmode << 16;}
+
 
 
 

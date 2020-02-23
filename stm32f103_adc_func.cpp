@@ -134,24 +134,11 @@ void analog_scan::injectStart(uint_fast8_t dowait)
 	_ADC1_(ADC_CR2) |= ADC_CR2_JSWSTART;
 	if (dowait) injectWaitForResult();
 }
+
 uint16_t analog_scan::injectRead(uint_fast8_t jcha)
 {
 	uint16_t res = _ADC1_(0x38 + jcha*4);
 	return res;
-}
-
-void analog_inject::init(uint8_t jtrigger, uint8_t cycles)
-{
-	//*(adc + ADC_CR2/4) |= ADC_CR2_JEXTTRIG | (jtrigger << 12);
-	if (cnum < 10) *(adc + ADC_SMPR2/4) |= cycles << (cnum*3); // set the conversion speed
-	else *(adc + ADC_SMPR1/4) |= cycles << ((cnum-10)*3);
-}
-
-void analog_inject::inject()
-{
-	*(adc + ADC_CR2/4) |= ADC_CR2_JEXTSEL; // software trigger
-	*(adc + ADC_JSQR/4) = cnum << 16; // clear and set one channel to convert
-	*(adc + ADC_CR2/4) |= ADC_CR2_JSWSTART; // the trigger itself
 }
 
 void adc1_init()
@@ -174,4 +161,34 @@ void adc2_init()
 	while (_ADC2_(ADC_CR2) & ADC_CR2_CAL); //wait for calibration to finish
 }
 
+void adc1_watchdog(uint32_t low, uint32_t high)
+{
+	_ADC1_(ADC_LTR) = low;
+	_ADC1_(ADC_HTR) = high;
+	_ADC1_(ADC_CR1) &= ~(ADC_CR1_AWDSGL);
+	_ADC1_(ADC_CR1) |= ADC_CR1_AWDEN;
+}
 
+void adc1_watchdog(uint8_t cha, uint32_t low, uint32_t high)
+{
+	_ADC1_(ADC_LTR) = low;
+	_ADC1_(ADC_HTR) = high;
+	_ADC1_(ADC_CR1) &= ~(0x0000001F);
+	_ADC1_(ADC_CR1) |= ADC_CR1_AWDSGL | ADC_CR1_AWDEN | cha;
+}
+
+void adc1_injectWatchdog(uint32_t low, uint32_t high)
+{
+	_ADC1_(ADC_LTR) = low;
+	_ADC1_(ADC_HTR) = high;
+	_ADC1_(ADC_CR1) &= ~(ADC_CR1_AWDSGL);
+	_ADC1_(ADC_CR1) |= ADC_CR1_JAWDEN;
+}
+
+void adc1_injectWatchdog(uint8_t cha, uint32_t low, uint32_t high)
+{
+	_ADC1_(ADC_LTR) = low;
+	_ADC1_(ADC_HTR) = high;
+	_ADC1_(ADC_CR1) &= ~(0x0000001F);
+	_ADC1_(ADC_CR1) |= ADC_CR1_AWDSGL | ADC_CR1_JAWDEN | cha;
+}
