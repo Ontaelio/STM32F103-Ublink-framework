@@ -192,3 +192,35 @@ void adc1_injectWatchdog(uint8_t cha, uint32_t low, uint32_t high)
 	_ADC1_(ADC_CR1) &= ~(0x0000001F);
 	_ADC1_(ADC_CR1) |= ADC_CR1_AWDSGL | ADC_CR1_JAWDEN | cha;
 }
+
+void adc2_watchdog(uint32_t low, uint32_t high)
+{
+	_ADC2_(ADC_LTR) = low;
+	_ADC2_(ADC_HTR) = high;
+	_ADC2_(ADC_CR1) &= ~(ADC_CR1_AWDSGL);
+	_ADC2_(ADC_CR1) |= ADC_CR1_AWDEN;
+}
+
+void adc2_watchdog(uint8_t cha, uint32_t low, uint32_t high)
+{
+	_ADC2_(ADC_LTR) = low;
+	_ADC2_(ADC_HTR) = high;
+	_ADC2_(ADC_CR1) &= ~(0x0000001F);
+	_ADC2_(ADC_CR1) |= ADC_CR1_AWDSGL | ADC_CR1_AWDEN | cha;
+}
+
+void adc2_injectWatchdog(uint32_t low, uint32_t high)
+{
+	_ADC2_(ADC_LTR) = low;
+	_ADC2_(ADC_HTR) = high;
+	_ADC2_(ADC_CR1) &= ~(ADC_CR1_AWDSGL);
+	_ADC2_(ADC_CR1) |= ADC_CR1_JAWDEN;
+}
+
+void adc2_injectWatchdog(uint8_t cha, uint32_t low, uint32_t high)
+{
+	_ADC2_(ADC_LTR) = low;
+	_ADC2_(ADC_HTR) = high;
+	_ADC2_(ADC_CR1) &= ~(0x0000001F);
+	_ADC2_(ADC_CR1) |= ADC_CR1_AWDSGL | ADC_CR1_JAWDEN | cha;
+}

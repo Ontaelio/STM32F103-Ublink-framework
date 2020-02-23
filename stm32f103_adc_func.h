@@ -118,6 +118,16 @@ inline void adc1_watchdogHigh(uint32_t high) {_ADC1_(ADC_HTR) = high;}
 inline void adc1_watchdogLow(uint32_t low) {_ADC1_(ADC_LTR) = low;}
 inline void adc1_watchdogLowHigh(uint32_t low, uint32_t high) {_ADC1_(ADC_LTR) = low; _ADC1_(ADC_HTR) = high;}
 
+void adc2_watchdog(uint32_t low, uint32_t high);
+void adc2_watchdog(uint8_t cha, uint32_t low, uint32_t high);
+void adc2_injectWatchdog(uint32_t low, uint32_t high);
+void adc2_injectWatchdog(uint8_t cha, uint32_t low, uint32_t high);
+inline void adc2_watchdog() {_ADC2_(ADC_CR1) |= ADC_CR1_AWDEN;}
+inline void adc2_injectWatchdog() {_ADC2_(ADC_CR1) |= ADC_CR1_JAWDEN;}
+inline void adc2_watchdogHigh(uint32_t high) {_ADC2_(ADC_HTR) = high;}
+inline void adc2_watchdogLow(uint32_t low) {_ADC2_(ADC_LTR) = low;}
+inline void adc2_watchdogLowHigh(uint32_t low, uint32_t high) {_ADC2_(ADC_LTR) = low; _ADC1_(ADC_HTR) = high;}
+
 
 //interrupts - global
 inline void adc_IRQenable() {IRQ_0TO31_SER |= IRQ_ADC1_2;}
@@ -131,6 +141,7 @@ inline void adc2_WDinterrupt(uint8_t bit) {BB_ADC2_CR1_AWDIE = bit;}
 inline void adc2_EOCintterrupt(uint8_t bit) {BB_ADC2_CR1_EOCIE = bit;}
 inline void adc2_JEOCinterrupt(uint8_t bit) {BB_ADC2_CR1_JEOCIE = bit;}
 
+//dual mode
 inline void adc1_dualMode(uint8_t dmode) {_ADC1_(ADC_CR1) |= dmode << 16;}
 
 
