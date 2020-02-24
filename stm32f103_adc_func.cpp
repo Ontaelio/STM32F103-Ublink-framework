@@ -107,6 +107,7 @@ void analog_scan::init(uint16_t* targ, uint_fast8_t num, ...)
 
 	//setup DMA channel 1
 	dma1_init();
+	_DMA1_(DMA_CCR1) &= ~(DMA_CCR_EN);
 	_DMA1_(DMA_CPAR1) = 0x40012400 + ADC_DR;
 	_DMA1_(DMA_CMAR1) = (uint32_t)targ;
 	_DMA1_(DMA_CNDTR1) = (uint16_t)num;
