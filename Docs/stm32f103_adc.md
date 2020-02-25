@@ -10,10 +10,11 @@ The ADC library provides basic and extended functions to run the analog-to-digit
 [Non-member initialization](#non-member-adc-functions)
 [Analog watchdog](#analog-watchdog)
 [Interrupts and events](#interrupts-and-events)
+[Examples](#examples)
 
 ## Classes and their member functions
 
-###Analog Pin Class
+### Analog Pin Class
 
 This is the most basic class of the ADC library. It provides simple 'Arduino-style' functions to read ADC-compatible pins manually, one by one. Each class object represents a single pin to be read. This class utilizes ADC2, as this peripheral is not DMA-empowered, thus *Analog Pins* can be used at the same time as *Analog Continuous* (on ADC1) and *Analog Scan* objects.
 
@@ -43,6 +44,10 @@ Default `cycles` value is 0.
 
 Starts a single conversion, waits for the End of Conversion (EOC) flag to set, then returns the conversion result.
 
+* **overloaded type conversion**
+
+ *Analog Pin* class is overloaded into `uint16_t` type and can be used as a right-hand operand as any normal `uint16_t` unsigned integer, e.g. `uint16_t res = analog_pin_object;`. Check the code [example](#analog-pin-adc-blink) below.
+
 ###Analog Continuous Class
 
 Up to two pins (ADC1 _and_ ADC2) can be set up as *Analog Continuous* objects providing real-time continuous conversions on selected channels. Additional channels can be used in injected mode. The continuous mode uses its ADC peripheral fully, so no other `analog` object can be set up on the same ADC.
@@ -67,7 +72,11 @@ Stops the continuous conversion.
 
 * uint16_t **read ()**
 
-Returns the current conversion result. An overloaded **=** operator can also be used for the same purpose (i.e. `uint16_t res = analog_cont_object;`).
+Returns the current conversion result.
+
+* **overloaded type conversion**
+
+ *Analog Continuous* class is overloaded into `uint16_t` type and can be used as a right-hand operand as any normal `uint16_t` unsigned integer, e.g. `uint16_t res = analog_cont_object;`.
 
 *For the injected functions list check the Injected channels section below*
 
@@ -307,3 +316,118 @@ Return the state of the corresponding status bit.
 * void **adc2_clearWD ()**
 
 Clear the corresponding status bit after the event.
+
+## Examples
+
+*Note: objects are named after their corresponding pins in these examples for better understanding, but it is a bad practice for a working project. Name them after the devices connected, e.g. `pot1` or `ldr3`. This way, if you need to change the pins these devices are connected to later, you'll just change the numbers in object declarations, and the code will retain its readability.*
+
+### Analog Pin: ADC Blink
+
+This basic example turns the Blue Pill in-built LED at pin C13 on and off depending on the position of a potentiometer connected to pin A1.
+```cpp
+#include <stm32f103_adc_func.h>
+#include <stm32f103_gpio_func.h>
+
+gpioC_pin C13(13);
+analog_pin A1(1);
+
+int main()
+{
+	C13.init();
+	C13.mode(OUTPUT);
+	A1.init();
+
+	while (1)
+	{
+		if (A1 < 2047) C13.high(); else C13.low();
+		// same as if (A1.read() < 2047) C13.high(); else C13.low();
+	}
+}
+```
+
+### Analog Continuous: ADC Cont PWM
+
+In this example, the brightness of the Blue Pill in-built LED (C13) is controlled by two potentiometers connected to pins A3 and A4 by using software PWM. Turn both knobs all the way to 'off' position to turn off the LED completely.
+
+Note that `(A3+A4)` is the same as `(A3.read() + A4.read())`. The timers library is needed for the delay to work.
+```cpp
+#include <stm32f103_adc_func.h>
+#include <stm32f103_gpio_func.h>
+#include <stm32f103_timers_func.h>
+
+gpioC_pin C13(13);
+analog_cont A3(1, 3);
+analog_cont A4(2, 4);
+
+int main()
+{
+	C13.init();
+	C13.mode(OUTPUT_50MHZ);
+	A3.init();
+	A4.init();
+
+	while (1)
+	{
+		C13.low(); //turn the LED on
+		delay_us((A3+A4)/2); //delay according to the readings
+		C13.high(); //turn the LED off
+		delay_us(4095 - (A3+A4)/2); //delay according to the readings
+	}
+}
+```
+
+### Analog Scan: ADC Scan 4 pots
+
+Four potentiometers are connected to pins A0 .. A3. If the sum of the readings on pins A2 and A3 is more than the sum of the readings on pins A0 and A1, the in-built Blue Pill LED (C13) lights up and goes dark otherwise.
+
+```cpp
+#include <stm32f103_adc_func.h>
+#include <stm32f103_gpio_func.h>
+
+gpioC_pin C13(13);
+analog_scan fourPots;
+uint16_t arr[4]; //an array to hold the conversion results
+
+int main()
+{
+	C13.init();
+	C13.mode(OUTPUT);
+	fourPots.init(arr, 4, 0,1,2,3); //pots are on pins A0, A1, A2 and A3
+	fourPots.start(); //start continuous conversion
+
+	while (1)
+	{
+		if ((arr[0] + arr[1]) > (arr[2] + arr[3])) C13.high(); else C13.low();
+	}
+}
+```
+
+### Injected channels and external events
+
+
+### Watchdog
+
+```cpp
+// interrupt routine
+extern "C"
+{
+void ADC1_2_IRQHandler()
+{
+	if (adc1_WD()) //make sure it was the watchdog event
+	{
+		if (arr[0] > 3500)
+			{
+			//'remove' high threshold, restore low
+			adc1_watchdogLowHigh(1000, 4095);
+			C13.low();
+			}
+		else
+			{
+			//'remove' low threshold, restore high
+			adc1_watchdogLowHigh(0, 3800);
+			C13.high();
+			}
+	adc1_clearWD(); //clear the event flag to avoid permanent interrupt
+	}
+}
+```
