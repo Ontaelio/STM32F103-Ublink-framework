@@ -51,7 +51,7 @@ Constructor:
 
 * **analog_cont (uint8_t adc, uint8_t cha)**
 
-Initializes an object and binds it to the ADC #`adc` and the channel `cha`. `adc` can be 1 or 2 and represents ADC1 and ADC2 respectfully.
+Initializes an object and binds it to the ADC #`adc` and the channel `cha`. `adc` can be 1 or 2 and represents ADC1 or ADC2 respectfully.
 
 * void **init (uint8_t cycles = 0)**
 
@@ -59,7 +59,7 @@ Initializes and calibrates the bound ADC using `adcX_init()`. Optional `cycles` 
 
 * void **start ()**
 
-Starts the continuous conversion of the selected channel. The data register will be updated in real time.
+Starts the continuous conversion of the selected channel. The data register will be updated in real-time.
 
 * void **stop ()**
 
@@ -73,6 +73,10 @@ Returns the current conversion result. An overloaded **=** operator can also be 
 
 
 ###Analog Scan Class
+
+*Analog Scan* object reads multiple (up to 16) ADC channels in sequence and saves the conversion results in a user-provided array of unsigned ints (uint16_t). The scan can work in single bursts or continuously. *Analog Scan* object utilizes DMA and works only with ADC1, as DMA is not available on ADC2. Thus only one *Analog Scan* object should be used in a program.
+
+*Note: technically, ADC2 can be read by DMA in Dual Mode, but this mode implementation is rudimentary in this library for simplicity reasons.*
 
 Constructor:
 
@@ -92,7 +96,7 @@ void main(){
 }
 ```
 
-will make the `analog_data` object write conversion data into the `arr` array, while checking channels 1,2 and 3 twice during a single scan, and channels 4 and 5 once.
+will make the `analog_data` object write conversion data into the `arr` array while checking channels 1,2 and 3 twice during a single scan, and channels 4 and 5 once.
 
 * void **start ()**
 
@@ -118,11 +122,11 @@ Sets the DMA priority level (`pri` is 0..3, where 0 == low, 3 == very high).
 
 ### External triggers on regular channels
 
-Regular channels of the *Analog Scan* class object can start convertion on an external trigger (a certain event). External triggers allow avoiding the continuous scanning that consumes power and DMA resources, requesting ADC data at timed intervals instead. For example, using a atimer event as an external trigger you can make scans happen every second.
+Regular channels of the *Analog Scan* class object can start a conversion on an external trigger (a certain event). External triggers allow avoiding the continuous scanning that consumes power and DMA resources, requesting ADC data at timed intervals instead. For example, using a timer event as an external trigger you can make scans happen every second.
 
 * void **external (uint8_t regtrig)**
 
-Makes triggering of the object's analog data convertion dependant on the external trigger instead of the ADON bit that forces it manually.
+Makes triggering of the object's analog data conversion dependant on the external trigger instead of the ADON bit that forces it manually.
 
 The `regtrig` values are:
 
@@ -141,7 +145,7 @@ When an external event occurs, it will force a single conversion, the results wi
 
 * void **externalStart ()**
 
-If `regtrig` in the previuous function call was `7`, this function will start a continuous conversion (same as `start()`, but using the SWSTART bit instead of the ADON bit). This continuous conversion can be stopped with `stop()`.
+If `regtrig` in the previous function call was `7`, this function will start a continuous conversion (same as `start()`, but using the SWSTART bit instead of the ADON bit). This continuous conversion can be stopped with `stop()`.
 
 * void **externalRead ()**
 
@@ -170,7 +174,7 @@ value | name
 
 * void **injectAuto ()**
 
-Alternatively, injected channels can be auto-converted after the regular channels group with `injectAuto()` function. In this case, external trigger is disables and injected channels output registers will get updated after any regular conversion (single or continuous).
+Alternatively, injected channels can be auto-converted after the regular channels group with the `injectAuto()` function. In this case, the external trigger is disabled and injected channels output registers will get updated after any regular conversion (single or continuous).
 
 * void **injectTriggered ()**
 
@@ -181,11 +185,11 @@ Disables auto-injection and enables the external trigger mode.
 * void **inject (uint8_t cha1, uint8_t cha2, uint8_t cha3)**
 * void **inject (uint8_t cha1, uint8_t cha2, uint8_t cha3, uint8_t cha4)**
 
-Setup injection of 1, 2, 3 or 4 channels `chaX`. The conversion results will end up in 1st, 2nd, 3rd and 4th injected data registers to be read by `injectRead()`.
+Setup injection of 1, 2, 3 or 4 channels `chaX`. The conversion results will end up in 1st, 2nd, 3rd, and 4th injected data registers to be read by `injectRead()`.
 
 * void **injectStart (uint_fast8_t dowait = 1)**
 
-Start manual injection in software (JSWSTART, `jtrigger == 7`) mode. The `dowait` argument tells the function to wait for the end of conversion and is `1` by default. A `0` here will return back to the main program right after setting the JSWSTART bit, but the convertion results won't be available immediately.
+Start manual injection in software (JSWSTART, `jtrigger == 7`) mode. The `dowait` argument tells the function to wait for the end of a conversion and is `1` by default. A `0` here will return to the main program right after setting the JSWSTART bit, but the conversion results won't be available immediately.
 
 * void **injectClear ()**
 
@@ -204,6 +208,8 @@ Read the value from the injected channel `jcha` data register.
 
 Enables the corresponding ADC clock, waits for the corresponding ADC to power up and calibrates it. If the ADC is already up and running, quits immediately. All the classes above incorporate the corresponding `adc_init()` function in their `init()` member functions, there's no need to call these explicitly.
 
+*Note: analog conversions don't require the clock of the GPIO port running. Thus both `inits` don't enable it and don't do anything with the GPIO peripheral at all, the same applies to classes' `inits`. If you use pins of the same GPIO as the analog pins in some other capacity, it's a good practice to enable `Analog` mode on the ones that work as ADC inputs (the default `Input` mode also works, but consumes power). You may use inline functions `pinA0_Analog()` and similar for A1..A7, B0 and B1 to enable the `Analog` mode on needed pins.*
+
 * void **adc_temperature ()**
 
 Enable temperature sensor and V<sub>REFINT</sub> (ADC1 channels 16 and 17).
@@ -214,9 +220,7 @@ Enable Dual Mode. Please check the ST RM0008 reference manual for details on val
 
 ### Analog watchdog
 
-Analog watchdogs allow events and interrupts to happen if the ADC data register values are above or below certain thresholds. Note that watchdogs can not start the conversion and deal with data registers only; thus they're not included in any of the classes above and must be set up separately. Watchdogs can monitor either all the channels of an ADC peripheral or only one of the channels of an ADC peripheral.
-
-Functions listed below deal with ADC1, ADC2 has the same number of functions called `adc2_*****()`.
+Analog watchdogs allow events and interrupts to happen if the ADC data register values are above or below certain thresholds. Note that watchdogs can not start the conversion and deal with data registers only; thus they are not included in any of the classes above and must be set up separately. Watchdogs can monitor either all the channels of an ADC peripheral or only one of the channels of an ADC peripheral.
 
 * void **adc1_watchdog (uint32_t low, uint32_t high)**
 * void **adc2_watchdog (uint32_t low, uint32_t high)**
@@ -243,7 +247,7 @@ Same for a **single injected** channel `cha` on the specified ADC.
 * void **adc2_watchdog ()**
 * void **adc2_injectWatchdog ()**
 
-Same functions with no argument disable the corresponding watchdog.
+The same functions with no argument disable the corresponding watchdog.
 
 * void **adc1_watchdogLow (uint32_t low)**
 * void **adc2_watchdogLow (uint32_t low)**
