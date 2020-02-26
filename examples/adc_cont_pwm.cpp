@@ -25,8 +25,10 @@ int main()
 {
 	C13.init();
 	C13.mode(OUTPUT_50MHZ);
-	A3.init();
+	A3.init(); // initialize objects
 	A4.init();
+	A3.start(); // start continuous conversion
+	A4.start();
 
 	while (1)
 	{

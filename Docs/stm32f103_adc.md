@@ -81,7 +81,7 @@ Returns the current conversion result.
 *For the injected functions list check the Injected channels section below*
 
 
-###Analog Scan Class
+### Analog Scan Class
 
 *Analog Scan* object reads multiple (up to 16) ADC channels in sequence and saves the conversion results in a user-provided array of unsigned ints (uint16_t). The scan can work in single bursts or continuously. *Analog Scan* object utilizes DMA and works only with ADC1, as DMA is not available on ADC2. Thus only one *Analog Scan* object should be used in a program.
 
@@ -139,16 +139,16 @@ Makes triggering of the object's analog data conversion dependant on the externa
 
 The `regtrig` values are:
 
-value | name 
---|--
-0 | Timer 1 CC1 event
-1 | Timer 1 CC2 event
-2 | Timer 1 CC3 event
-3 | Timer **2** CC2 event
-4 | Timer **3** TRGO event
-5 | Timer **4** CC4 event
-6 | EXTI line 11
-7 | SWSTART bit in the ADC_CR2 register
+value | macro | event
+--|--|--
+0 | ADC_EXT_T1CC1 | Timer 1 CC1 event
+1 | ADC_EXT_T1CC2 | Timer 1 CC2 event
+2 | ADC_EXT_T1CC3 | Timer 1 CC3 event
+3 | ADC_EXT_T2CC2 | Timer **2** CC2 event
+4 | ADC_EXT_T3TRGO | Timer **3** TRGO event
+5 | ADC_EXT_T4CC4 | Timer **4** CC4 event
+6 | ADC_EXT_EXTI11 | EXTI line 11
+7 | ADC_EXT_SW | SWSTART bit in the ADC_CR2 register
 
 When an external event occurs, it will force a single conversion, the results will be stored in the `targ` array provided during initialization.
 
@@ -170,16 +170,16 @@ Enables injection on an external event and binds it to an external trigger `jtri
 
 `jtrigger` values are:
 
-value | name 
---|--
-0 | Timer 1 TRGO event
-1 | Timer 1 CC4 event
-2 |  Timer **2** TRGO event
-3 |  Timer **2** CC1 event
-4 |  Timer **3** CC4 event
-5 |  Timer **4** TRGO event
-6 |  EXTI line15
-7 |  JSWSTART bit in the ADC_CR2 register
+value | macro | event
+--|--|--
+0 | ADC_JEXT_T1TRGO | Timer 1 TRGO event
+1 | ADC_JEXT_T1CC4 | Timer 1 CC4 event
+2 | ADC_JEXT_T2TRGO | Timer **2** TRGO event
+3 | ADC_JEXT_T2CC1 | Timer **2** CC1 event
+4 | ADC_JEXT_T3CC4 | Timer **3** CC4 event
+5 | ADC_JEXT_T4TRGO | Timer **4** TRGO event
+6 | ADC_JEXT_EXTI15 | EXTI line15
+7 | ADC_JEXT_SW | JSWSTART bit in the ADC_CR2 register
 
 * void **injectAuto ()**
 
@@ -363,8 +363,10 @@ int main()
 {
 	C13.init();
 	C13.mode(OUTPUT_50MHZ);
-	A3.init();
+	A3.init(); // initialize objects
 	A4.init();
+	A3.start(); // start continuous conversion
+	A4.start();
 
 	while (1)
 	{
@@ -402,12 +404,58 @@ int main()
 }
 ```
 
-### Injected channels and external events
+### Injected channels and external events: ADC Inject
 
-
-### Watchdog
+Four potentiometers are connected to pins A0 .. A3. Two pots are scanned constantly, two are injected and scanned on external event from Timer1 every 5 seconds. The output goes to a serial console (TX is on pin B6, alternative pinout used).
 
 ```cpp
+#include <stm32f103_usart_func.h>
+#include <stm32f103_adc_func.h>
+#include <stm32f103_gpio_func.h>
+#include <stm32f103_timers_func.h>
+
+analog_scan twoPots; //analog scan object
+uint16_t arr[2]; // array for analog scan values
+timer1 tim1(36000, 10000); //timer1 will update once in 5 seconds
+usart1 txtout; //serial output on USART1
+
+int main()
+{
+	txtout.init(9600, 1); //9600 baud, alt pinout TX = B6
+	txtout << "Starting...\r\n";
+
+	tim1.init();
+	tim1.master(MMS_UPDATE); //update triggers the TRGO event
+
+	twoPots.init(arr, 3, 0,1); //regular pots are on pins A0 and A1
+	twoPots.injectInit(ADC_JEXT_T1TRGO); //timer1 TRGO event
+	twoPots.inject(2, 3); //injected pots are on pins A2 and A3
+
+	twoPots.start(); //start continuous conversion
+	tim1.enable(); //enable timer
+
+	while (1)
+	{
+		txtout << "Regular A0: " << arr[0] << "; A1: " << arr[1] << "\r\n";
+		txtout << "Injected A2: " << twoPots.injectRead(1) 
+			<< "; A3: " << twoPots.injectRead(2) << "\r\n";
+		delay_ms(1000);
+	}
+}
+```
+
+### Watchdog: ADC Watchdog
+Two potentiometers are connected to pins A2 and A3 (*Analog Continuous* objects). When A2 goes above the `wdhigh` value, the in-built led at C13 lights up. When it goes below the `wdlow` value, the led turns off. The `wdhigh` and `wdlow` values are set to mid-point initially. A3 is being constantly updated but does nothing else.
+
+```cpp
+#include <stm32f103_adc_func.h>
+#include <stm32f103_gpio_func.h>
+
+gpioC_pin C13(13);
+analog_cont A2(1, 2), A3(2, 3);
+const uint16_t wdlow = 2047;
+const uint16_t wdhigh = 2048;
+
 // interrupt routine
 extern "C"
 {
@@ -415,19 +463,39 @@ void ADC1_2_IRQHandler()
 {
 	if (adc1_WD()) //make sure it was the watchdog event
 	{
-		if (arr[0] > 3500)
+		if (A2 > wdhigh)
 			{
 			//'remove' high threshold, restore low
-			adc1_watchdogLowHigh(1000, 4095);
+			adc1_watchdogLowHigh(wdlow, 4095);
 			C13.low();
 			}
 		else
 			{
 			//'remove' low threshold, restore high
-			adc1_watchdogLowHigh(0, 3800);
+			adc1_watchdogLowHigh(0, wdhigh);
 			C13.high();
 			}
 	adc1_clearWD(); //clear the event flag to avoid permanent interrupt
 	}
+}
+}
+
+int main()
+{
+	C13.init();
+	C13.mode(OUTPUT);
+	C13.high(); //turn the LED off
+
+ 	A2.init(); //adc must be initialized before the watchdog setup
+	A3.init();
+
+	adc1_watchdog(2, wdlow, wdhigh); //setup watchdog on channel 2
+	adc_IRQenable(); //enable ADC1_2 IRQ
+	adc1_WDinterrupt(1); //enable watchdog interrupt
+
+	A2.start(); //start continuous mode
+	A3.start();
+
+	while (1){} //nothing to do here
 }
 ```
