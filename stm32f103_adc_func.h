@@ -21,12 +21,32 @@
 #include <stm32f103_timers_func.h>
 #include <stm32f103_dma_func.h>
 
+#define ADC_EXT_T1CC1	0
+#define ADC_EXT_T1CC2	1
+#define ADC_EXT_T1CC3	2
+#define ADC_EXT_T2CC2	3
+#define ADC_EXT_T3TRGO	4
+#define ADC_EXT_T4CC4	5
+#define ADC_EXT_EXTI11	6
+#define ADC_EXT_SW		7
+
+#define ADC_JEXT_T1TRGO	0
+#define ADC_JEXT_T1CC4 	1
+#define ADC_JEXT_T2TRGO	2
+#define ADC_JEXT_T2CC1	3
+#define ADC_JEXT_T3CC4	4
+#define ADC_JEXT_T4TRGO	5
+#define ADC_JEXT_EXTI15	6
+#define ADC_JEXT_SW		7
+
+
 class analog_pin
 {
 public:
 	analog_pin(uint_fast8_t cha) : cnum (cha) {}
 	void init(uint8_t cycles = 0);
 	uint16_t read();
+	operator uint16_t() {return read();}
 
 protected:
 	uint_fast8_t cnum;
@@ -97,7 +117,7 @@ private:
 void adc1_init();
 void adc2_init();
 
-// status bits: check for event, clead event
+// status bits: check for event, clear event
 inline uint8_t adc1_Start() {return ((_ADC1_(ADC_SR) & (ADC_SR_STRT))>>4);}
 inline uint8_t adc1_JStart() {return ((_ADC1_(ADC_SR) & (ADC_SR_JSTRT))>>3);}
 inline uint8_t adc1_JEOC() {return ((_ADC1_(ADC_SR) & (ADC_SR_JEOC))>>2);}

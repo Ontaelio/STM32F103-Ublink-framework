@@ -423,16 +423,16 @@ void timer1::config()
 	_TIM1_(TIMX_SMCR) = SMCR;
 	_TIM1_(TIMX_CR2) = CR2;
 	_TIM1_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
-	updateEvent();
+	timer1::updateEvent();
 	_TIM1_(TIMX_CR1) = CR1;
 }
 
 void timer1::enable(uint16_t count)
 {
-	disable();
-	config();
+	timer1::disable();
+	timer1::config();
 	if (count) _TIM1_(TIMX_CNT) = count;
-	enableOnly();
+	timer1::enableOnly();
 }
 
 void timer1::master(uint16_t mms, uint16_t ccmr)
@@ -517,16 +517,16 @@ void timer2::config()
 	_TIM2_(TIMX_SMCR) = SMCR;
 	_TIM2_(TIMX_CR2) = CR2;
 	_TIM2_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
-	updateEvent();
+	timer2::updateEvent();
 	_TIM2_(TIMX_CR1) = CR1;
 }
 
 void timer2::enable(uint16_t count)
 {
-	disable();
-	config();
+	timer2::disable();
+	timer2::config();
 	if (count) _TIM2_(TIMX_CNT) = count;
-	enableOnly();
+	timer2::enableOnly();
 }
 
 void timer2::master(uint16_t mms, uint16_t ccmr)
@@ -613,16 +613,16 @@ void timer3::config()
 	_TIM3_(TIMX_SMCR) = SMCR;
 	_TIM3_(TIMX_CR2) = CR2;
 	_TIM3_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
-	updateEvent();
+	timer3::updateEvent();
 	_TIM3_(TIMX_CR1) = CR1;
 }
 
 void timer3::enable(uint16_t count)
 {
-	disable();
-	config();
+	timer3::disable();
+	timer3::config();
 	if (count) _TIM3_(TIMX_CNT) = count;
-	enableOnly();
+	timer3::enableOnly();
 }
 
 void timer3::master(uint16_t mms, uint16_t ccmr)
@@ -708,16 +708,16 @@ void timer4::config()
 	_TIM4_(TIMX_SMCR) = SMCR;
 	_TIM4_(TIMX_CR2) = CR2;
 	_TIM4_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
-	updateEvent();
+	timer4::updateEvent();
 	_TIM4_(TIMX_CR1) = CR1;
 }
 
 void timer4::enable(uint16_t count)
 {
-	disable();
-	config();
+	timer4::disable();
+	timer4::config();
 	if (count) _TIM4_(TIMX_CNT) = count;
-	enableOnly();
+	timer4::enableOnly();
 }
 
 void timer4::master(uint16_t mms, uint16_t ccmr)

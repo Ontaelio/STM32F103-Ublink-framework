@@ -227,6 +227,11 @@ public:
 	virtual void writeCC3(uint16_t val) =0;
 	virtual void writeCC4(uint16_t val) =0;
 
+	virtual void CC1output(uint8_t bit) =0;
+	virtual void CC2output(uint8_t bit) =0;
+	virtual void CC3output(uint8_t bit) =0;
+	virtual void CC4output(uint8_t bit) =0;
+
 	//BB (atomic) stuff
 	//update event enable/disable (CR1->UDIS)
 	virtual void updateDisable() =0;

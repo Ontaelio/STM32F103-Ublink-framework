@@ -38,10 +38,10 @@ void analog_cont::init(uint8_t cycles)
 
 	if (cnum < 10) *(adc + ADC_SMPR2/4) |= cycles << (cnum*3); // set the conversion speed
 	else *(adc + ADC_SMPR1/4) |= cycles << ((cnum-10)*3);
-	*(adc + ADC_SQR3/4) = cnum; // set the channel as the first regular conversion
-	*(adc + ADC_CR2/4) |= ADC_CR2_CONT; // setup continuous mode
-	*(adc + ADC_CR2/4) |= ADC_CR2_ADON; // start regular conversion
-	while(!(*(adc) & ADC_SR_EOC)); // ADC_SR = 0, wait for first conversion to complete
+	//*(adc + ADC_SQR3/4) = cnum; // set the channel as the first regular conversion
+	//*(adc + ADC_CR2/4) |= ADC_CR2_CONT; // setup continuous mode
+	//*(adc + ADC_CR2/4) |= ADC_CR2_ADON; // start regular conversion
+	//while(!(*(adc) & ADC_SR_EOC)); // ADC_SR = 0, wait for first conversion to complete
 }
 
 void analog_cont::start()
@@ -150,9 +150,9 @@ void analog_scan::speed(uint_fast8_t cha, uint8_t cycles)
 
 void analog_scan::injectInit(uint8_t jtrigger)
 {
-	_ADC1_(ADC_CR2) |= ADC_CR2_JEXTTRIG;
 	_ADC1_(ADC_CR2) &= ~(ADC_CR2_JEXTSEL);
 	_ADC1_(ADC_CR2) |= (jtrigger << 12); //set JEXTSEL
+	_ADC1_(ADC_CR2) |= ADC_CR2_JEXTTRIG; //enable trigger
 }
 
 void analog_scan::injectWaitForResult()
