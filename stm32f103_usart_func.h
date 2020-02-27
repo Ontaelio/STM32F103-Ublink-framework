@@ -177,7 +177,7 @@ public:
 	void DMATdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAT;}
 	void sendBreak() {_USART2_(USART_CR1) |= USART_CR1_SBK;}
 
-	void wordLength(uint8_t M) {BB_UART2_CR1_M = M&0x01;}
+	void wordLength(uint8_t M) {BB_USART2_CR1_M = M&0x01;}
 	void stopBits(uint8_t stp) {_USART2_(USART_CR2) &= ~USART_CR2_STOP; _USART2_(USART_CR2) |= stp << 12;}
 	void parityEnable(uint8_t ps) {_USART2_(USART_CR1) |= USART_CR1_PCE | (ps<<9);}
 	void parityDisable() {_USART2_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
@@ -225,7 +225,7 @@ public:
 	void DMATdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAT;}
 	void sendBreak() {_USART3_(USART_CR1) |= USART_CR1_SBK;}
 
-	void wordLength(uint8_t M) {BB_UART3_CR1_M = M&0x01;}
+	void wordLength(uint8_t M) {BB_USART3_CR1_M = M&0x01;}
 	void stopBits(uint8_t stp) {_USART3_(USART_CR2) &= ~USART_CR2_STOP; _USART3_(USART_CR2) |= stp << 12;}
 	void parityEnable(uint8_t ps) {_USART3_(USART_CR1) |= USART_CR1_PCE | (ps<<9);}
 	void parityDisable() {_USART3_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
