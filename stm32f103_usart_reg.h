@@ -22,7 +22,8 @@
 #define _UART5_(mem_offset) (*(volatile uint32_t *)(0x40005000 + (mem_offset)))
 
 //Bit-band aliases (atomic access to select registers)
-#define BB_UART1_CR1_M     *(volatile uint32_t *) 0x422701B0
+#define BB_USART1_CR1_M     *(volatile uint32_t *) 0x422701B0
+
 
 //register offsets
 #define USART_SR	0x00
