@@ -109,7 +109,7 @@ public:
 	void init(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
-	uint8_t dumpRX();
+
 
 	void RXenable() {_USART1_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART1_(USART_CR1) &= ~USART_CR1_RE;}
@@ -143,6 +143,104 @@ public:
 	uint16_t checkIdle() {return (_USART1_(USART_SR) & 0x0010);}
 	void writeDR(uint8_t dat) {_USART1_(USART_DR) = dat;}
 
+	void sendStreamDMA(uint8_t* dat, uint32_t size);
+	void getStreamDMA(uint8_t* dat, uint32_t size);
+
+private:
+
+};
+
+class usart2 : public usart
+{
+public:
+	void init(uint32_t baud, uint_fast8_t remap = 0);
+	void sendByte(uint8_t dat);
+	uint8_t getByte();
+
+
+	void RXenable() {_USART2_(USART_CR1) |= USART_CR1_RE;}
+	void RXdisable() {_USART2_(USART_CR1) &= ~USART_CR1_RE;}
+	void TXenable() {_USART2_(USART_CR1) |= USART_CR1_TE;}
+	void TXdisable() {_USART2_(USART_CR1) &= ~USART_CR1_TE;}
+	void CLKenable(uint8_t cpol = 0, uint8_t cpha = 0, uint8_t lbcl = 0)
+		{_USART2_(USART_CR2) |= USART_CR2_CLKEN | (cpha << 9) | (cpol << 10) | (lbcl << 8);}
+	void CLKdisable() {_USART2_(USART_CR2) &= ~(USART_CR2_CLKEN | 0x0700);}
+	void RTSenable() {_USART2_(USART_CR3) |= USART_CR3_RTSE;}
+	void RTSdisable() {_USART2_(USART_CR3) &= ~USART_CR3_RTSE;}
+	void CTSenable() {_USART2_(USART_CR3) |= USART_CR3_CTSE;}
+	void CTSdisable() {_USART2_(USART_CR3) &= ~USART_CR3_CTSE;}
+	void HDenable() {_USART2_(USART_CR3) |= USART_CR3_HDSEL;}
+	void HDdisable() {_USART2_(USART_CR3) &= ~USART_CR3_HDSEL;}
+	void DMARenable() {_USART2_(USART_CR3) |= USART_CR3_DMAR;}
+	void DMARdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAR;}
+	void DMATenable() {_USART2_(USART_CR3) |= USART_CR3_DMAT;}
+	void DMATdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAT;}
+	void sendBreak() {_USART2_(USART_CR1) |= USART_CR1_SBK;}
+
+	void wordLength(uint8_t M) {BB_UART1_CR1_M = M&0x01;}
+	void stopBits(uint8_t stp) {_USART2_(USART_CR2) &= ~USART_CR2_STOP; _USART2_(USART_CR2) |= stp << 12;}
+	void parityEnable(uint8_t ps) {_USART2_(USART_CR1) |= USART_CR1_PCE | (ps<<9);}
+	void parityDisable() {_USART2_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
+
+	void IRQenable(uint16_t irqs);
+	void IRQdisable() {IRQ_32TO63_CER |= IRQ_USART1;}
+
+	void clearCTS() {_USART2_(USART_SR) &= ~USART_SR_CTS;}
+	uint16_t checkError() {return (_USART2_(USART_SR) & 0x001F);}
+	uint16_t checkIdle() {return (_USART2_(USART_SR) & 0x0010);}
+	void writeDR(uint8_t dat) {_USART2_(USART_DR) = dat;}
+
+	void sendStreamDMA(uint8_t* dat, uint32_t size);
+	void getStreamDMA(uint8_t* dat, uint32_t size);
+
+private:
+
+};
+
+
+class usart3 : public usart
+{
+public:
+	void init(uint32_t baud, uint_fast8_t remap = 0);
+	void sendByte(uint8_t dat);
+	uint8_t getByte();
+
+
+	void RXenable() {_USART3_(USART_CR1) |= USART_CR1_RE;}
+	void RXdisable() {_USART3_(USART_CR1) &= ~USART_CR1_RE;}
+	void TXenable() {_USART3_(USART_CR1) |= USART_CR1_TE;}
+	void TXdisable() {_USART3_(USART_CR1) &= ~USART_CR1_TE;}
+	void CLKenable(uint8_t cpol = 0, uint8_t cpha = 0, uint8_t lbcl = 0)
+		{_USART3_(USART_CR2) |= USART_CR2_CLKEN | (cpha << 9) | (cpol << 10) | (lbcl << 8);}
+	void CLKdisable() {_USART3_(USART_CR2) &= ~(USART_CR2_CLKEN | 0x0700);}
+	void RTSenable() {_USART3_(USART_CR3) |= USART_CR3_RTSE;}
+	void RTSdisable() {_USART3_(USART_CR3) &= ~USART_CR3_RTSE;}
+	void CTSenable() {_USART3_(USART_CR3) |= USART_CR3_CTSE;}
+	void CTSdisable() {_USART3_(USART_CR3) &= ~USART_CR3_CTSE;}
+	void HDenable() {_USART3_(USART_CR3) |= USART_CR3_HDSEL;}
+	void HDdisable() {_USART3_(USART_CR3) &= ~USART_CR3_HDSEL;}
+	void DMARenable() {_USART3_(USART_CR3) |= USART_CR3_DMAR;}
+	void DMARdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAR;}
+	void DMATenable() {_USART3_(USART_CR3) |= USART_CR3_DMAT;}
+	void DMATdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAT;}
+	void sendBreak() {_USART3_(USART_CR1) |= USART_CR1_SBK;}
+
+	void wordLength(uint8_t M) {BB_UART1_CR1_M = M&0x01;}
+	void stopBits(uint8_t stp) {_USART3_(USART_CR2) &= ~USART_CR2_STOP; _USART3_(USART_CR2) |= stp << 12;}
+	void parityEnable(uint8_t ps) {_USART3_(USART_CR1) |= USART_CR1_PCE | (ps<<9);}
+	void parityDisable() {_USART3_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
+
+	void IRQenable(uint16_t irqs);
+	void IRQdisable() {IRQ_32TO63_CER |= IRQ_USART1;}
+
+	void clearCTS() {_USART3_(USART_SR) &= ~USART_SR_CTS;}
+	uint16_t checkError() {return (_USART3_(USART_SR) & 0x001F);}
+	uint16_t checkIdle() {return (_USART3_(USART_SR) & 0x0010);}
+	void writeDR(uint8_t dat) {_USART3_(USART_DR) = dat;}
+
+	void sendStreamDMA(uint8_t* dat, uint32_t size);
+	void getStreamDMA(uint8_t* dat, uint32_t size);
+
 private:
 
 };
@@ -165,7 +263,6 @@ inline void usart1_init(uint32_t brate)
 	_USART1_(USART_CR1) |= USART_CR1_UE;
 	//enable TX and RX
 	_USART1_(USART_CR1) |= USART_CR1_TE | USART_CR1_RE;
-
 }
 
 #endif /* STM32F103_USART_FUNC_H_ */
