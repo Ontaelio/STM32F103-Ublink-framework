@@ -23,6 +23,8 @@
 
 //Bit-band aliases (atomic access to select registers)
 #define BB_USART1_CR1_M     *(volatile uint32_t *) 0x422701B0
+#define BB_USART2_CR1_M     *(volatile uint32_t *) 0x420881B0
+#define BB_USART3_CR1_M     *(volatile uint32_t *) 0x420901B0
 
 
 //register offsets
