@@ -471,8 +471,8 @@ void usart1::init(uint32_t baud, uint_fast8_t remap)
 
 void usart1::sendByte(uint8_t dat)
 {
-	while(!(_USART3_(USART_SR) & USART_SR_TC));
-	_USART3_(USART_DR) = dat;
+	while(!(_USART1_(USART_SR) & USART_SR_TC));
+	_USART1_(USART_DR) = dat;
 }
 
 uint8_t usart1::getByte()
@@ -498,7 +498,7 @@ void usart2::init(uint32_t baud, uint_fast8_t remap)
 {
 	/*if (remap)
 	{
-		//enable GPIOB | USART1 |alt func
+		//enable GPIOB | USART2 |alt func
 		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
 		//remap the pins
 		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART2_REMAP;
@@ -561,7 +561,7 @@ void usart3::init(uint32_t baud, uint_fast8_t remap)
 	}
 	else*/
 	{
-		//enable GPIOA | USART1 |alt func
+		//enable GPIOA | USART3 |alt func
 		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN |  RCC_APB2ENR_AFIOEN;
 		_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_USART3EN;
 		//configure pins; TX(PB10) alt push-pull output; RX(PB11) input
