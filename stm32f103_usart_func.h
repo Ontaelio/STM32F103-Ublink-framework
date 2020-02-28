@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-//#include <string.h>
 #include <string>
 #include <math.h>
 #include <stm32f103_usart_reg.h>
@@ -107,9 +106,10 @@ class usart1 : public usart
 {
 public:
 	void init(uint32_t baud, uint_fast8_t remap = 0);
+	void initTX(uint32_t baud, uint_fast8_t remap = 0);
+	void initRX(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
-
 
 	void RXenable() {_USART1_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART1_(USART_CR1) &= ~USART_CR1_RE;}
@@ -154,9 +154,10 @@ class usart2 : public usart
 {
 public:
 	void init(uint32_t baud, uint_fast8_t remap = 0);
+	void initTX(uint32_t baud, uint_fast8_t remap = 0);
+	void initRX(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
-
 
 	void RXenable() {_USART2_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART2_(USART_CR1) &= ~USART_CR1_RE;}
@@ -202,9 +203,10 @@ class usart3 : public usart
 {
 public:
 	void init(uint32_t baud, uint_fast8_t remap = 0);
+	void initTX(uint32_t baud, uint_fast8_t remap = 0);
+	void initRX(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
-
 
 	void RXenable() {_USART3_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART3_(USART_CR1) &= ~USART_CR1_RE;}

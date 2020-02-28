@@ -472,6 +472,60 @@ void usart1::init(uint32_t baud, uint_fast8_t remap)
 	_USART1_(USART_CR1) |= USART_CR1_TE | USART_CR1_RE;
 }
 
+void usart1::initTX(uint32_t baud, uint_fast8_t remap)
+{
+	if (remap)
+	{
+		//enable GPIOB | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//remap the pins
+		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART1_REMAP;
+		//configure pins; TX(PB6) alt push-pull output
+		pinB6_Output_AFPP_50(); //these are in gpio_func header
+	}
+	else
+	{
+		//enable GPIOA | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//configure pins; TX(PA9) alt push-pull output
+		pinA9_Output_AFPP_50(); //these are in gpio_func header
+	}
+
+	//set speed
+	_USART1_(USART_BRR) = APB2SPEED/baud;
+	//enable USART
+	_USART1_(USART_CR1) |= USART_CR1_UE;
+	//enable TX and RX
+	_USART1_(USART_CR1) |= USART_CR1_TE;
+}
+
+void usart1::initRX(uint32_t baud, uint_fast8_t remap)
+{
+	if (remap)
+	{
+		//enable GPIOB | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//remap the pins
+		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART1_REMAP;
+		//configure pins; RX(PB7) input
+		pinB7_Input();
+	}
+	else
+	{
+		//enable GPIOA | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//configure pins; RX(PA10) input
+		pinA10_Input();
+	}
+
+	//set speed
+	_USART1_(USART_BRR) = APB2SPEED/baud;
+	//enable USART
+	_USART1_(USART_CR1) |= USART_CR1_UE;
+	//enable TX and RX
+	_USART1_(USART_CR1) |= USART_CR1_RE;
+}
+
 void usart1::sendByte(uint8_t dat)
 {
 	while(!(_USART1_(USART_SR) & USART_SR_TC));
@@ -527,6 +581,63 @@ void usart2::init(uint32_t baud, uint_fast8_t remap)
 	_USART2_(USART_CR1) |= USART_CR1_TE | USART_CR1_RE;
 }
 
+void usart2::initTX(uint32_t baud, uint_fast8_t remap)
+{
+	/*if (remap)
+	{
+		//enable GPIOB | USART2 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//remap the pins
+		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART2_REMAP;
+		//configure pins; TX(PB6) alt push-pull output;
+		pinB6_Output_AFPP_50(); //these are in gpio_func header
+	}
+	else*/
+	{
+		//enable GPIOA | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPAEN |  RCC_APB2ENR_AFIOEN;
+		_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_USART2EN;
+		//configure pins; TX(PA2) alt push-pull output
+		pinA2_Output_AFPP_50(); //these are in gpio_func header
+	}
+
+	//set speed
+	_USART2_(USART_BRR) = APB1SPEED/baud;
+	//enable USART
+	_USART2_(USART_CR1) |= USART_CR1_UE;
+	//enable TX and RX
+	_USART2_(USART_CR1) |= USART_CR1_TE;
+}
+
+void usart2::initRX(uint32_t baud, uint_fast8_t remap)
+{
+	/*if (remap)
+	{
+		//enable GPIOB | USART2 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//remap the pins
+		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART2_REMAP;
+		//configure pins; RX(PB7) input
+		pinB7_Input();
+	}
+	else*/
+	{
+		//enable GPIOA | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPAEN |  RCC_APB2ENR_AFIOEN;
+		_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_USART2EN;
+		//configure pins; RX(PA3) input
+		pinA3_Input();
+	}
+
+	//set speed
+	_USART2_(USART_BRR) = APB1SPEED/baud;
+	//enable USART
+	_USART2_(USART_CR1) |= USART_CR1_UE;
+	//enable TX and RX
+	_USART2_(USART_CR1) |= USART_CR1_RE;
+}
+
+
 void usart2::sendByte(uint8_t dat)
 {
 	while(!(_USART2_(USART_SR) & USART_SR_TC));
@@ -578,6 +689,62 @@ void usart3::init(uint32_t baud, uint_fast8_t remap)
 	_USART3_(USART_CR1) |= USART_CR1_UE;
 	//enable TX and RX
 	_USART3_(USART_CR1) |= USART_CR1_TE | USART_CR1_RE;
+}
+
+void usart3::initTX(uint32_t baud, uint_fast8_t remap)
+{
+	/*if (remap)
+	{
+		//enable GPIOB | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//remap the pins
+		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART3_REMAP;
+		//configure pins; TX(PB6) alt push-pull output
+		pinB6_Output_AFPP_50(); //these are in gpio_func header
+	}
+	else*/
+	{
+		//enable GPIOA | USART3 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN |  RCC_APB2ENR_AFIOEN;
+		_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_USART3EN;
+		//configure pins; TX(PB10) alt push-pull output
+		pinB10_Output_AFPP_50(); //these are in gpio_func header
+	}
+
+	//set speed
+	_USART3_(USART_BRR) = APB1SPEED/baud;
+	//enable USART
+	_USART3_(USART_CR1) |= USART_CR1_UE;
+	//enable TX and RX
+	_USART3_(USART_CR1) |= USART_CR1_TE;
+}
+
+void usart3::initRX(uint32_t baud, uint_fast8_t remap)
+{
+	/*if (remap)
+	{
+		//enable GPIOB | USART1 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_USART1EN | RCC_APB2ENR_AFIOEN;
+		//remap the pins
+		_AFIO_(AFIO_MAPR) |= AFIO_MAPR_USART3_REMAP;
+		//configure pins; RX(PB7) input
+		pinB7_Input();
+	}
+	else*/
+	{
+		//enable GPIOA | USART3 |alt func
+		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN |  RCC_APB2ENR_AFIOEN;
+		_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_USART3EN;
+		//configure pins; RX(PB11) input
+		pinB11_Input();
+	}
+
+	//set speed
+	_USART3_(USART_BRR) = APB1SPEED/baud;
+	//enable USART
+	_USART3_(USART_CR1) |= USART_CR1_UE;
+	//enable TX and RX
+	_USART3_(USART_CR1) |= USART_CR1_RE;
 }
 
 void usart3::sendByte(uint8_t dat)
