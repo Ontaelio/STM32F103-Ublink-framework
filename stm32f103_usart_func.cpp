@@ -181,11 +181,12 @@ char usart::getChar()
 	return res;
 }
 
+
 uint64_t usart::getUInt()
 {
 	uint64_t res = 0;
 	uint8_t b;
-	do b = getByte() - 48; while (b>9);
+	do b = getByte() - 48; while ((uint8_t)b>9);
 	do
 	{
 		res = res*10 + b;
@@ -196,10 +197,10 @@ uint64_t usart::getUInt()
 
 int64_t usart::getInt()
 {
-	int res = 0;
+	int64_t res = 0;
 	uint8_t b;
-	uint_fast8_t neg = 0;
-	do b = getByte(); while ((b-48)>9 && (b!='-'));
+	int8_t neg = 0;
+	do b = getByte(); while ((uint8_t)(b-48)>9 && (b!='-'));
 	if (b == '-') {neg = 1; b = getByte() - 48;} else b-=48;
 	do
 	{
@@ -214,14 +215,15 @@ long double usart::getFloat()
 {
 	long double res = 0;
 	uint32_t divider = 10;
-	uint8_t b;
-	do {b = getByte(); if (b == '-') res = -0; b-=48;} while (b>9);
+	uint8_t b = 0;
+	int8_t neg = 0;
+	do {b = getByte(); if (b == '-') neg = 1; b-=48;} while ((uint8_t)b>9);
 	do
 	{
 		res = res*10 + b;
 		b = getByte() - 48;
 	} while (b<10);
-	if (b != 254) return res;
+	if (b != 254) {if (neg) res = 0-res; return res;}
 	res = (uint32_t)res;
 	b = getByte() - 48;
 	while (b<10)
@@ -230,6 +232,7 @@ long double usart::getFloat()
 		b = getByte() - 48;
 		divider *= 10;
 	}
+	if (neg) res = 0-res;
 	return res;
 }
 
@@ -301,7 +304,7 @@ usart& operator << (usart& out, const uint32_t dat)
 
 usart& operator << (usart& out, const uint64_t dat)
 {
-	out.printUInt(dat); return out;
+	out.printUInt64(dat); return out;
 }
 
 usart& operator << (usart& out, const float dat)
@@ -341,7 +344,7 @@ usart& operator << (usart& out, const int32_t dat)
 
 usart& operator << (usart& out, const int64_t dat)
 {
-	out.printInt(dat); return out;
+	out.printInt64(dat); return out;
 }
 
 usart& operator << (usart& out, const char ch)
