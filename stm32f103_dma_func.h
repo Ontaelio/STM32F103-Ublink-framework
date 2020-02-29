@@ -92,6 +92,8 @@
 void dma1_reset(uint8_t channel, uint16_t ccr = 0);
 void dma1_setup(uint8_t channel, uint32_t paddr, uint32_t maddr, uint16_t datanum, uint16_t ccr);
 
+//DMA registers are calculated as [offset] + 0d20*(channel_num - 1)
+
 inline void dma1_init() {_RCC_(RCC_AHBENR) |= RCC_AHBENR_DMA1EN;}
 inline void dma1_ifclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CGIF << (--channel)*4;}
 inline void dma1_completeclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CTCIF << (--channel)*4;}
@@ -104,6 +106,8 @@ inline void dma1_enable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DM
 inline void dma1_disable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_EN;}
 inline void dma1_IRQenable(uint8_t channel) {IRQ_0TO31_SER |= (uint32_t)0x0000400<<channel;}
 inline void dma1_IRQdisable(uint8_t channel) {IRQ_0TO31_CER |= (uint32_t)0x0000400<<channel;}
+
+inline uint8_t dma1_transfercomplete(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 1))&1);}
 
 
 //void dma1_ifclear(uint8_t channel);

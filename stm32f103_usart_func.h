@@ -26,6 +26,7 @@
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_timers_func.h>
 #include <stm32f103_gpio_func.h>
+#include <stm32f103_dma_func.h>
 
 #define USART_TX_EMPTY USART_CR1_TXEIE
 #define USART_TRANSFER_COMPLETE USART_CR1_TCIE
@@ -141,10 +142,10 @@ public:
 	void clearCTS() {_USART1_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART1_(USART_SR) & 0x001F);}
 	uint16_t checkIdle() {return (_USART1_(USART_SR) & 0x0010);}
-	void writeDR(uint8_t dat) {_USART1_(USART_DR) = dat;}
+	uint16_t readDR() {return _USART1_(USART_DR);}
 
-	void sendStreamDMA(uint8_t* dat, uint32_t size);
-	void getStreamDMA(uint8_t* dat, uint32_t size);
+	void sendStreamDMA(uint8_t* dat, uint16_t size);
+	void getStreamDMA(uint8_t* dat, uint16_t size);
 
 private:
 
@@ -189,7 +190,7 @@ public:
 	void clearCTS() {_USART2_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART2_(USART_SR) & 0x001F);}
 	uint16_t checkIdle() {return (_USART2_(USART_SR) & 0x0010);}
-	void writeDR(uint8_t dat) {_USART2_(USART_DR) = dat;}
+	uint16_t readDR() {return _USART1_(USART_DR);}
 
 	void sendStreamDMA(uint8_t* dat, uint32_t size);
 	void getStreamDMA(uint8_t* dat, uint32_t size);
@@ -238,7 +239,7 @@ public:
 	void clearCTS() {_USART3_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART3_(USART_SR) & 0x001F);}
 	uint16_t checkIdle() {return (_USART3_(USART_SR) & 0x0010);}
-	void writeDR(uint8_t dat) {_USART3_(USART_DR) = dat;}
+	uint16_t readDR() {return _USART1_(USART_DR);}
 
 	void sendStreamDMA(uint8_t* dat, uint32_t size);
 	void getStreamDMA(uint8_t* dat, uint32_t size);

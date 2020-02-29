@@ -540,8 +540,6 @@ uint8_t usart1::getByte()
 	return res;
 }
 
-
-
 void usart1::IRQenable(uint16_t irqs)
 {
 	IRQ_32TO63_SER |= IRQ_USART1;
@@ -550,6 +548,50 @@ void usart1::IRQenable(uint16_t irqs)
 	_USART1_(USART_CR1) |= (irqs & 0x01F0); //set particular bits
 	_USART1_(USART_CR3) |= (irqs & 0x0401); //set particular bits
 }
+
+void usart1::sendStreamDMA(uint8_t* dat, uint16_t size)
+{   //channel 5 (RX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+	//mem2per
+	dma1_setup( 4, 0x40013804,
+				//(uint32_t)(_USART1_(USART_DR)),
+				(uint32_t)dat,
+				size,
+				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR));
+	//_DMA1_(DMA_CCR1) &= ~(DMA_CCR_EN);
+	//_DMA1_(DMA_CPAR1) = (uint32_t)(_USART1_(USART_DR));
+	//_DMA1_(DMA_CMAR1) = (uint32_t)dat;
+	//_DMA1_(DMA_CNDTR1) = (uint16_t)size;
+	//ccr = high priority | 16 bit mem | 32 pit periphery | memory increment // | circular
+	//_DMA1_(DMA_CCR1) = (uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);// | DMA_CCR_CIRC);
+
+	//enable DMA
+	//while(!(_USART1_(USART_SR) & USART_SR_RXNE));
+	while(!(_USART1_(USART_SR) & USART_SR_TC));
+	dma1_enable(4);
+}
+
+
+void usart1::getStreamDMA(uint8_t* dat, uint16_t size)
+{
+	//channel 5 (RX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+	dma1_setup( 5, 0x40013804,
+				//(uint32_t)(_USART1_(USART_DR)),
+				(uint32_t)dat,
+				size,
+				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC));
+	//_DMA1_(DMA_CCR1) &= ~(DMA_CCR_EN);
+	//_DMA1_(DMA_CPAR1) = (uint32_t)(_USART1_(USART_DR));
+	//_DMA1_(DMA_CMAR1) = (uint32_t)dat;
+	//_DMA1_(DMA_CNDTR1) = (uint16_t)size;
+	//ccr = high priority | 16 bit mem | 32 pit periphery | memory increment // | circular
+	//_DMA1_(DMA_CCR1) = (uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);// | DMA_CCR_CIRC);
+
+	//enable DMA
+	while(!(_USART1_(USART_SR) & USART_SR_RXNE));
+	dma1_enable(5);
+}
+
+
 
 void usart2::init(uint32_t baud, uint_fast8_t remap)
 {

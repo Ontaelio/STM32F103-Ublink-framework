@@ -111,8 +111,8 @@ void analog_scan::init(uint16_t* targ, uint_fast8_t num, ...)
 	_DMA1_(DMA_CPAR1) = 0x40012400 + ADC_DR;
 	_DMA1_(DMA_CMAR1) = (uint32_t)targ;
 	_DMA1_(DMA_CNDTR1) = (uint16_t)num;
-	//ccr = very high priority | 16 bit mem | 32 pit periphery | memory increment | circular
-	_DMA1_(DMA_CCR1) = (uint16_t)(DMA_PLVHIGH | DMA_MSIZE16 | DMA_PSIZE32 | DMA_CCR_MINC | DMA_CCR_CIRC);
+	//ccr = medium priority | 16 bit mem | 32 pit periphery | memory increment | circular
+	_DMA1_(DMA_CCR1) = (uint16_t)(DMA_PLMEDIUM | DMA_MSIZE16 | DMA_PSIZE32 | DMA_CCR_MINC | DMA_CCR_CIRC);
 
 	//enable SCAN
 	_ADC1_(ADC_CR1) |= ADC_CR1_SCAN;
