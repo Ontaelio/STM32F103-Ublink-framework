@@ -12,6 +12,9 @@
 #ifndef STM32F103_I2C_MASTER_H_
 #define STM32F103_I2C_MASTER_H_
 
+#include <stm32f103_rcc_reg.h>
+#include <stm32f103_i2c_reg.h>
+
 //SM = 100 KHz, FM = 400 KHz, alt pins = PB9/PB8 for i2c1
 #define I2C_SM 0
 #define I2C_FM 1

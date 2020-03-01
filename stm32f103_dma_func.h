@@ -15,7 +15,10 @@
 #include <stdio.h>
 #include <stm32f103_dma_reg.h>
 #include <stm32f103_rcc_reg.h>
-#include <stm32f103_spi_reg.h>
+#include <stm32f103_spi_func.h>
+#include <stm32f103_adc_func.h>
+#include <stm32f103_usart_func.h>
+#include <stm32f103_i2c_master.h>
 
 #ifndef STM32F103_TIMERS_REG_H_
 //interrupt set-enable registers
@@ -165,6 +168,17 @@ public:
 	uint8_t channel;
 	uint16_t ccr, cndtr;
 	uint32_t cpar, cmar;
+};
+
+class dma
+{
+public:
+	void init(uint16_t p, spi1_slave m);
+
+	void transfer(uint16_t size); //do one transfer
+	void start(uint16_t size); //start circular transfer
+	void stop(); //stop circular transfer
+	void disable(); //disable dma channel
 };
 
 

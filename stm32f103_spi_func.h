@@ -13,6 +13,7 @@
 #define STM32F103_SPI_FUNC_H_
 
 #include <stm32f103_rcc_reg.h>
+#include <stm32f103_spi_reg.h>
 #include <stm32f103_gpio_reg.h>
 #include <stm32f103_gpio_func.h>
 #include <stdio.h>

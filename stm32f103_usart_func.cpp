@@ -550,22 +550,13 @@ void usart1::IRQenable(uint16_t irqs)
 }
 
 void usart1::sendStreamDMA(uint8_t* dat, uint16_t size)
-{   //channel 5 (RX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+{   //channel 4 (TX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
 	//mem2per
-	dma1_setup( 4, 0x40013804,
-				//(uint32_t)(_USART1_(USART_DR)),
+	dma1_setup( 4, //0x40013804,
+				(uint32_t)&(_USART1_(USART_DR)),
 				(uint32_t)dat,
 				size,
 				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR));
-	//_DMA1_(DMA_CCR1) &= ~(DMA_CCR_EN);
-	//_DMA1_(DMA_CPAR1) = (uint32_t)(_USART1_(USART_DR));
-	//_DMA1_(DMA_CMAR1) = (uint32_t)dat;
-	//_DMA1_(DMA_CNDTR1) = (uint16_t)size;
-	//ccr = high priority | 16 bit mem | 32 pit periphery | memory increment // | circular
-	//_DMA1_(DMA_CCR1) = (uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);// | DMA_CCR_CIRC);
-
-	//enable DMA
-	//while(!(_USART1_(USART_SR) & USART_SR_RXNE));
 	while(!(_USART1_(USART_SR) & USART_SR_TC));
 	dma1_enable(4);
 }
@@ -574,20 +565,11 @@ void usart1::sendStreamDMA(uint8_t* dat, uint16_t size)
 void usart1::getStreamDMA(uint8_t* dat, uint16_t size)
 {
 	//channel 5 (RX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
-	dma1_setup( 5, 0x40013804,
-				//(uint32_t)(_USART1_(USART_DR)),
+	dma1_setup( 5, //0x40013804,
+				(uint32_t)&(_USART1_(USART_DR)),
 				(uint32_t)dat,
 				size,
 				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC));
-	//_DMA1_(DMA_CCR1) &= ~(DMA_CCR_EN);
-	//_DMA1_(DMA_CPAR1) = (uint32_t)(_USART1_(USART_DR));
-	//_DMA1_(DMA_CMAR1) = (uint32_t)dat;
-	//_DMA1_(DMA_CNDTR1) = (uint16_t)size;
-	//ccr = high priority | 16 bit mem | 32 pit periphery | memory increment // | circular
-	//_DMA1_(DMA_CCR1) = (uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);// | DMA_CCR_CIRC);
-
-	//enable DMA
-	while(!(_USART1_(USART_SR) & USART_SR_RXNE));
 	dma1_enable(5);
 }
 
@@ -703,6 +685,30 @@ void usart2::IRQenable(uint16_t irqs)
 	_USART2_(USART_CR3) |= (irqs & 0x0401); //set particular bits
 }
 
+void usart2::sendStreamDMA(uint8_t* dat, uint16_t size)
+{   //channel 7 (TX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+	//mem2per
+	dma1_setup( 7,
+				(uint32_t)&(_USART2_(USART_DR)),
+				(uint32_t)dat,
+				size,
+				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR));
+	while(!(_USART1_(USART_SR) & USART_SR_TC));
+	dma1_enable(7);
+}
+
+
+void usart2::getStreamDMA(uint8_t* dat, uint16_t size)
+{
+	//channel 6 (RX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+	dma1_setup( 6,
+				(uint32_t)&(_USART2_(USART_DR)),
+				(uint32_t)dat,
+				size,
+				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC));
+	dma1_enable(6);
+}
+
 void usart3::init(uint32_t baud, uint_fast8_t remap)
 {
 	/*if (remap)
@@ -812,3 +818,26 @@ void usart3::IRQenable(uint16_t irqs)
 	_USART3_(USART_CR3) |= (irqs & 0x0401); //set particular bits
 }
 
+void usart3::sendStreamDMA(uint8_t* dat, uint16_t size)
+{   //channel 2 (TX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+	//mem2per
+	dma1_setup( 2, //0x40013804,
+				(uint32_t)&(_USART3_(USART_DR)),
+				(uint32_t)dat,
+				size,
+				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR));
+	while(!(_USART1_(USART_SR) & USART_SR_TC));
+	dma1_enable(2);
+}
+
+
+void usart3::getStreamDMA(uint8_t* dat, uint16_t size)
+{
+	//channel 3 (RX), paddr, maddr, num,  ccr = high pri, 8 bit mem, 8 bit periph, memory increments, non-circular
+	dma1_setup( 3, //0x40013804,
+				(uint32_t)&(_USART3_(USART_DR)),
+				(uint32_t)dat,
+				size,
+				(uint16_t)(DMA_PLHIGH | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC));
+	dma1_enable(3);
+}

@@ -111,6 +111,7 @@ public:
 	void initRX(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
+	void dump() {while(_USART1_(USART_SR) & USART_SR_RXNE) usart1::readDR();}
 
 	void RXenable() {_USART1_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART1_(USART_CR1) &= ~USART_CR1_RE;}
@@ -159,6 +160,7 @@ public:
 	void initRX(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
+	void dump() {while(_USART2_(USART_SR) & USART_SR_RXNE) usart2::readDR();}
 
 	void RXenable() {_USART2_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART2_(USART_CR1) &= ~USART_CR1_RE;}
@@ -190,10 +192,10 @@ public:
 	void clearCTS() {_USART2_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART2_(USART_SR) & 0x001F);}
 	uint16_t checkIdle() {return (_USART2_(USART_SR) & 0x0010);}
-	uint16_t readDR() {return _USART1_(USART_DR);}
+	uint16_t readDR() {return _USART2_(USART_DR);}
 
-	void sendStreamDMA(uint8_t* dat, uint32_t size);
-	void getStreamDMA(uint8_t* dat, uint32_t size);
+	void sendStreamDMA(uint8_t* dat, uint16_t size);
+	void getStreamDMA(uint8_t* dat, uint16_t size);
 
 private:
 
@@ -208,6 +210,7 @@ public:
 	void initRX(uint32_t baud, uint_fast8_t remap = 0);
 	void sendByte(uint8_t dat);
 	uint8_t getByte();
+	void dump() {while(_USART3_(USART_SR) & USART_SR_RXNE) usart3::readDR();}
 
 	void RXenable() {_USART3_(USART_CR1) |= USART_CR1_RE;}
 	void RXdisable() {_USART3_(USART_CR1) &= ~USART_CR1_RE;}
@@ -239,10 +242,10 @@ public:
 	void clearCTS() {_USART3_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART3_(USART_SR) & 0x001F);}
 	uint16_t checkIdle() {return (_USART3_(USART_SR) & 0x0010);}
-	uint16_t readDR() {return _USART1_(USART_DR);}
+	uint16_t readDR() {return _USART3_(USART_DR);}
 
-	void sendStreamDMA(uint8_t* dat, uint32_t size);
-	void getStreamDMA(uint8_t* dat, uint32_t size);
+	void sendStreamDMA(uint8_t* dat, uint16_t size);
+	void getStreamDMA(uint8_t* dat, uint16_t size);
 
 private:
 
