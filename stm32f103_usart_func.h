@@ -12,11 +12,11 @@
 #ifndef STM32F103_USART_FUNC_H_
 #define STM32F103_USART_FUNC_H_
 
-//#define NAN_INFINITY_ENABLED
-//#define USE_BUFFER_FOR_INTS
-
 #define APB2SPEED 72000000
 #define APB1SPEED 36000000
+
+//#define USE_BUFFER_FOR_INTS
+//#define NAN_INFINITY_ENABLED
 
 #include <stdio.h>
 #include <stdint.h>
@@ -126,10 +126,10 @@ public:
 	void CTSdisable() {_USART1_(USART_CR3) &= ~USART_CR3_CTSE;}
 	void HDenable() {_USART1_(USART_CR3) |= USART_CR3_HDSEL;}
 	void HDdisable() {_USART1_(USART_CR3) &= ~USART_CR3_HDSEL;}
-	void DMARenable() {_USART1_(USART_CR3) |= USART_CR3_DMAR;}
-	void DMARdisable() {_USART1_(USART_CR3) &= ~USART_CR3_DMAR;}
-	void DMATenable() {_USART1_(USART_CR3) |= USART_CR3_DMAT;}
-	void DMATdisable() {_USART1_(USART_CR3) &= ~USART_CR3_DMAT;}
+	void DMARXenable() {_USART1_(USART_CR3) |= USART_CR3_DMAR;}
+	void DMARXdisable() {_USART1_(USART_CR3) &= ~USART_CR3_DMAR;}
+	void DMATXenable() {_USART1_(USART_CR3) |= USART_CR3_DMAT;}
+	void DMATXdisable() {_USART1_(USART_CR3) &= ~USART_CR3_DMAT;}
 	void sendBreak() {_USART1_(USART_CR1) |= USART_CR1_SBK;}
 
 	void wordLength(uint8_t M) {BB_USART1_CR1_M = M&0x01;}
@@ -147,6 +147,10 @@ public:
 
 	void sendStreamDMA(uint8_t* dat, uint16_t size);
 	void getStreamDMA(uint8_t* dat, uint16_t size);
+	void startTX(uint8_t* dat, uint16_t size, uint16_t pri = 0x1000);
+	void stopTX();
+	void startRX(uint8_t* dat, uint16_t size, uint16_t pri = 0x1000);
+	void stopRX();
 
 private:
 
@@ -175,10 +179,10 @@ public:
 	void CTSdisable() {_USART2_(USART_CR3) &= ~USART_CR3_CTSE;}
 	void HDenable() {_USART2_(USART_CR3) |= USART_CR3_HDSEL;}
 	void HDdisable() {_USART2_(USART_CR3) &= ~USART_CR3_HDSEL;}
-	void DMARenable() {_USART2_(USART_CR3) |= USART_CR3_DMAR;}
-	void DMARdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAR;}
-	void DMATenable() {_USART2_(USART_CR3) |= USART_CR3_DMAT;}
-	void DMATdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAT;}
+	void DMARXenable() {_USART2_(USART_CR3) |= USART_CR3_DMAR;}
+	void DMARXdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAR;}
+	void DMATXenable() {_USART2_(USART_CR3) |= USART_CR3_DMAT;}
+	void DMATXdisable() {_USART2_(USART_CR3) &= ~USART_CR3_DMAT;}
 	void sendBreak() {_USART2_(USART_CR1) |= USART_CR1_SBK;}
 
 	void wordLength(uint8_t M) {BB_USART2_CR1_M = M&0x01;}
@@ -196,6 +200,11 @@ public:
 
 	void sendStreamDMA(uint8_t* dat, uint16_t size);
 	void getStreamDMA(uint8_t* dat, uint16_t size);
+	void startTX(uint8_t* dat, uint16_t size, uint16_t pri = 0x1000);
+	void stopTX();
+	void startRX(uint8_t* dat, uint16_t size, uint16_t pri = 0x1000);
+	void stopRX();
+
 
 private:
 
@@ -225,10 +234,10 @@ public:
 	void CTSdisable() {_USART3_(USART_CR3) &= ~USART_CR3_CTSE;}
 	void HDenable() {_USART3_(USART_CR3) |= USART_CR3_HDSEL;}
 	void HDdisable() {_USART3_(USART_CR3) &= ~USART_CR3_HDSEL;}
-	void DMARenable() {_USART3_(USART_CR3) |= USART_CR3_DMAR;}
-	void DMARdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAR;}
-	void DMATenable() {_USART3_(USART_CR3) |= USART_CR3_DMAT;}
-	void DMATdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAT;}
+	void DMARXenable() {_USART3_(USART_CR3) |= USART_CR3_DMAR;}
+	void DMARXdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAR;}
+	void DMATXenable() {_USART3_(USART_CR3) |= USART_CR3_DMAT;}
+	void DMATXdisable() {_USART3_(USART_CR3) &= ~USART_CR3_DMAT;}
 	void sendBreak() {_USART3_(USART_CR1) |= USART_CR1_SBK;}
 
 	void wordLength(uint8_t M) {BB_USART3_CR1_M = M&0x01;}
@@ -246,11 +255,17 @@ public:
 
 	void sendStreamDMA(uint8_t* dat, uint16_t size);
 	void getStreamDMA(uint8_t* dat, uint16_t size);
+	void startTX(uint8_t* dat, uint16_t size, uint16_t pri = 0x1000);
+	void stopTX();
+	void startRX(uint8_t* dat, uint16_t size, uint16_t pri = 0x1000);
+	void stopRX();
+
 
 private:
 
 };
 
+/*
 inline void usart1_send(uint8_t a)
 {
 	while(!(_USART1_(USART_SR) & USART_SR_TC));
@@ -270,5 +285,6 @@ inline void usart1_init(uint32_t brate)
 	//enable TX and RX
 	_USART1_(USART_CR1) |= USART_CR1_TE | USART_CR1_RE;
 }
+*/
 
 #endif /* STM32F103_USART_FUNC_H_ */
