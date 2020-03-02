@@ -3,13 +3,21 @@
 The ADC library provides basic and extended functions to run the analog-to-digital conversion. Three classes deal with single, continuous and scan modes of operation.
 
 [Analog Pin Class](#analog-pin-class)
+
 [Analog Continuous Class](#analog-continuous-class)
+
 [Analog Scan Class](#analog-scan-class)
+
 [External triggers on regular channels](#external-triggers-on-regular-channels)
+
 [Injected channels](#injected-channels)
+
 [Non-member initialization](#non-member-adc-functions)
+
 [Analog watchdog](#analog-watchdog)
+
 [Interrupts and events](#interrupts-and-events)
+
 [Examples](#examples)
 
 ## Classes and their member functions
