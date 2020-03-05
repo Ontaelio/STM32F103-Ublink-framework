@@ -106,6 +106,11 @@ public:
 
 	void seqTransfer(uint8_t* arr_out, uint16_t num_out, uint8_t* arr_in, uint16_t num_in);
 
+	void DMATXenable() {_SPI1_(SPI_CR2) |= SPI_CR2_RXDMAEN;}
+	void DMARXenable() {_SPI1_(SPI_CR2) |= SPI_CR2_TXDMAEN;}
+	void DMATXdisable() {_SPI1_(SPI_CR2) &= ~SPI_CR2_RXDMAEN;}
+	void DMARXdisable() {_SPI1_(SPI_CR2) &= ~SPI_CR2_TXDMAEN;}
+
 private:
 	uint16_t static const default_config = 0x0300;
 
@@ -141,6 +146,12 @@ public:
 	void transferStream(void* arr_out, void* arr_in, uint16_t num);
 
 	void seqTransfer(uint8_t* arr_out, uint16_t num_out, uint8_t* arr_in, uint16_t num_in);
+
+	void DMATXenable() {_SPI2_(SPI_CR2) |= SPI_CR2_RXDMAEN;}
+	void DMARXenable() {_SPI2_(SPI_CR2) |= SPI_CR2_TXDMAEN;}
+	void DMATXdisable() {_SPI2_(SPI_CR2) &= ~SPI_CR2_RXDMAEN;}
+	void DMARXdisable() {_SPI2_(SPI_CR2) &= ~SPI_CR2_TXDMAEN;}
+
 
 private:
 	uint16_t static const default_config = 0x0300;

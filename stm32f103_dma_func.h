@@ -12,12 +12,12 @@
 #ifndef STM32F103_DMA_FUNC_H_
 #define STM32F103_DMA_FUNC_H_
 
+#include <stm32f103_usart_func.h>
 #include <stdio.h>
 #include <stm32f103_dma_reg.h>
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_spi_func.h>
 #include <stm32f103_adc_func.h>
-#include <stm32f103_usart_func.h>
 #include <stm32f103_i2c_master.h>
 
 #ifndef STM32F103_TIMERS_REG_H_
@@ -95,6 +95,10 @@
 void dma1_reset(uint8_t channel, uint16_t ccr = 0);
 void dma1_setup(uint8_t channel, uint32_t paddr, uint32_t maddr, uint16_t datanum, uint16_t ccr);
 
+template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
+    return SIZE;
+}
+
 //DMA registers are calculated as [offset] + 0d20*(channel_num - 1)
 
 inline void dma1_init() {_RCC_(RCC_AHBENR) |= RCC_AHBENR_DMA1EN;}
@@ -105,8 +109,8 @@ inline void dma1_errorclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CTEIF
 inline void dma1_paddr(uint8_t channel, uint32_t paddr) {_DMA1_(DMA_CPAR + (--channel)*20) = paddr;}
 inline void dma1_maddr(uint8_t channel, uint32_t maddr) {_DMA1_(DMA_CMAR + (--channel)*20) = maddr;}
 inline void dma1_datanum(uint8_t channel, uint16_t datanum) {_DMA1_(DMA_CNDTR + (--channel)*20) = datanum;};
-inline void dma1_enable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DMA_EN;}
-inline void dma1_disable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_EN;}
+inline void dma1_enable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DMA_CCR_EN;}
+inline void dma1_disable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_CCR_EN;}
 inline void dma1_IRQenable(uint8_t channel) {IRQ_0TO31_SER |= (uint32_t)0x0000400<<channel;}
 inline void dma1_IRQdisable(uint8_t channel) {IRQ_0TO31_CER |= (uint32_t)0x0000400<<channel;}
 
@@ -148,7 +152,7 @@ public:
 	void config(uint16_t cval) {ccr = cval;}
 	void size(uint8_t per, uint8_t mem) {ccr &= ~0xF0FF; ccr|= per<<8 | mem<<10;}
 	void increment(uint8_t per, uint8_t mem) {ccr &= ~0xFF3F; ccr|= per<<6 | mem<<7;}
-	void priority(uint8_t pri) {ccr&= ~0xCFFF; ccr |= pri<<12;}
+	void priority(uint8_t pri) {ccr&= ~0x4FFF; ccr |= pri<<12;}
 	void direction(uint8_t dir, uint8_t circ, uint8_t m2m) {ccr&= ~0xBFCF; ccr|= dir<<4 | circ<<5 | m2m<<14;}
 	void interrupts(uint8_t irq) {ccr&=0xFFF1; ccr |= irq<<1;}
 	void setup() {dma1_setup(channel, cpar, cmar, cndtr, ccr);}
@@ -170,17 +174,78 @@ public:
 	uint32_t cpar, cmar;
 };
 
+class usart1;
+class usart2;
+class usart3;
+
+#define DMA_TIM1_CH1	0x12
+#define DMA_TIM1_CH4	0x14
+#define DMA_TIM1_TRIG	0x1C
+#define DMA_TIM1_COM	0x10
+#define DMA_TIM1_UP		0x15
+#define DMA_TIM1_CH3	0x16
+
+#define DMA_TIM2_CH3	0x21
+#define DMA_TIM2_UP		0x22
+#define DMA_TIM2_CH1	0x25
+#define DMA_TIM2_CH2	0x27
+#define DMA_TIM2_CH4	0x2F
+
+#define DMA_TIM3_CH3	0x32
+#define DMA_TIM3_CH4	0x33
+#define DMA_TIM3_UP		0x3B
+#define DMA_TIM3_CH1	0x36
+#define DMA_TIM3_TRIG	0x3E
+
+#define DMA_TIM4_CH1	0x41
+#define DMA_TIM4_CH2	0x44
+#define DMA_TIM4_CH3	0x45
+#define DMA_TIM4_UP		0x47
+
 class dma
 {
 public:
-	void init(uint16_t p, spi1_slave m);
+	dma(): cha (0){}
+	dma(uint8_t tmr): cha(tmr){}
 
-	void transfer(uint16_t size); //do one transfer
-	void start(uint16_t size); //start circular transfer
+	void init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr); //generic
+
+	void init(uint16_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 16bit
+	void init(uint16_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 16bit
+	void init(uint8_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 8bit
+	void init(uint8_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 8bit
+
+	void init(spi1_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 16bit
+	void init(spi2_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 16bit
+	void init(spi1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 8bit
+	void init(spi2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 8bit
+
+
+	void init(uint8_t* src, usart1 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart1 ok
+	void init(uint8_t* src, usart2 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart2
+	void init(uint8_t* src, usart3 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart3
+	void init(usart1 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart1 2 mem ok
+	void init(usart2 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart2 2 mem
+	void init(usart3 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart3 2 mem
+
+
+
+	void transfer(uint16_t num); //do one transfer
+	void start(uint16_t num); //start circular transfer
 	void stop(); //stop circular transfer
-	void disable(); //disable dma channel
+	void disable() {_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;} //disable dma channel
+	void priority(uint16_t pri);
+
+	uint8_t cha;
+private:
+	void setDMAtimerChannel(uint8_t &c);
 };
 
+class timer_dma
+{
+public:
+	void init(timer1 tim, uint8_t trigger, dma target);
+};
 
 
 
