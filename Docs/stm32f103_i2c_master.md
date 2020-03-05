@@ -1,6 +1,12 @@
 # I2C lib
 
+----
+**TODO**
+1. DMAenables
 
+**TODO**
+
+----
 
 ### Setup, tweak and troubleshooting functions
 

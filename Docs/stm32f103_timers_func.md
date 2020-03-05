@@ -1,5 +1,15 @@
 # Timer functions peripheral library
 
+---
+**TODO**
+1. pwm_pin DMAenable
+2. *DIER and DMA-related registers must leave setup() and be set atomically*
+3. *timerX DMAenable*
+
+**TODO**
+
+----
+
 The timer_func library provides some basic means to deal with timers, PWMs and interrupts. This guide consists of the following sections:
 
 [SysTick timer](#systick-timer) - dealing with the ARM core timer

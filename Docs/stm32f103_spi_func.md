@@ -1,4 +1,13 @@
 # SPI functions peripheral library
+
+----
+**TODO**
+1. DMAenables
+
+**TODO**
+
+----
+
 #### Part of the STM32F103 peripheral library
 
 Notes:

@@ -1,5 +1,14 @@
 # ADC (Analog to digital) library
 
+---
+
+**TODO**
+1. DMAenables in analog_cont
+
+**TODO**
+
+---
+
 The ADC library provides basic and extended functions to run the analog-to-digital conversion. Three classes deal with single, continuous and scan modes of operation.
 
 [Analog Pin Class](#analog-pin-class)

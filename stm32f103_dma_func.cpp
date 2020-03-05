@@ -105,6 +105,42 @@ void dma::init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr)
 	_DMA1_(DMA_CCR + cha*20) = ccr;
 }
 
+void dma::init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri)
+{
+	//if timer was selected the c argument is discarded
+	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)src; //set peripheral address (from)
+	//priority, 8 bit mem, 8 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+}
+
+void dma::init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri)
+{
+	//if timer was selected the c argument is discarded
+	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)src; //set peripheral address (from)
+	//priority, 16 bit mem, 16 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
+}
+
+void dma::init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri)
+{
+	//if timer was selected the c argument is discarded
+	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)src; //set peripheral address (from)
+	//priority, 32 bit mem, 32 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32 | DMA_CCR_MINC);
+}
+
 void dma::init(uint16_t* src, spi1_slave targ, uint16_t pri)
 {
 	if (cha == 0)
@@ -169,7 +205,7 @@ void dma::init(uint8_t* src, spi2_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(spi1_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH)
+void dma::init(spi1_slave src, uint16_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -185,7 +221,7 @@ void dma::init(spi1_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma::init(spi2_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH)
+void dma::init(spi2_slave src, uint16_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -201,7 +237,7 @@ void dma::init(spi2_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma::init(spi1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH)
+void dma::init(spi1_slave src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -217,7 +253,7 @@ void dma::init(spi1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(spi2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH)
+void dma::init(spi2_slave src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -233,6 +269,73 @@ void dma::init(spi2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
+void dma::init(uint8_t* src, i2c1_slave targ, uint16_t pri)
+{
+	if (cha == 0)
+	{
+	cha = 6-1; //Subtract one to use later with CCR register; channel 6 (I2C1 TX)
+	targ.DMAenable();
+	}
+	else setDMAtimerChannel(cha);
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_I2C1_(I2C_DR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem(dir=1)
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint8_t* src, i2c2_slave targ, uint16_t pri)
+{
+	if (cha == 0)
+	{
+	cha = 4-1; //Subtract one to use later with CCR register; channel 4 (I2C2 TX)
+	targ.DMAenable();
+	}
+	else setDMAtimerChannel(cha);
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_I2C2_(I2C_DR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem(dir=1)
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(i2c1_slave src, uint8_t* targ, uint16_t pri)
+{
+	if (cha == 0)
+	{
+	cha = 7-1; //Subtract one to use later with CCR register; channel 7 (I2C1 RX)
+	src.DMAenable();
+	}
+	else setDMAtimerChannel(cha);
+
+	src.LASTset(); //last byte triggers NACK
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_I2C1_(I2C_DR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+}
+
+void dma::init(i2c2_slave src, uint8_t* targ, uint16_t pri)
+{
+	if (cha == 0)
+	{
+	cha = 5-1; //Subtract one to use later with CCR register; channel 5 (I2C2 RX)
+	src.DMAenable();
+	}
+	else setDMAtimerChannel(cha);
+
+	src.LASTset(); //last byte triggers NACK
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_I2C2_(I2C_DR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+}
 
 void dma::init(uint8_t* src, usart1 targ, uint16_t pri)
 {
@@ -328,7 +431,65 @@ void dma::init(usart3 src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void timer_dma::init(timer1 tim, uint8_t trigger, dma target)
+void dma::init(analog_cont src, uint16_t targ, uint16_t pri)
 {
+	if (cha == 0)
+	{
+	cha = 1-1; //Subtract one to use later with CCR register; channel 1 (ADC)
+	src.DMAenable();
+	}
+	else setDMAtimerChannel(cha);
 
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_ADC1_(ADC_DR)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
+}
+
+void dma::init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri)
+{
+	if (cha == 0)
+	{
+	cha = 1-1; //Subtract one to use later with CCR register; channel 1 (ADC)
+	src1.DMAenable();
+	}
+	else setDMAtimerChannel(cha);
+
+	adc_dualMode(7); // fast interleaved mode; max conversion time is 7 cycles
+
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_ADC1_(ADC_DR)); //set peripheral address
+	//priority, 32 bit mem, 32 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32 | DMA_CCR_MINC);
+}
+
+void dma::init(usart1 src, spi1_slave targ, uint16_t pri)
+{
+	cha = 5-1; // usart1 RX channel 5
+	src.DMARXenable();
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)&(_SPI1_(SPI_DR)); //set 'memory' address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_ADC1_(ADC_DR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments,
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+}
+
+void dma::init(uint16_t* src, tim1_pwm targ, uint16_t pri)
+{
+	switch (targ.channel)
+	{
+		case 1: cha = 2-1; break;
+		//case 2: cha = 2-1; break; // no DMA for ch2
+		case 3: cha = 6-1; break;
+		case 4: cha = 4-1; break;
+		default: break;
+	}
+	targ.DMAenable();
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM1_(targ.ch_addr)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }

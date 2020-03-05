@@ -33,6 +33,16 @@ public:
 	uint32_t read32(uint16_t addr);
 	void readStream(uint16_t addr, uint8_t* arr, uint8_t num);
 
+	void DMAenable() {_I2C1_(I2C_CR2) |= I2C_CR2_DMAEN;}
+	void DMAdisable() {_I2C1_(I2C_CR2) &= ~I2C_CR2_DMAEN;}
+	void LASTset() {_I2C1_(I2C_CR2) |= I2C_CR2_LAST;}
+	void LASTclear() {_I2C1_(I2C_CR2) &= ~I2C_CR2_LAST;}
+
+	void DMATXenable() {_I2C1_(I2C_CR2) |= I2C_CR2_DMAEN;} //for compatibility reasons
+	void DMARXenable() {_I2C1_(I2C_CR2) |= I2C_CR2_DMAEN;}
+	void DMATXdisable() {_I2C1_(I2C_CR2) &= ~I2C_CR2_DMAEN;}
+	void DMARXdisable() {_I2C1_(I2C_CR2) &= ~I2C_CR2_DMAEN;}
+
 private:
 	uint8_t device_addr, word_addr;
 	void startAndSendRegisterAddress(uint16_t regaddr);
@@ -90,6 +100,16 @@ public:
 	uint16_t read16(uint16_t addr);
 	uint32_t read32(uint16_t addr);
 	void readStream(uint16_t addr, uint8_t* arr, uint8_t num);
+
+	void DMAenable() {_I2C2_(I2C_CR2) |= I2C_CR2_DMAEN;}
+	void DMAdisable() {_I2C2_(I2C_CR2) &= ~I2C_CR2_DMAEN;}
+	void LASTset() {_I2C2_(I2C_CR2) |= I2C_CR2_LAST;}
+	void LASTclear() {_I2C2_(I2C_CR2) &= ~I2C_CR2_LAST;}
+
+	void DMATXenable() {_I2C2_(I2C_CR2) |= I2C_CR2_DMAEN;} //for compatibility reasons
+	void DMARXenable() {_I2C2_(I2C_CR2) |= I2C_CR2_DMAEN;}
+	void DMATXdisable() {_I2C2_(I2C_CR2) &= ~I2C_CR2_DMAEN;}
+	void DMARXdisable() {_I2C2_(I2C_CR2) &= ~I2C_CR2_DMAEN;}
 
 private:
 	uint8_t device_addr, word_addr;

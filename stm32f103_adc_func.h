@@ -74,6 +74,9 @@ public:
 	void injectClear() {*(adc + ADC_SR/4) &= ~ADC_SR_JEOC;}
 	uint16_t injectRead(uint_fast8_t jcha);
 
+	void DMAenable(){_ADC1_(ADC_CR2) |= ADC_CR2_DMA;}
+	void DMAdisable(){_ADC1_(ADC_CR2) &= ~ADC_CR2_DMA;}
+
 private:
 	void injectWaitForResult();
 

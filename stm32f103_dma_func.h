@@ -178,6 +178,8 @@ class usart1;
 class usart2;
 class usart3;
 
+class analog_cont;
+
 #define DMA_TIM1_CH1	0x12
 #define DMA_TIM1_CH4	0x14
 #define DMA_TIM1_TRIG	0x1C
@@ -210,28 +212,45 @@ public:
 
 	void init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr); //generic
 
+	void init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // mem2mem 8bits
+	void init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri = DMA_PLHIGH);  // mem2mem 16bits
+	void init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri = DMA_PLHIGH);  // mem2mem 16bits
+
 	void init(uint16_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 16bit
 	void init(uint16_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 16bit
 	void init(uint8_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 8bit
 	void init(uint8_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 8bit
-
 	void init(spi1_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 16bit
 	void init(spi2_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 16bit
 	void init(spi1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 8bit
 	void init(spi2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 8bit
 
+	void init(uint8_t* src, i2c1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 i2c1
+	void init(uint8_t* src, i2c2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 i2c2
+	void init(i2c1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // i2c1 2 mem
+	void init(i2c2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // i2c2 2 mem
 
-	void init(uint8_t* src, usart1 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart1 ok
+	void init(uint8_t* src, usart1 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart1 							ok
 	void init(uint8_t* src, usart2 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart2
 	void init(uint8_t* src, usart3 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart3
-	void init(usart1 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart1 2 mem ok
+	void init(usart1 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart1 2 mem 							ok
 	void init(usart2 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart2 2 mem
 	void init(usart3 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart3 2 mem
 
+	void init(analog_cont src, uint16_t targ, uint16_t pri = DMA_PLHIGH); //adc1 2 mem
+	void init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri = DMA_PLHIGH); //adc1&2 2 mem
+
+	void init(usart1 src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); //will multiply once tested
+
+	void init(uint16_t* src, tim1_pwm targ, uint16_t pri = DMA_PLHIGH); //copy pwm value at the CC event
+
+	void init(uint16_t* src, timer1 targ, uint16_t pri = DMA_PLHIGH); // copy four CC values at UE
 
 
-	void transfer(uint16_t num); //do one transfer
-	void start(uint16_t num); //start circular transfer
+
+
+	void transfer(uint16_t num = 1); //do one transfer
+	void start(uint16_t num = 1); //start circular transfer
 	void stop(); //stop circular transfer
 	void disable() {_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;} //disable dma channel
 	void priority(uint16_t pri);
@@ -240,17 +259,5 @@ public:
 private:
 	void setDMAtimerChannel(uint8_t &c);
 };
-
-class timer_dma
-{
-public:
-	void init(timer1 tim, uint8_t trigger, dma target);
-};
-
-
-
-
-
-
 
 #endif /* STM32F103_DMA_FUNC_H_ */

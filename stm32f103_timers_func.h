@@ -142,6 +142,7 @@ public:
 	virtual void enable() =0;
 	virtual void disable() =0;
 	virtual void write(uint16_t pwm_val) =0;
+	friend class dma;
 
 protected:
 	uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
@@ -276,6 +277,10 @@ public:
 	void enable();
 	void disable() {_TIM1_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM1_(ch_addr) = pwm_val;}
+
+	void DMAenable() {_TIM1_(TIMX_DIER) |= (1 << (channel+8));}
+	void DMAdisable() {_TIM1_(TIMX_DIER) &= ~(1 << (channel+8));}
+
 	operator uint16_t() {return _TIM1_(ch_addr);}
 	tim1_pwm& operator= (const uint16_t& a) {write(a); return *this;}
 	tim1_pwm& operator++ () {write (_TIM1_(ch_addr) + 1); return *this;}
@@ -301,6 +306,10 @@ public:
 	void enable();
 	void disable() {_TIM2_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM2_(ch_addr) = pwm_val;}
+
+	void DMAenable() {_TIM2_(TIMX_DIER) |= (1 << (channel+8));}
+	void DMAdisable() {_TIM2_(TIMX_DIER) &= ~(1 << (channel+8));}
+
 	operator uint16_t() {return _TIM2_(ch_addr);}
 	tim2_pwm& operator= (const uint16_t& a) {write(a); return *this;}
 	tim2_pwm& operator++ () {write (_TIM2_(ch_addr) + 1); return *this;}
@@ -326,6 +335,10 @@ public:
 	void enable();
 	void disable() {_TIM3_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM3_(ch_addr) = pwm_val;}
+
+	void DMAenable() {_TIM3_(TIMX_DIER) |= (1 << (channel+8));}
+	void DMAdisable() {_TIM3_(TIMX_DIER) &= ~(1 << (channel+8));}
+
 	operator uint16_t() {return _TIM3_(ch_addr);}
 	tim3_pwm& operator= (const uint16_t& a) {write(a); return *this;}
 	tim3_pwm& operator++ () {write (_TIM3_(ch_addr) + 1); return *this;}
@@ -351,6 +364,10 @@ public:
 	void enable();
 	void disable() {_TIM4_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM4_(ch_addr) = pwm_val;}
+
+	void DMAenable() {_TIM4_(TIMX_DIER) |= (1 << (channel+8));}
+	void DMAdisable() {_TIM4_(TIMX_DIER) &= ~(1 << (channel+8));}
+
 	operator uint16_t() {return _TIM4_(ch_addr);}
 	tim4_pwm& operator= (const uint16_t& a) {write(a); return *this;}
 	tim4_pwm& operator++ () {write (_TIM4_(ch_addr) + 1); return *this;}
