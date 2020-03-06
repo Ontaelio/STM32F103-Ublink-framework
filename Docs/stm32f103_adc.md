@@ -1,14 +1,5 @@
 # ADC (Analog to digital) library
 
----
-
-**TODO**
-1. DMAenables in analog_cont
-
-**TODO**
-
----
-
 The ADC library provides basic and extended functions to run the analog-to-digital conversion. Three classes deal with single, continuous and scan modes of operation.
 
 [Analog Pin Class](#analog-pin-class)
@@ -96,6 +87,11 @@ Returns the current conversion result.
  *Analog Continuous* class is overloaded into `uint16_t` type and can be used as a right-hand operand as any normal `uint16_t` unsigned integer, e.g. `uint16_t res = analog_cont_object;`.
 
 *For the injected functions list check the Injected channels section below*
+
+* void **DMAenable()**
+* void **DMAdisable()**
+
+Enable/disable DMA. Used by the DMA library.
 
 
 ### Analog Scan Class
