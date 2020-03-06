@@ -14,7 +14,7 @@
 
 Checks the i2c bus and tries to reset it if it's unsynchronised, i.e. SDA line is held low. This condition may happen if the slave has its own power source (e.g. a battery). In that case when the master resets while receiving data, the slave continues to wait for the incoming clock pulse. `resetBus` provides up to nine clock pulses while monitoring SDA line, once SDA gets high it generates a START condition followed by a STOP condition and returns 0. If SDA remains low after 9 clock pulses, 1 is returned. `altpins` set to 1 or `I2C1_ALT` specifies alternative pins for i2c1; default is 0.
 
-==_Note: `i2cX_resetBus`, if present, must be called **before** `i2cX_init` as it resets pin modes to general IO._==
+*Note: `i2cX_resetBus`, if present, must be called **before** `i2cX_init` as it resets pin modes to general IO.*
 
 * `void  i2c1_init(uint8_t speed [,uint8_t altpins = 0])`
 
