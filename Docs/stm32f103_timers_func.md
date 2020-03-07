@@ -2,9 +2,43 @@
 
 ---
 **TODO**
-1. pwm_pin DMAenable
-2. *DIER and DMA-related registers must leave setup() and be set atomically*
+1. pwm_pin DMAenable: 
+	void DMAenable() {_TIM4_(TIMX_DIER) |= (1 << (channel+8));}
+	void DMAdisable() {_TIM4_(TIMX_DIER) &= ~(1 << (channel+8));}
+2. DIER and DMA-related registers must leave setup()
+3. DMAR, DCR and DIER variables removed from the class
+4. setInterrupts deleted
 3. *timerX DMAenable*
+	void DMACOMenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_COMDE;}
+	void DMATRGenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_TDE;}
+	void DMACCenable(uint8_t ch_num = 0);
+	void DMAUPenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_UDE;}
+	void DMACOMdisable()  {_TIM1_(TIMX_DIER) &= ~TIMX_DIER_COMDE;}
+	void DMATRGdisable()  {_TIM1_(TIMX_DIER) &= ~TIMX_DIER_TDE;}
+	void DMACCdisable(uint8_t ch_num = 0);
+	void DMAUPdisable()  {_TIM1_(TIMX_DIER) &= ~TIMX_DIER_UDE;}
+	void DMAburst(uint8_t burst) {_TIM1_(TIMX_DCR) &= ~TIMX_DCR_DBL; _TIM1_(TIMX_DCR) |= ((--burst) << 8);}
+	void DMAbase(uint8_t base) {_TIM1_(TIMX_DCR) &= ~TIMX_DCR_DBA; _TIM1_(TIMX_DCR) |= base;}
+6. tim_pwm(uint8_t ch_num, uint16_t d = 0xFFFF)
+7. 	//check status flags
+	uint8_t checkUpdate() {return (_TIM1_(TIMX_SR) & TIMX_SR_UIF);}
+	uint8_t checkCC1() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC1IF)>>1);}
+	uint8_t checkCC2() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC2IF)>>2);}
+	uint8_t checkCC3() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC3IF)>>3);}
+	uint8_t checkCC4() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC4IF)>>4);}
+	uint8_t checkCOM() {return ((_TIM1_(TIMX_SR) & TIMX_SR_COMIF)>>5);}
+	uint8_t checkTrigger() {return ((_TIM1_(TIMX_SR) & TIMX_SR_TIF)>>6);}
+	uint8_t checkBreak() {return ((_TIM1_(TIMX_SR) & TIMX_SR_BIF)>>7);}
+8. same as above for tim_pwm
+	//check status flags
+	uint8_t checkUpdate() {return (_TIM1_(TIMX_SR) & TIMX_SR_UIF);}
+	uint8_t checkCC() {return ((_TIM1_(TIMX_SR) >> channel) & 1);}
+	void clearUpdate() {_TIM1_(TIMX_SR) &= ~TIMX_SR_UIF;}
+	void clearCC() {_TIM1_(TIMX_SR) &= ~(1<<channel);}
+	void updateEvent() {BB_TIM1_EGR_UG = 1;}
+	void CCevent() {_TIM1_(TIMX_EGR) |= 1<<channel;}
+9. void setPreload(uint16_t pre) in `timerX` (auto-reload preload)
+	void setUpdateRequest(uint16_t cc_only) {CR1 &= ~TIMX_CR1_URS; CR1 |= (cc_only << 2);}
 
 **TODO**
 
@@ -75,7 +109,7 @@ Enables the clocks for Timer X and AFIO.
 
 ## PWM pin class
 
-The PWM class is a simple instrument to quickly set up PWM output pins Arduino-style. Each class object represents a single PWM output. If constant PWM outputs are exactly what's needed, this class is the best solution; for other cases a more complex TimerX class has it's own set of PWM functions.
+The PWM class is a simple instrument to quickly set up PWM output pins Arduino-style. Each class object represents a single PWM output. If constant PWM outputs are exactly what's needed, this class is the best solution; for other cases, a more complex TimerX class has its own set of PWM functions.
 
 Constructor:
 * **tim1_pwm (uint8_t ch_num)**
@@ -106,11 +140,11 @@ Timer4 Channel 4 | PB9 |
 
 * void **init ([uint8_t pushpull = 0])**
 
-Initializes the SS pin and its GPIO port. If `pushpull` is non-zero, the pin will be configured as a push-pull output, else an open drain output (default). `init()` checks whether the timer outputs were remapped and adjusts accordingly. Timer1 complementary outputs not supported.
+Initializes the SS pin and its GPIO port. If `pushpull` is non-zero, the pin will be configured as a push-pull output, else an open-drain output (default). `init()` checks whether the timer outputs were remapped and adjusts accordingly. Timer1 complementary outputs not supported.
 
 *Note: `init` doesn't initialize the timer, `timerX_init()` must be used.*
 
-A `timX_pwm` class object has a number of variables that hold configuration values used to set up the PWM channel when it gets enabled. These variables are assigned with default values in the constructor and can be changed before enabling the PWM channel. These variables are:
+A `timX_pwm` class object has several variables that hold configuration values used to set up the PWM channel when it gets enabled. These variables are assigned with default values in the constructor and can be changed before enabling the PWM channel. These variables are:
 
 variable | values | default
 --|--|--
@@ -121,7 +155,7 @@ variable | values | default
 **prescaler** |Timer prescaler, 0 .. 0xFFFF | 0
 **depth** | Timer reload value, 0 .. 0xFFFF | 0xFFFF
 
-The rest of the configuration registers values are hard-coded into the PWM timer configuration.
+The rest of the configuration registers' values are hard-coded into the PWM timer configuration.
 
 * void **enable ()**
 
@@ -137,20 +171,20 @@ Sets the PWM output to the provided `value`. Can be used before `enable` to pre-
 
 * Overloaded functions **=**, **++**, **--**, **+=**, **-=**
 
-The overloaded functions can be used to read, write, increase and decrease the PWM output (that is, the corresponding capture/compare register). I.e. with a PWM_pin object called `A11` you can use either `A11.write(1000);` or `A11 = 1000;`, the end result will be equal. Pre- and post- increrment/decrement produce the same result. `=` operator can also be used to get the current PWM value (`int a = A11;`).
+The overloaded functions can be used to read, write, increase and decrease the PWM output (that is, the corresponding capture/compare register). I.e. with a PWM_pin object called `A11` you can use either `A11.write(1000);` or `A11 = 1000;`, the result will be equal. Pre- and post- increment/decrement produce the same result. `=` operator can also be used to get the current PWM value (`int a = A11;`).
 
 
 ## Timer class
 
-`timerX` objects hold all the settable register values and provide some rudimentary functions for the most common timer operations and register bits assigments. Multiple `timerX` objects with different configs for the same timer allow quick operation mode switching with `enable` member function.
+`timerX` objects hold all the settable register values and provide some rudimentary functions for the most common timer operations and register bits assignments. Multiple `timerX` objects with different configs for the same timer allow quick operation mode switching with `enable` member function.
 
-The object has a number of `public` variables corresponding to the number of settable timer registers. These variables can be assigned with values (16-bit half words, except Timer1 DMAR register that is 32-bit); these values are written into the corresponding registers with `config` or `enable` member functions. The variables are named according to the registers they represent:
+The object has several `public` variables corresponding to the number of settable timer registers. These variables can be assigned with values (16-bit half words, except Timer1 DMAR register that is 32-bit); these values are written into the corresponding registers with `config` or `enable` member functions. The variables are named according to the registers they represent:
 
 `CR1, CR2, SMCR, DIER, CCMR1, CCMR2, CCER, PSC, ARR, RCR, CCR1, CCR2, CCR3, CCR4, BDTR, DCR, DMAR` *(RCR and BDTR are Timer1 only)*
 
 The call to constructor initializes all these variables to the corresponding register reset value (`0` for all except `ARR` that resets at `0xFFFF`) except `BDTR` for Timer1.
 
-`ARR` (`depth`) and `PSC` (`prsclr`) values can be assigned in constructor.
+`ARR` (`depth`) and `PSC` (`prsclr`) values can be assigned in the constructor.
 
 Timer1 register `BDTR` is initialized with `MOE` (Master Output Enable) bit **set** to avoid confusion. If it's not needed, it must be reset manually (`timer.BDTR = 0`) before the call to `enable()`.
 
@@ -219,14 +253,18 @@ Sets the timer prescaler (PSC).
 *Timer1 only* Sets the repetitions counter (RCR). Note that while the register is 16-bit, only 8 bits are available, thus no more than 255 here.
 
 
-* void **setCC1mode (uint16_t mode [, uint8_t plrty = 0, uint8_t oe = 1])**
-* void **setCC2mode (uint16_t mode [, uint8_t plrty = 0, uint8_t oe = 1])**
-* void **setCC3mode (uint16_t mode [, uint8_t plrty = 0, uint8_t oe = 1])**
-* void **setCC4mode (uint16_t mode [, uint8_t plrty = 0, uint8_t oe = 1])**
+* void **setCC1mode (uint16_t mode [, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1])**
+* void **setCC2mode (uint16_t mode [, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1])**
+* void **setCC3mode (uint16_t mode [, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1])**
+* void **setCC4mode (uint16_t mode [, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1])**
 
-These functions set up a Capture/Compare channel 1..4, configuring output compare mode, polarity and output-enable.
+These functions set up a Capture/Compare channel 1..4, configuring output compare mode, compare value preload, polarity and output-enable.
 
-Polarity and output-enable have default values of *Active High* and *Output Enable*. You can also enable/disable CC output with a dedicated fast `CCXoutput(x)` function (see below).
+Preload mode (`prld_en`) is on by default; set this argument to 0 to disable.
+
+Polarity and output-enable have default values of *Active High* (`plrty = 0`) and *Output Enable* (`oe = 1`). Provide different values (`1` or `0`) for these arguments if needed.
+
+You can also enable/disable CC output with a dedicated fast `CCXoutput(x)` function (see below).
 
 The following defined constants may be used to represent the output compare mode:
 
@@ -325,11 +363,11 @@ Set (1, default) or reset (0) the corresponding interrupt enable bits (DIER).
 
 * void **pwmSetup (uint8_t center, uint8_t dir)**
 
-Sets up PWM mode. `center` corresponds to the CMS bits in CR1; `dir` is the DIR bit. `center == 1` selects center-aligned mode, while `dir` selects the counter direction if `center` is zero. Sets the ARPE bit in CR1. This functions doesn't write into the actual register and is similar to the `setMode` function.
+Sets up PWM mode. `center` corresponds to the CMS bits in CR1; `dir` is the DIR bit. `center == 1` selects center-aligned mode, while `dir` selects the counter direction if `center` is zero (`0` for up, `1` for down). Sets the ARPE (auto reload preload enable) bit in CR1. This function doesn't write into the actual register and is similar to the `setMode` function.
 
 * void **pwmChannel (uint8_t ch_num, uint8_t mode, uint8_t plrty [, uint8_t pushpull = 0])**
 
-Sets up the PWM channel `ch_num`. `mode` is the PWM mode (1 or 2), `plrty` is polarity (0 or 1). Optional `pushpull` argument, if set, will configure the output pin into the push-pull mode; defaul is open-drain. This function will initialize the output pin, but won't write anything into the timer registers.
+Sets up the PWM channel `ch_num`. `mode` is the PWM mode (1 or 2), `plrty` is polarity (0 or 1), check `setCCXmode()` above for values. Optional `pushpull` argument, if set, will configure the output pin into the push-pull mode; defaul is open-drain. This function will initialize the output pin, but won't write anything into the timer registers.
 
 * void **pwmWrite (uint8_t ch_num, uint16_t val)**
 
