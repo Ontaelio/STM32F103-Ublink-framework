@@ -476,7 +476,7 @@ void dma::init(usart1 src, spi1_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(uint16_t* src, tim1_pwm targ, uint16_t pri)
+void dma::init(uint16_t* src, tim1_pwm targ, uint8_t uedma, uint16_t pri)
 {
 	switch (targ.channel)
 	{
@@ -486,10 +486,189 @@ void dma::init(uint16_t* src, tim1_pwm targ, uint16_t pri)
 		case 4: cha = 4-1; break;
 		default: break;
 	}
-	targ.DMAenable();
+	//CCDS assures the DMA request is sent on update, but the DMA channel remains CC-connected
+	if (uedma) _TIM1_(TIMX_CR2) |= TIMX_CR2_CCDS; else _TIM1_(TIMX_CR2) &= ~TIMX_CR2_CCDS;
+	targ.DMAenable(); // channel dma enable
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
 	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM1_(targ.ch_addr)); //set peripheral address
 	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, tim2_pwm targ, uint8_t uedma, uint16_t pri)
+{
+	switch (targ.channel)
+	{
+		case 1: cha = 5-1; break;
+		case 2: cha = 7-1; break;
+		case 3: cha = 1-1; break;
+		case 4: cha = 7-1; break;
+		default: break;
+	}
+	if (uedma) _TIM2_(TIMX_CR2) |= TIMX_CR2_CCDS; else _TIM2_(TIMX_CR2) &= ~TIMX_CR2_CCDS;
+	targ.DMAenable(); // channel dma enable
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM2_(targ.ch_addr)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, tim3_pwm targ, uint8_t uedma, uint16_t pri)
+{
+	switch (targ.channel)
+	{
+		case 6: cha = 2-1; break;
+		//case 2: cha = 2-1; break; // no DMA for ch2
+		case 3: cha = 2-1; break;
+		case 4: cha = 3-1; break;
+		default: break;
+	}
+	if (uedma) _TIM3_(TIMX_CR2) |= TIMX_CR2_CCDS; else _TIM3_(TIMX_CR2) &= ~TIMX_CR2_CCDS;
+	targ.DMAenable(); // channel dma enable
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM3_(targ.ch_addr)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, tim4_pwm targ, uint8_t uedma, uint16_t pri)
+{
+	switch (targ.channel)
+	{
+		case 1: cha = 1-1; break;
+		case 2: cha = 4-1; break;
+		case 3: cha = 5-1; break;
+		//case 4: cha = 4-1; break; // no DMA for ch4
+		default: break;
+	}
+	if (uedma) _TIM4_(TIMX_CR2) |= TIMX_CR2_CCDS; else _TIM4_(TIMX_CR2) &= ~TIMX_CR2_CCDS;
+	targ.DMAenable(); // channel dma enable
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM4_(targ.ch_addr)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, timer1 targ, uint8_t numofch, uint16_t pri)
+{
+	cha = 5-1;
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+
+	targ.DMAburst(numofch); //num of data to transfer in one burst
+	targ.DMAbase(13); //CCR1
+	targ.DMAUPenable();
+
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM1_(TIMX_DMAR)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, timer2 targ, uint8_t numofch, uint16_t pri)
+{
+	cha = 2-1;
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+
+	targ.DMAburst(numofch); //num of data to transfer in one burst
+	targ.DMAbase(13); //CCR1
+	targ.DMAUPenable();
+
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM2_(TIMX_DMAR)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, timer3 targ, uint8_t numofch, uint16_t pri)
+{
+	cha = 3-1;
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+
+	targ.DMAburst(numofch); //num of data to transfer in one burst
+	targ.DMAbase(13); //CCR1
+	targ.DMAUPenable();
+
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM3_(TIMX_DMAR)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, timer4 targ, uint8_t numofch, uint16_t pri)
+{
+	cha = 7-1;
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+
+	targ.DMAburst(numofch); //num of data to transfer in one burst
+	targ.DMAbase(13); //CCR1
+	targ.DMAUPenable();
+
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_TIM4_(TIMX_DMAR)); //set peripheral address
+	//priority, 16 bit mem, 16 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, gpioA targ, int16_t pri)
+{
+	setDMAtimerChannel(cha);
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_GPIOA_(GPIOX_ODR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, gpioB targ, int16_t pri)
+{
+	setDMAtimerChannel(cha);
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_GPIOB_(GPIOX_ODR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint16_t* src, gpioC targ, int16_t pri)
+{
+	setDMAtimerChannel(cha);
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_GPIOC_(GPIOX_ODR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint32_t* src, gpioA targ, int16_t pri)
+{
+	setDMAtimerChannel(cha);
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_GPIOA_(GPIOX_BSRR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint32_t* src, gpioB targ, int16_t pri)
+{
+	setDMAtimerChannel(cha);
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_GPIOB_(GPIOX_BSRR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
+}
+
+void dma::init(uint32_t* src, gpioC targ, int16_t pri)
+{
+	setDMAtimerChannel(cha);
+	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
+	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
+	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_GPIOC_(GPIOX_BSRR)); //set peripheral address
+	//priority, 8 bit mem, 8 bit periph, memory increments, from mem
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
 }

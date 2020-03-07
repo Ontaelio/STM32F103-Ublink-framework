@@ -46,34 +46,34 @@ void sysTick_start(uint32_t val, uint8_t intext)
 }
 
 
-void timer::setCC1mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+void timer::setCC1mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
 	CCMR1 &= ~TIMX_CCMR1_OC1M; //clear
-	CCMR1 |= mode<<4; //set CC1 mode
+	CCMR1 |= (mode<<4) | (prld_en<<3); //set CC1 mode
 	if (plrty) CCER |= TIMX_CCER_CC1P; else CCER &= ~(TIMX_CCER_CC1P);
 	if (oe) CCER |= TIMX_CCER_CC1E; else CCER &= ~(TIMX_CCER_CC1E);
 }
 
-void timer::setCC2mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+void timer::setCC2mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
 	CCMR1 &= ~TIMX_CCMR1_OC2M; //clear
-	CCMR1 |= mode<<12; //set CC1 mode
+	CCMR1 |= mode<<12 | (prld_en<<11); //set CC1 mode
 	if (plrty) CCER |= TIMX_CCER_CC2P; else CCER &= ~(TIMX_CCER_CC2P);
 	if (oe) CCER |= TIMX_CCER_CC2E; else CCER &= ~(TIMX_CCER_CC2E);
 }
 
-void timer::setCC3mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+void timer::setCC3mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
 	CCMR2 &= ~TIMX_CCMR2_OC3M; //clear
-	CCMR2 |= mode<<4; //set CC1 mode
+	CCMR2 |= mode<<4 | (prld_en<<3); //set CC1 mode
 	if (plrty) CCER |= TIMX_CCER_CC3P; else CCER &= ~(TIMX_CCER_CC3P);
 	if (oe) CCER |= TIMX_CCER_CC3E; else CCER &= ~(TIMX_CCER_CC3E);
 }
 
-void timer::setCC4mode(uint16_t mode, uint8_t plrty, uint8_t oe)
+void timer::setCC4mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
 	CCMR2 &= ~TIMX_CCMR2_OC4M; //clear
-	CCMR2 |= mode<<12; //set CC1 mode
+	CCMR2 |= mode<<12 | (prld_en<<11); //set CC1 mode
 	if (plrty) CCER |= TIMX_CCER_CC4P; else CCER &= ~(TIMX_CCER_CC4P);
 	if (oe) CCER |= TIMX_CCER_CC4E; else CCER &= ~(TIMX_CCER_CC4E);
 }
@@ -405,8 +405,8 @@ void tim4_pwm::enable()
 
 void timer1::config()
 {
-	_TIM1_(TIMX_DMAR) = DMAR;
-	_TIM1_(TIMX_DCR) = DCR;
+	//_TIM1_(TIMX_DMAR) = DMAR;
+	//_TIM1_(TIMX_DCR) = DCR;
 	_TIM1_(TIMX_BDTR) = BDTR; //tim1 only
 	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM1_(TIMX_CCR4) = CCR4;
 	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM1_(TIMX_CCR3) = CCR3;
@@ -419,7 +419,7 @@ void timer1::config()
 	_TIM1_(TIMX_CCER) = CCER;
 	_TIM1_(TIMX_CCMR2) = CCMR2;
 	_TIM1_(TIMX_CCMR1) = CCMR1;
-	_TIM1_(TIMX_DIER) = DIER;
+	//_TIM1_(TIMX_DIER) = DIER;
 	_TIM1_(TIMX_SMCR) = SMCR;
 	_TIM1_(TIMX_CR2) = CR2;
 	_TIM1_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
@@ -499,10 +499,23 @@ void timer1::pwmDisable(uint8_t ch_num)
 	CCER &= ~tmp;
 }
 
+void timer1::DMACCenable(uint8_t ch_num)
+{
+	if (ch_num) _TIM1_(TIMX_DIER) |= (1 << (ch_num + 8));
+	else _TIM1_(TIMX_DIER) |= TIMX_DIER_CCDE;
+}
+
+void timer1::DMACCdisable(uint8_t ch_num)
+{
+	if (ch_num) _TIM1_(TIMX_DIER) &= ~(1 << (ch_num + 8));
+	else _TIM1_(TIMX_DIER) &= ~TIMX_DIER_CCDE;
+}
+
+
 void timer2::config()
 {
-	_TIM2_(TIMX_DMAR) = DMAR;
-	_TIM2_(TIMX_DCR) = DCR;
+	//_TIM2_(TIMX_DMAR) = DMAR;
+	//_TIM2_(TIMX_DCR) = DCR;
 	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM2_(TIMX_CCR4) = CCR4;
 	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM2_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM2_(TIMX_CCR2) = CCR2;
@@ -513,7 +526,7 @@ void timer2::config()
 	_TIM2_(TIMX_CCER) = CCER;
 	_TIM2_(TIMX_CCMR2) = CCMR2;
 	_TIM2_(TIMX_CCMR1) = CCMR1;
-	_TIM2_(TIMX_DIER) = DIER;
+	//_TIM2_(TIMX_DIER) = DIER;
 	_TIM2_(TIMX_SMCR) = SMCR;
 	_TIM2_(TIMX_CR2) = CR2;
 	_TIM2_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
@@ -594,11 +607,23 @@ void timer2::pwmDisable(uint8_t ch_num)
 	CCER &= ~tmp;
 }
 
+void timer2::DMACCenable(uint8_t ch_num)
+{
+	if (ch_num) _TIM2_(TIMX_DIER) |= (1 << (ch_num + 8));
+	else _TIM2_(TIMX_DIER) |= TIMX_DIER_CCDE;
+}
+
+void timer2::DMACCdisable(uint8_t ch_num)
+{
+	if (ch_num) _TIM2_(TIMX_DIER) &= ~(1 << (ch_num + 8));
+	else _TIM2_(TIMX_DIER) &= ~TIMX_DIER_CCDE;
+}
+
 
 void timer3::config()
 {
-	_TIM3_(TIMX_DMAR) = DMAR;
-	_TIM3_(TIMX_DCR) = DCR;
+	//_TIM3_(TIMX_DMAR) = DMAR;
+	//_TIM3_(TIMX_DCR) = DCR;
 	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM3_(TIMX_CCR4) = CCR4;
 	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM3_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM3_(TIMX_CCR2) = CCR2;
@@ -609,7 +634,7 @@ void timer3::config()
 	_TIM3_(TIMX_CCER) = CCER;
 	_TIM3_(TIMX_CCMR2) = CCMR2;
 	_TIM3_(TIMX_CCMR1) = CCMR1;
-	_TIM3_(TIMX_DIER) = DIER;
+	//_TIM3_(TIMX_DIER) = DIER;
 	_TIM3_(TIMX_SMCR) = SMCR;
 	_TIM3_(TIMX_CR2) = CR2;
 	_TIM3_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
@@ -690,10 +715,23 @@ void timer3::pwmDisable(uint8_t ch_num)
 	CCER &= ~tmp;
 }
 
+void timer3::DMACCenable(uint8_t ch_num)
+{
+	if (ch_num) _TIM3_(TIMX_DIER) |= (1 << (ch_num + 8));
+	else _TIM3_(TIMX_DIER) |= TIMX_DIER_CCDE;
+}
+
+void timer3::DMACCdisable(uint8_t ch_num)
+{
+	if (ch_num) _TIM3_(TIMX_DIER) &= ~(1 << (ch_num + 8));
+	else _TIM3_(TIMX_DIER) &= ~TIMX_DIER_CCDE;
+}
+
+
 void timer4::config()
 {
-	_TIM4_(TIMX_DMAR) = DMAR;
-	_TIM4_(TIMX_DCR) = DCR;
+	//_TIM4_(TIMX_DMAR) = DMAR;
+	//_TIM4_(TIMX_DCR) = DCR;
 	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM4_(TIMX_CCR4) = CCR4;
 	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM4_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM4_(TIMX_CCR2) = CCR2;
@@ -704,7 +742,7 @@ void timer4::config()
 	_TIM4_(TIMX_CCER) = CCER;
 	_TIM4_(TIMX_CCMR2) = CCMR2;
 	_TIM4_(TIMX_CCMR1) = CCMR1;
-	_TIM4_(TIMX_DIER) = DIER;
+	//_TIM4_(TIMX_DIER) = DIER;
 	_TIM4_(TIMX_SMCR) = SMCR;
 	_TIM4_(TIMX_CR2) = CR2;
 	_TIM4_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
@@ -785,3 +823,14 @@ void timer4::pwmDisable(uint8_t ch_num)
 	CCER &= ~tmp;
 }
 
+void timer4::DMACCenable(uint8_t ch_num)
+{
+	if (ch_num) _TIM4_(TIMX_DIER) |= (1 << (ch_num + 8));
+	else _TIM4_(TIMX_DIER) |= TIMX_DIER_CCDE;
+}
+
+void timer4::DMACCdisable(uint8_t ch_num)
+{
+	if (ch_num) _TIM4_(TIMX_DIER) &= ~(1 << (ch_num + 8));
+	else _TIM4_(TIMX_DIER) &= ~TIMX_DIER_CCDE;
+}

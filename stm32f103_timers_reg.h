@@ -321,6 +321,7 @@
 #define TIMX_DIER_CC2DE	0x0400
 #define TIMX_DIER_CC3DE	0x0800
 #define TIMX_DIER_CC4DE	0x1000
+#define TIMX_DIER_CCDE	0x1E00 //mask
 #define TIMX_DIER_COMDE	0x2000
 #define TIMX_DIER_TDE	0x4000
 //reserved
