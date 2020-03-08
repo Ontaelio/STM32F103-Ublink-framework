@@ -95,13 +95,11 @@
 void dma1_reset(uint8_t channel, uint16_t ccr = 0);
 void dma1_setup(uint8_t channel, uint32_t paddr, uint32_t maddr, uint16_t datanum, uint16_t ccr);
 
-template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
-    return SIZE;
-}
-
 //DMA registers are calculated as [offset] + 0d20*(channel_num - 1)
 
 inline void dma1_init() {_RCC_(RCC_AHBENR) |= RCC_AHBENR_DMA1EN;}
+
+
 inline void dma1_ifclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CGIF << (--channel)*4;}
 inline void dma1_completeclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CTCIF << (--channel)*4;}
 inline void dma1_halfclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CHTIF << (--channel)*4;}
@@ -114,71 +112,10 @@ inline void dma1_disable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~
 inline void dma1_IRQenable(uint8_t channel) {IRQ_0TO31_SER |= (uint32_t)0x0000400<<channel;}
 inline void dma1_IRQdisable(uint8_t channel) {IRQ_0TO31_CER |= (uint32_t)0x0000400<<channel;}
 
+inline uint8_t dma1_globalinterrupt(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4))&1);}
 inline uint8_t dma1_transfercomplete(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 1))&1);}
-
-
-//void dma1_ifclear(uint8_t channel);
-//void dma1_completeclear(uint8_t channel);
-//void dma1_halfclear(uint8_t channel);
-//void dma1_errorclear(uint8_t channel);
-//void dma1_paddr(uint8_t channel, uint32_t paddr);
-//void dma1_maddr(uint8_t channel, uint32_t maddr);
-//void dma1_datanum(uint8_t channel, uint16_t datanum);
-//void dma1_enable(uint8_t channel);
-//void dma1_disable(uint8_t channel);
-//void dma1_IRQenable(uint8_t channel);
-//void dma1_IRQdisable(uint8_t channel);
-
-
-/*
-void dma1_msize(uint8_t channel, uint8_t size);
-void dma1_psize(uint8_t channel, uint8_t size);
-void dma1_pl(uint8_t channel, uint8_t pl);
-void dma1_dir(uint8_t channel, uint8_t dir);
-void dma1_mem2mem(uint8_t channel, uint8_t m2m);
-void dma1_circ(uint8_t channel, uint8_t circ);
-void dma1_minc(uint8_t channel, uint8_t minc);
-void dma1_pinc(uint8_t channel, uint8_t pinc);
-*/
-
-class dma1_channel{
-public:
-	dma1_channel(uint8_t chnl): channel(chnl), ccr(0), cndtr(0), cpar(0), cmar(0){}
-	dma1_channel();
-	void init() {dma1_init();}
-	void paddr(uint32_t s) {cpar = s;}
-	void maddr(uint32_t t) {cmar = t;}
-	void datanum(uint16_t n) {cndtr = n;}
-	void config(uint16_t cval) {ccr = cval;}
-	void size(uint8_t per, uint8_t mem) {ccr &= ~0xF0FF; ccr|= per<<8 | mem<<10;}
-	void increment(uint8_t per, uint8_t mem) {ccr &= ~0xFF3F; ccr|= per<<6 | mem<<7;}
-	void priority(uint8_t pri) {ccr&= ~0x4FFF; ccr |= pri<<12;}
-	void direction(uint8_t dir, uint8_t circ, uint8_t m2m) {ccr&= ~0xBFCF; ccr|= dir<<4 | circ<<5 | m2m<<14;}
-	void interrupts(uint8_t irq) {ccr&=0xFFF1; ccr |= irq<<1;}
-	void setup() {dma1_setup(channel, cpar, cmar, cndtr, ccr);}
-	void reset() {dma1_reset(channel, 0); setup();}
-	void enable() {dma1_enable(channel);}
-	void disable() {dma1_disable(channel);}
-
-	void IRQenable() {IRQ_0TO31_SER |= (uint32_t)0x0000400<<channel;}
-	void IRQdisable() {IRQ_0TO31_CER |= (uint32_t)0x0000400<<channel;}
-
-	void clearError() {dma1_errorclear(channel);}
-	void clearHalf() {dma1_halfclear(channel);}
-	void clearComplete() {dma1_completeclear(channel);}
-	void clearAll() {dma1_ifclear(channel);}
-
-
-	uint8_t channel;
-	uint16_t ccr, cndtr;
-	uint32_t cpar, cmar;
-};
-
-class usart1;
-class usart2;
-class usart3;
-
-class analog_cont;
+inline uint8_t dma1_halftransfer(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 2))&1);}
+inline uint8_t dma1_transfererror(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 3))&1);}
 
 #define DMA_TIM1_CH1	0x12
 #define DMA_TIM1_CH4	0x14
@@ -203,6 +140,11 @@ class analog_cont;
 #define DMA_TIM4_CH2	0x44
 #define DMA_TIM4_CH3	0x45
 #define DMA_TIM4_UP		0x47
+
+class usart1;
+class usart2;
+class usart3;
+class analog_cont;
 
 class dma
 {
@@ -268,9 +210,28 @@ public:
 	void disable() {_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;} //disable dma channel
 	void priority(uint16_t pri);
 
+	void reset() {dma1_reset((cha - 1), 0);}
+
+	void IRQenable() {IRQ_0TO31_SER |= (uint32_t)0x0000800<<cha;}
+	void IRQdisable() {IRQ_0TO31_CER |= (uint32_t)0x0000800<<cha;}
+
+	uint8_t interrupt(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4))&1);}
+	uint8_t complete(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4 + 1))&1);}
+	uint8_t half(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4 + 2))&1);}
+	uint8_t error(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4 + 3))&1);}
+
+
+	void clearError() {dma1_errorclear((cha - 1));}
+	void clearHalf() {dma1_halfclear((cha - 1));}
+	void clearComplete() {dma1_completeclear((cha - 1));}
+	void clearAll() {dma1_ifclear((cha - 1));}
+
 	uint8_t cha;
+	//uint32_t* baza = _DMA1_(0);
 private:
 	void setDMAtimerChannel(uint8_t &c);
 };
+
+typedef dma dma1;
 
 #endif /* STM32F103_DMA_FUNC_H_ */
