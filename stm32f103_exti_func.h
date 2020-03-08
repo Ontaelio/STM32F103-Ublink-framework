@@ -41,7 +41,7 @@ class exti
 	void init(uint8_t crbits);
 	void reset();
 	uint8_t check() {return exti_check(channel);}
-	uint8_t clear() {exti_clear(channel);}
+	void clear() {exti_clear(channel);}
 	void interrupt() {exti_interrupt(channel);}
 
 	uint8_t channel;
