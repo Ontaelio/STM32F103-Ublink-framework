@@ -74,7 +74,7 @@
 #define IRQ_USART3			0x00000080
 #define IRQ_EXTI15_10		0x00000100
 #define IRQ_RTCAlarm		0x00000200
-#define IRQ_USB_Wakeup		0x00000400
+#define IRQ_USBWakeup		0x00000400
 #define IRQ_TIM8_BRK		0x00000800
 #define IRQ_TIM8_UP			0x00001000
 #define IRQ_TIM8_TRG_COM	0x00002000
@@ -415,11 +415,11 @@
 #define TIMX_DCR_DBL	0x1F00 //mask
 
 //EXTI registers
-#define EXTI_IMR	*(volatile uint32_t *) 0x40010400
-#define EXTI_EMR	*(volatile uint32_t *) 0x40010404
-#define EXTI_RTSR	*(volatile uint32_t *) 0x40010408
-#define EXTI_FTSR	*(volatile uint32_t *) 0x4001040C
-#define EXTI_SWIER	*(volatile uint32_t *) 0x40010410
-#define EXTI_PR		*(volatile uint32_t *) 0x40010414
+//#define EXTI_IMR	*(volatile uint32_t *) 0x40010400
+//#define EXTI_EMR	*(volatile uint32_t *) 0x40010404
+//#define EXTI_RTSR	*(volatile uint32_t *) 0x40010408
+//#define EXTI_FTSR	*(volatile uint32_t *) 0x4001040C
+//#define EXTI_SWIER	*(volatile uint32_t *) 0x40010410
+//#define EXTI_PR		*(volatile uint32_t *) 0x40010414
 
 #endif /* STM32F103_TIMERS_REG_H_ */
