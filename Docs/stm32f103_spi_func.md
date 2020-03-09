@@ -1,13 +1,5 @@
 # SPI functions peripheral library
 
-----
-**TODO**
-1. DMAenables
-
-**TODO**
-
-----
-
 #### Part of the STM32F103 peripheral library
 
 Notes:
@@ -133,11 +125,18 @@ Starts the communication, then sends `num` bytes/half-words from the container p
 *Note: 8-bit mode only*
 Starts communication, sends `num_out` of bytes from the container pointed by `arr_out`, then immediately proceeds to receive `num_in` bytes into the container pointed by `arr_in`. Can be used with flash memory chip for reading data from an address.
 
-/*
+* void **DMATXenable()**
+* void **DMARXenable()**
+* void **DMATXdisable()**
+* void **DMARXdisable()**
+
+Enables/disables DMA requests for sending (TX) and receiving (RX) data.
+
+/*** *this was removed into separate flashmem library*
 * void **readFlash(uint32_t command, uint8_t&ast; arr_in, uint16_t num)**
 
 For use with flash memory chips. Starts communication, sends 4 bytes of `command` (usually, the command and the 24-bit address), then immediately reads `num` of bytes into the container pointed by `arr_in`. 8-bit only.
-*/
+**********/
 
 ### Lower level functions
 
