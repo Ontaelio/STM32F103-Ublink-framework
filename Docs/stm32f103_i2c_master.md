@@ -1,13 +1,5 @@
 # I2C lib
 
-----
-**TODO**
-1. DMAenables
-
-**TODO**
-
-----
-
 ### Setup, tweak and troubleshooting functions
 
 * `uint8_t i2c1_resetBus([uint8_t altpins = 0])`
@@ -80,6 +72,16 @@ Reads a 32-bit word from register address `reg_addr` of a slave object `device`.
 * `device.readStream(uint16_t reg_addr, uint8_t* arr, uint8_t num)`
 
 Reads a stream of `num` bytes starting with register address `reg_addr` of a slave `device` into an array pointed by `arr`.
+
+* `void DMAenable()`
+* `void DMAdisable()`
+
+Enable/disable DMA requests.
+
+* `void LASTset()`
+* `void LASTclear()`
+
+Set/reset LAST bit. The LAST bit allows I2C to generate NACK on the last DMA transfer (when the 'transfer complete' bit is set by hardware); used in the master receiver mode.
 
 **Class application example**
 ```c++
