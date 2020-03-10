@@ -13,7 +13,7 @@
 #define STM32F103_EXTI_FUNC_H_
 
 #include <stm32f103_exti_reg.h>
-#include <stm32f103_timers_func.h>
+#include <stm32f103_timers_reg.h>
 
 #define EXTI_EVENT		0x01
 #define EXTI_INTERRUPT	0x02
@@ -22,17 +22,17 @@
 #define EXTI_FALLING	0x08
 
 
-void exti_eventenable(uint8_t channel) {_EXTI_(EXTI_EMR) |= (uint32_t)(1<<channel);}
-void exti_eventdisable(uint8_t channel) {_EXTI_(EXTI_EMR) &= ~((uint32_t)(1<<channel));}
-void exti_interruptenable(uint8_t channel); // sets up both STM and Cortex core interrupts
-void exti_interruptdisable(uint8_t channel) {_EXTI_(EXTI_IMR) &= ~((uint32_t)(1<<channel));}
-void exti_rising(uint8_t channel) {_EXTI_(EXTI_RTSR) |= (uint32_t)(1<<channel);} // rising edge
-void exti_risingdisable(uint8_t channel) {_EXTI_(EXTI_RTSR) &= ~((uint32_t)(1<<channel));} // rising edge
-void exti_falling(uint8_t channel) {_EXTI_(EXTI_FTSR) |= (uint32_t)(1<<channel);} // falling edge
-void exti_fallingdisable(uint8_t channel) {_EXTI_(EXTI_FTSR) &= ~((uint32_t)(1<<channel));} // falling edge
-void exti_interrupt(uint8_t channel)  {_EXTI_(EXTI_SWIER) |= (uint32_t)(1<<channel);} // generate interrupt
-uint8_t exti_check(uint8_t channel)  {return ((_EXTI_(EXTI_PR)>>channel)&1);} // check pending bit
-void exti_clear(uint8_t channel) {_EXTI_(EXTI_PR) &= ~((uint32_t)(1<<channel));} // clear pending bit
+inline void exti_eventenable(uint8_t channel) {_EXTI_(EXTI_EMR) |= (uint32_t)(1<<channel);}
+inline void exti_eventdisable(uint8_t channel) {_EXTI_(EXTI_EMR) &= ~((uint32_t)(1<<channel));}
+inline void exti_interruptenable(uint8_t channel); // sets up both STM and Cortex core interrupts
+inline void exti_interruptdisable(uint8_t channel) {_EXTI_(EXTI_IMR) &= ~((uint32_t)(1<<channel));}
+inline void exti_rising(uint8_t channel) {_EXTI_(EXTI_RTSR) |= (uint32_t)(1<<channel);} // rising edge
+inline void exti_risingdisable(uint8_t channel) {_EXTI_(EXTI_RTSR) &= ~((uint32_t)(1<<channel));} // rising edge
+inline void exti_falling(uint8_t channel) {_EXTI_(EXTI_FTSR) |= (uint32_t)(1<<channel);} // falling edge
+inline void exti_fallingdisable(uint8_t channel) {_EXTI_(EXTI_FTSR) &= ~((uint32_t)(1<<channel));} // falling edge
+inline void exti_interrupt(uint8_t channel)  {_EXTI_(EXTI_SWIER) |= (uint32_t)(1<<channel);} // generate interrupt
+inline uint8_t exti_check(uint8_t channel)  {return ((_EXTI_(EXTI_PR)>>channel)&1);} // check pending bit
+inline void exti_clear(uint8_t channel) {_EXTI_(EXTI_PR) |= (uint32_t)(1<<channel);} // clear pending bit by writing 1
 
 class exti
 {
