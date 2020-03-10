@@ -1,49 +1,5 @@
 # Timer functions peripheral library
 
----
-**TODO**
-1. pwm_pin DMAenable: 
-	void DMAenable() {_TIM4_(TIMX_DIER) |= (1 << (channel+8));}
-	void DMAdisable() {_TIM4_(TIMX_DIER) &= ~(1 << (channel+8));}
-2. DIER and DMA-related registers must leave setup()
-3. DMAR, DCR and DIER variables removed from the class
-4. setInterrupts deleted
-3. *timerX DMAenable*
-	void DMACOMenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_COMDE;}
-	void DMATRGenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_TDE;}
-	void DMACCenable(uint8_t ch_num = 0);
-	void DMAUPenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_UDE;}
-	void DMACOMdisable()  {_TIM1_(TIMX_DIER) &= ~TIMX_DIER_COMDE;}
-	void DMATRGdisable()  {_TIM1_(TIMX_DIER) &= ~TIMX_DIER_TDE;}
-	void DMACCdisable(uint8_t ch_num = 0);
-	void DMAUPdisable()  {_TIM1_(TIMX_DIER) &= ~TIMX_DIER_UDE;}
-	void DMAburst(uint8_t burst) {_TIM1_(TIMX_DCR) &= ~TIMX_DCR_DBL; _TIM1_(TIMX_DCR) |= ((--burst) << 8);}
-	void DMAbase(uint8_t base) {_TIM1_(TIMX_DCR) &= ~TIMX_DCR_DBA; _TIM1_(TIMX_DCR) |= base;}
-6. tim_pwm(uint8_t ch_num, uint16_t d = 0xFFFF)
-7. 	//check status flags
-	uint8_t checkUpdate() {return (_TIM1_(TIMX_SR) & TIMX_SR_UIF);}
-	uint8_t checkCC1() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC1IF)>>1);}
-	uint8_t checkCC2() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC2IF)>>2);}
-	uint8_t checkCC3() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC3IF)>>3);}
-	uint8_t checkCC4() {return ((_TIM1_(TIMX_SR) & TIMX_SR_CC4IF)>>4);}
-	uint8_t checkCOM() {return ((_TIM1_(TIMX_SR) & TIMX_SR_COMIF)>>5);}
-	uint8_t checkTrigger() {return ((_TIM1_(TIMX_SR) & TIMX_SR_TIF)>>6);}
-	uint8_t checkBreak() {return ((_TIM1_(TIMX_SR) & TIMX_SR_BIF)>>7);}
-8. same as above for tim_pwm
-	//check status flags
-	uint8_t checkUpdate() {return (_TIM1_(TIMX_SR) & TIMX_SR_UIF);}
-	uint8_t checkCC() {return ((_TIM1_(TIMX_SR) >> channel) & 1);}
-	void clearUpdate() {_TIM1_(TIMX_SR) &= ~TIMX_SR_UIF;}
-	void clearCC() {_TIM1_(TIMX_SR) &= ~(1<<channel);}
-	void updateEvent() {BB_TIM1_EGR_UG = 1;}
-	void CCevent() {_TIM1_(TIMX_EGR) |= 1<<channel;}
-9. void setPreload(uint16_t pre) in `timerX` (auto-reload preload)
-	void setUpdateRequest(uint16_t cc_only) {CR1 &= ~TIMX_CR1_URS; CR1 |= (cc_only << 2);}
-
-**TODO**
-
-----
-
 The timer_func library provides some basic means to deal with timers, PWMs and interrupts. This guide consists of the following sections:
 
 [SysTick timer](#systick-timer) - dealing with the ARM core timer
@@ -95,7 +51,7 @@ Returns the current SysTick timer value.
 
 * void **sysTick_intEnable ()**
 
-Enables SysTick interrupt.
+Enables SysTick interrupt. The interrupt happens each time the SysTick counter reaches zero and underflows.
 
 * void **sysTick_intDisable ()**
 
@@ -112,12 +68,14 @@ Enables the clocks for Timer X and AFIO.
 The PWM class is a simple instrument to quickly set up PWM output pins Arduino-style. Each class object represents a single PWM output. If constant PWM outputs are exactly what's needed, this class is the best solution; for other cases, a more complex TimerX class has its own set of PWM functions.
 
 Constructor:
-* **tim1_pwm (uint8_t ch_num)**
-* **tim2_pwm (uint8_t ch_num)** 
-* **tim3_pwm (uint8_t ch_num)** 
-* **tim4_pwm (uint8_t ch_num)** 
+* **tim1_pwm (uint8_t ch_num [, uint16_t depth = 0xFFFF])**
+* **tim2_pwm (uint8_t ch_num [, uint16_t depth = 0xFFFF])** 
+* **tim3_pwm (uint8_t ch_num [, uint16_t depth = 0xFFFF])** 
+* **tim4_pwm (uint8_t ch_num [, uint16_t depth = 0xFFFF])** 
 
-Declares an object of `timX_pwm` class using channel `ch_num` of timer X as PWM output. Check the microcontroller pinout to see which pin corresponds to which output. The table below provides some reference, but timer remapping is a bit more complicated than that (with partial and full remaps).
+Declares an object of `timX_pwm` class using channel `ch_num` of timer X as PWM output. Optional `depth` argument sets the couner period (the number of ticks before the counter overflow). The default 16-bit depth may be too much for certain applications; for example, you can set `depth` to 255 for a 8-bit PWM or to 4095 for a 12-bit one.
+
+Check the microcontroller pinout to see which pin corresponds to which output. The table below provides some reference, but timer remapping is a bit more complicated than that (with partial and full remaps).
 
 Timer channel | Default pin | Remap pin
 --|--|--
@@ -173,6 +131,28 @@ Sets the PWM output to the provided `value`. Can be used before `enable` to pre-
 
 The overloaded functions can be used to read, write, increase and decrease the PWM output (that is, the corresponding capture/compare register). I.e. with a PWM_pin object called `A11` you can use either `A11.write(1000);` or `A11 = 1000;`, the result will be equal. Pre- and post- increment/decrement produce the same result. `=` operator can also be used to get the current PWM value (`int a = A11;`).
 
+* void **DMAenable()** 
+* void **DMAdisable()**
+
+Enable/disable DMA control for the associated capture/compare channel.
+
+* uint8_t **checkUpdate()**
+
+Check the update interrupt flag in the Status register; returns `1` is the flag is set and `0` otherwise.
+
+* uint8_t **checkCC()**
+
+Check the capture/compare interrups flag for the connected channel; returns `1` is the flag is set and `0` otherwise.
+
+* void **clearUpdate()**
+* void **clearCC()**
+
+Clear the corresponding interrupt flag.
+
+* void **updateEvent()**
+* void **CCevent()**
+
+Generate an update or capture/compare event.
 
 ## Timer class
 
@@ -279,6 +259,13 @@ OCM_FORCEHIGH |	0x0005 | Force active level
 OCM_PWM1	|	0x0006 | PWM mode 1: active when CNT<CCR
 OCM_PWM2	|	0x0007 | PWM mode 2: active when CNT>CCR
 
+* void **setPreload(uint16_t pre)**
+
+Sets/resets the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event.
+
+* void **setUpdateRequest(uint16_t ov_only)**
+
+Sets/resets the update interrupt/DMA request source. When set (`ov_only == 1`) only the actual counter overflow/underflow will generate an update request; software and slave mode generation won't work.
 
 * void **master (uint16_t mms [, uint16_t ccmr = 0])**
 
@@ -381,6 +368,39 @@ Enables the PWM channel output. This function writes both into the internal vari
 
 Disables the PWM channel output. This function writes both into the internal variable CCER and the timer CCER register (thus physically disabling the output).
 
+#### DMA control member functions
+
+* void **DMACOMenable()**
+
+*Timer1 only* Enable COM DMA requests.
+
+* void **DMATRGenable()**
+
+Enable TRG DMA requests.
+
+* void **DMACCenable ([uint8_t ch_num = 0])**
+
+Enable DMA requests for a capture/compare channel `ch_num`. If `ch_num` is not provided (is set to default `0`), all four CC channels' DMA requests are enabled.
+
+* void **DMAUPenable()**
+
+Enable DMA requests for Update event.
+
+* void **DMACOMdisable()**
+* void **DMATRGdisable()**
+* void **DMACCdisable([uint8_t ch_num = 0])**
+* void **DMAUPdisable()**
+
+Disable DMA requests for selected sources, see `DMAXXXenable` above.
+
+* void **DMAburst(uint8_t burst)**
+
+Set the DMA burst length to `burst`, where `0` is one transfer and the maximum value is 17 (18 transfers in one burst). Timer recognises the DMA transfer to TIMx_DMAR register and provides the needed number of additional DMA requests.
+
+* void **DMAbase(uint8_t base)**
+
+Set the base address for DMA-to-timer transfer. This governs transfers done via TIMx_DMAR register that allows bursts; `base` is the number of the timer register to be written to first: `0` is for CR1, `1` for CR2, etc, as they're listed in the Reference Manual RM0008 section 14.4. CCR1 register that is the most likely target here is `13` (`0xE`)
+
 #### Direct register manipulation member functions
 
 The following access the timer and/or ARM core registers directly without modifying the internal class variables.
@@ -400,7 +420,7 @@ Enables/disables Timer IRQ for timers 2, 3 and 4 (ARM core). For timer1 this ena
 * void **IRQ_TRG_COM_disable ()**
 * void **IRQ_CC_disable ()**
 
-Enable/disable Timer1 interrupts in ARM core.
+Enable/disable specific Timer1 interrupts in ARM core.
 
 * void **writeCC1 (uint16_t val)**
 * void **writeCC2 (uint16_t val)**
@@ -409,7 +429,7 @@ Enable/disable Timer1 interrupts in ARM core.
 
 Write `val` into the CCRX register (capture/compare value).
 
-*The following functions are atomic, i.e. they use bit-band aliases for maximum speed*
+*Most of the following functions are atomic, i.e. they use bit-band aliases for maximum speed*
 
 * void **CC1output (uint8_t bit)**
 * void **CC1output (uint8_t bit)**
@@ -433,6 +453,17 @@ Disables/enables update event (UDIS bit in the CR1 register).
 * void **breakInterrupt (uint8_t bit)** *Timer1 only*
 
 Enable (`bit == 1`) or disable (`bit == 0`) timer interrupts.
+
+* uint8_t **checkUpdate()** 
+* uint8_t **checkCC1()** 
+* uint8_t **checkCC2()** 
+* uint8_t **checkCC3()** 
+* uint8_t **checkCC4()** 
+* uint8_t **checkCOM()** 
+* uint8_t **checkTrigger()**
+* uint8_t **checkBreak()**
+
+*Non-atomic* Check whether a certain interrupt flag is set in the Status register; returns `1` of the flag is set and `0` otherwise. Useful to get an idea what exactly called an interrupt routine.
 
 * void **clearUpdate ()**
 * void **clearCC1 ()**
