@@ -142,7 +142,7 @@ public:
 	virtual void enable() =0;
 	virtual void disable() =0;
 	virtual void write(uint16_t pwm_val) =0;
-	friend class dma;
+	friend class dma1;
 
 protected:
 	uint8_t channel, ch_addr, ccmr, cms_dir, ccer;

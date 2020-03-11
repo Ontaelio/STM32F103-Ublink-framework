@@ -146,11 +146,11 @@ class usart2;
 class usart3;
 class analog_cont;
 
-class dma
+class dma1
 {
 public:
-	dma(): cha (0){}
-	dma(uint8_t tmr): cha(tmr){}
+	dma1(): cha (0){}
+	dma1(uint8_t tmr): cha(tmr){}
 
 	void init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr); //generic
 
@@ -232,6 +232,6 @@ private:
 	void setDMAtimerChannel(uint8_t &c);
 };
 
-typedef dma dma1;
+typedef dma1 dma;
 
 #endif /* STM32F103_DMA_FUNC_H_ */

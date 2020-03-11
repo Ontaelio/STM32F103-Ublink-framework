@@ -30,13 +30,13 @@ void dma1_setup(uint8_t channel, uint32_t paddr, uint32_t maddr, uint16_t datanu
 
 
 
-void dma::transfer(uint16_t num)
+void dma1::transfer(uint16_t num)
 {
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;
 	_DMA1_(DMA_CNDTR + cha*20) = num;
 	_DMA1_(DMA_CCR + cha*20) |= DMA_CCR_EN;
 }
-void dma::start(uint16_t num)
+void dma1::start(uint16_t num)
 {
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;
 	_DMA1_(DMA_CNDTR + cha*20) = num;
@@ -44,19 +44,19 @@ void dma::start(uint16_t num)
 	_DMA1_(DMA_CCR + cha*20) |= DMA_CCR_EN;
 }
 
-void dma::stop()
+void dma1::stop()
 {
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_CIRC;
 }
 
-void dma::priority(uint16_t pri)
+void dma1::priority(uint16_t pri)
 {
 	_DMA1_(DMA_CCR + cha*20) &= ~0x4FFF;
 	_DMA1_(DMA_CCR + cha*20) |= pri;
 }
 
-void dma::setDMAtimerChannel(uint8_t &c)
+void dma1::setDMAtimerChannel(uint8_t &c)
 {
 	//uint32_t toffsets[4] {0x40012C00,0x40000000,0x40000400,0x40000800};
 	//uint8_t t = c>>4;
@@ -94,7 +94,7 @@ void dma::setDMAtimerChannel(uint8_t &c)
 	--c; //Subtract one to use later with CCR register
 }
 
-void dma::init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr)
+void dma1::init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr)
 {
 	// generic DMA setup. The DMA enable bit in the peripheral must be set manually
 	cha = c-1;
@@ -105,7 +105,7 @@ void dma::init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr)
 	_DMA1_(DMA_CCR + cha*20) = ccr;
 }
 
-void dma::init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri)
+void dma1::init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
 	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
@@ -117,7 +117,7 @@ void dma::init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri)
+void dma1::init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
 	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
@@ -129,7 +129,7 @@ void dma::init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma::init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri)
+void dma1::init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
 	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
@@ -141,7 +141,7 @@ void dma::init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32 | DMA_CCR_MINC);
 }
 
-void dma::init(uint16_t* src, spi1_slave targ, uint16_t pri)
+void dma1::init(uint16_t* src, spi1_slave targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -157,7 +157,7 @@ void dma::init(uint16_t* src, spi1_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, spi2_slave targ, uint16_t pri)
+void dma1::init(uint16_t* src, spi2_slave targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -173,7 +173,7 @@ void dma::init(uint16_t* src, spi2_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint8_t* src, spi1_slave targ, uint16_t pri)
+void dma1::init(uint8_t* src, spi1_slave targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -189,7 +189,7 @@ void dma::init(uint8_t* src, spi1_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint8_t* src, spi2_slave targ, uint16_t pri)
+void dma1::init(uint8_t* src, spi2_slave targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -205,7 +205,7 @@ void dma::init(uint8_t* src, spi2_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(spi1_slave src, uint16_t* targ, uint16_t pri)
+void dma1::init(spi1_slave src, uint16_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -221,7 +221,7 @@ void dma::init(spi1_slave src, uint16_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma::init(spi2_slave src, uint16_t* targ, uint16_t pri)
+void dma1::init(spi2_slave src, uint16_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -237,7 +237,7 @@ void dma::init(spi2_slave src, uint16_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma::init(spi1_slave src, uint8_t* targ, uint16_t pri)
+void dma1::init(spi1_slave src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -253,7 +253,7 @@ void dma::init(spi1_slave src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(spi2_slave src, uint8_t* targ, uint16_t pri)
+void dma1::init(spi2_slave src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -269,7 +269,7 @@ void dma::init(spi2_slave src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(uint8_t* src, i2c1_slave targ, uint16_t pri)
+void dma1::init(uint8_t* src, i2c1_slave targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -285,7 +285,7 @@ void dma::init(uint8_t* src, i2c1_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint8_t* src, i2c2_slave targ, uint16_t pri)
+void dma1::init(uint8_t* src, i2c2_slave targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -301,7 +301,7 @@ void dma::init(uint8_t* src, i2c2_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(i2c1_slave src, uint8_t* targ, uint16_t pri)
+void dma1::init(i2c1_slave src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -319,7 +319,7 @@ void dma::init(i2c1_slave src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(i2c2_slave src, uint8_t* targ, uint16_t pri)
+void dma1::init(i2c2_slave src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -337,7 +337,7 @@ void dma::init(i2c2_slave src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(uint8_t* src, usart1 targ, uint16_t pri)
+void dma1::init(uint8_t* src, usart1 targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -353,7 +353,7 @@ void dma::init(uint8_t* src, usart1 targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint8_t* src, usart2 targ, uint16_t pri)
+void dma1::init(uint8_t* src, usart2 targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -368,7 +368,7 @@ void dma::init(uint8_t* src, usart2 targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint8_t* src, usart3 targ, uint16_t pri)
+void dma1::init(uint8_t* src, usart3 targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -383,7 +383,7 @@ void dma::init(uint8_t* src, usart3 targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(usart1 src, uint8_t* targ, uint16_t pri)
+void dma1::init(usart1 src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -399,7 +399,7 @@ void dma::init(usart1 src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(usart2 src, uint8_t* targ, uint16_t pri)
+void dma1::init(usart2 src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -415,7 +415,7 @@ void dma::init(usart2 src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(usart3 src, uint8_t* targ, uint16_t pri)
+void dma1::init(usart3 src, uint8_t* targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -431,7 +431,7 @@ void dma::init(usart3 src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(analog_cont src, uint16_t targ, uint16_t pri)
+void dma1::init(analog_cont src, uint16_t targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -447,7 +447,7 @@ void dma::init(analog_cont src, uint16_t targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma::init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri)
+void dma1::init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
@@ -465,7 +465,7 @@ void dma::init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32 | DMA_CCR_MINC);
 }
 
-void dma::init(usart1 src, spi1_slave targ, uint16_t pri)
+void dma1::init(usart1 src, spi1_slave targ, uint16_t pri)
 {
 	cha = 5-1; // usart1 RX channel 5
 	src.DMARXenable();
@@ -476,7 +476,7 @@ void dma::init(usart1 src, spi1_slave targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma::init(uint16_t* src, tim1_pwm targ, uint8_t uedma, uint16_t pri)
+void dma1::init(uint16_t* src, tim1_pwm targ, uint8_t uedma, uint16_t pri)
 {
 	switch (targ.channel)
 	{
@@ -496,7 +496,7 @@ void dma::init(uint16_t* src, tim1_pwm targ, uint8_t uedma, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, tim2_pwm targ, uint8_t uedma, uint16_t pri)
+void dma1::init(uint16_t* src, tim2_pwm targ, uint8_t uedma, uint16_t pri)
 {
 	switch (targ.channel)
 	{
@@ -515,7 +515,7 @@ void dma::init(uint16_t* src, tim2_pwm targ, uint8_t uedma, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, tim3_pwm targ, uint8_t uedma, uint16_t pri)
+void dma1::init(uint16_t* src, tim3_pwm targ, uint8_t uedma, uint16_t pri)
 {
 	switch (targ.channel)
 	{
@@ -534,7 +534,7 @@ void dma::init(uint16_t* src, tim3_pwm targ, uint8_t uedma, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, tim4_pwm targ, uint8_t uedma, uint16_t pri)
+void dma1::init(uint16_t* src, tim4_pwm targ, uint8_t uedma, uint16_t pri)
 {
 	switch (targ.channel)
 	{
@@ -553,7 +553,7 @@ void dma::init(uint16_t* src, tim4_pwm targ, uint8_t uedma, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, timer1 targ, uint8_t numofch, uint16_t pri)
+void dma1::init(uint16_t* src, timer1 targ, uint8_t numofch, uint16_t pri)
 {
 	cha = 5-1;
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -568,7 +568,7 @@ void dma::init(uint16_t* src, timer1 targ, uint8_t numofch, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, timer2 targ, uint8_t numofch, uint16_t pri)
+void dma1::init(uint16_t* src, timer2 targ, uint8_t numofch, uint16_t pri)
 {
 	cha = 2-1;
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -583,7 +583,7 @@ void dma::init(uint16_t* src, timer2 targ, uint8_t numofch, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, timer3 targ, uint8_t numofch, uint16_t pri)
+void dma1::init(uint16_t* src, timer3 targ, uint8_t numofch, uint16_t pri)
 {
 	cha = 3-1;
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -598,7 +598,7 @@ void dma::init(uint16_t* src, timer3 targ, uint8_t numofch, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, timer4 targ, uint8_t numofch, uint16_t pri)
+void dma1::init(uint16_t* src, timer4 targ, uint8_t numofch, uint16_t pri)
 {
 	cha = 7-1;
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -613,7 +613,7 @@ void dma::init(uint16_t* src, timer4 targ, uint8_t numofch, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, gpioA targ, int16_t pri)
+void dma1::init(uint16_t* src, gpioA targ, int16_t pri)
 {
 	setDMAtimerChannel(cha);
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -623,7 +623,7 @@ void dma::init(uint16_t* src, gpioA targ, int16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, gpioB targ, int16_t pri)
+void dma1::init(uint16_t* src, gpioB targ, int16_t pri)
 {
 	setDMAtimerChannel(cha);
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -633,7 +633,7 @@ void dma::init(uint16_t* src, gpioB targ, int16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint16_t* src, gpioC targ, int16_t pri)
+void dma1::init(uint16_t* src, gpioC targ, int16_t pri)
 {
 	setDMAtimerChannel(cha);
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -643,7 +643,7 @@ void dma::init(uint16_t* src, gpioC targ, int16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint32_t* src, gpioA targ, int16_t pri)
+void dma1::init(uint32_t* src, gpioA targ, int16_t pri)
 {
 	setDMAtimerChannel(cha);
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -653,7 +653,7 @@ void dma::init(uint32_t* src, gpioA targ, int16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint32_t* src, gpioB targ, int16_t pri)
+void dma1::init(uint32_t* src, gpioB targ, int16_t pri)
 {
 	setDMAtimerChannel(cha);
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
@@ -663,7 +663,7 @@ void dma::init(uint32_t* src, gpioB targ, int16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32| DMA_CCR_MINC | DMA_CCR_DIR);
 }
 
-void dma::init(uint32_t* src, gpioC targ, int16_t pri)
+void dma1::init(uint32_t* src, gpioC targ, int16_t pri)
 {
 	setDMAtimerChannel(cha);
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
