@@ -8,6 +8,7 @@ Contents:
 * [Higher level class functions](#higher-level-class-functions)
 * [Read, print and formatted print functions](#read-print-and-formatted-print-functions)
 * [Interrupts and errors](#interrupts-and-errors)
+* [usart_mem class](#usart_mem-class)
 * [Lower level setup functions](#lower-level-setup-functions)
 * [Defined values and compiler directives](#defined-values-and-compiler-directives)
 * [Code examples](#examples)
@@ -207,6 +208,15 @@ _Note: use `readDR()**` after getting an error code to clear the error/idle bit 
 
 Reads DR register to clear any error bits and/or to dump the RX contents.
 
+## usart_mem class
+
+The `usart_mem` class can be used to store the output text 'stream' in a byte array in RAM. An object of the `usart_mem` class supports most of the `print` and `get` member functions of a 'normal' `usart` class (except the C++ string ones). It can be used to convert numbers to text, for example.
+
+The constructor takes one argument - the size of the array in bytes, e.g. **usart_mem** foo(256);
+
+The **init(uint8_t\* dat)** function binds the `usart_mem` object to an array `dat`. Note that while this array holds text, it must be of `byte` aka `uint8_t` type.
+
+The array is used as a circular buffer, once its end is reached, new output will start overwriting bytes from the beginning. `usart_mem` can store ASCII control characters (like `\r` and `\n`) to allow text formatting. A special `\e` (escape, 27) character can be used to mark the end of text and return the 'carriage' to the start of the array (new data will overwrite the existing one).
 
 ## Lower level setup functions
 
