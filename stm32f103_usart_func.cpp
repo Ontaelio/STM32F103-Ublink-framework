@@ -443,6 +443,27 @@ usart& operator >> (usart& in, long double &dat)
 	return in;
 }
 
+
+void usart_mem::sendByte(uint8_t dat)
+{
+	if (dat == 27) counter = 0; //escape = return to front
+	else
+	{
+		stream[counter] = dat;
+		++counter;
+		if (counter == size) counter = 0;
+	}
+}
+
+uint8_t usart_mem::getByte()
+{
+	if (stream[counter == 27]) counter = 0;
+	uint8_t res = stream[counter];
+	++counter;
+	if (counter == size) counter = 0;
+	return res;
+}
+
 void usart1::init(uint32_t baud, uint_fast8_t remap)
 {
 	if (remap)

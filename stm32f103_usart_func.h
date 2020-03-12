@@ -103,6 +103,19 @@ public:
 	friend usart& operator >> (usart& in, long double &dat);
 };
 
+class usart_mem : public usart
+{
+public:
+	usart_mem(uint16_t s): size(s), counter(0) {}
+	void init(uint8_t* dat) {stream = dat;}
+	void sendByte(uint8_t dat);
+	uint8_t getByte();
+
+private:
+	uint16_t size, counter;
+	uint8_t* stream;
+};
+
 class usart1 : public usart
 {
 public:
