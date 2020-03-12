@@ -210,7 +210,7 @@ Reads DR register to clear any error bits and/or to dump the RX contents.
 
 ## usart_mem class
 
-The `usart_mem` class can be used to store the output text 'stream' in a byte array in RAM. An object of the `usart_mem` class supports most of the `print` and `get` member functions of a 'normal' `usart` class (except the C++ string ones). It can be used to convert numbers to text, for example.
+The `usart_mem` class can be used to store the output text 'stream' in a byte array in RAM. An object of the `usart_mem` class supports most of the `print` and `get` member functions and overloaded operators of a 'normal' `usart` class (except the C++ string ones). It can be used to convert numbers to text, for example.
 
 The constructor takes one argument - the size of the array in bytes, e.g. **usart_mem** foo(256);
 
