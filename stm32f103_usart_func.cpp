@@ -446,8 +446,8 @@ usart& operator >> (usart& in, long double &dat)
 
 void usart_mem::sendByte(uint8_t dat)
 {
-	if (dat == 27) counter = 0; //escape = return to front
-	else
+	if (dat == 27) counter = 0; //0 = return to front
+	else if (dat != 0)
 	{
 		stream[counter] = dat;
 		++counter;
