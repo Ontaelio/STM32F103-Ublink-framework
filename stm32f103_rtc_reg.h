@@ -13,6 +13,7 @@
 #define STM32F103_RTC_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define _RTC_(mem_offset) (*(volatile uint32_t *)(0x40002800 + (mem_offset)))
 

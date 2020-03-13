@@ -14,6 +14,8 @@
 
 #include <stm32f103_exti_reg.h>
 #include <stm32f103_timers_reg.h>
+#include <stdio.h>
+#include <stdint.h>
 
 #define EXTI_EVENT		0x01
 #define EXTI_INTERRUPT	0x02

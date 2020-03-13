@@ -12,9 +12,11 @@
 #ifndef STM32F103_SPI_FLASHMEM_H_
 #define STM32F103_SPI_FLASHMEM_H_
 
+#include <stdio.h>
+#include <stdint.h>
 #include <stm32f103_spi_reg.h>
 #include <stm32f103_spi_func.h>
-#include <stdio.h>
+
 
 class spi_flash
 {

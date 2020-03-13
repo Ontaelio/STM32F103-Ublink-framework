@@ -13,6 +13,7 @@
 #define STM32F103_TIMERS_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 //SysTick registers and values
 #define SYSTICK_CSR		*(volatile uint32_t *) 0xE000E010

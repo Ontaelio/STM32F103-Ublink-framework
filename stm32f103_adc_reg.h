@@ -13,6 +13,7 @@
 #define STM32F103_ADC_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define _ADC1_(mem_offset) (*(volatile uint32_t *)(0x40012400 + (mem_offset)))
 #define _ADC2_(mem_offset) (*(volatile uint32_t *)(0x40012800 + (mem_offset)))

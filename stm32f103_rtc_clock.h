@@ -8,6 +8,8 @@
 #ifndef STM32F103_RTC_CLOCK_H_
 #define STM32F103_RTC_CLOCK_H_
 
+#include <stdio.h>
+#include <stdint.h>
 #include <stm32f103_rtc_func.h>
 
 //#define WEEKDAYOFFSET 4 // for a leap year 0 use 4

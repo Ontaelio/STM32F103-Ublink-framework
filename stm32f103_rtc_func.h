@@ -12,10 +12,12 @@
 #ifndef STM32F103_RTC_FUNC_H_
 #define STM32F103_RTC_FUNC_H_
 
+#include <stdio.h>
+#include <stdint.h>
 #include <stm32f103_rtc_reg.h>
 #include <stm32f103_bkp_reg.h>
 #include <stm32f103_pwr_reg.h>
-#include <stdio.h>
+
 
 #ifndef STM32F103_TIMERS_REG_H_
 //interrupt set-enable registers

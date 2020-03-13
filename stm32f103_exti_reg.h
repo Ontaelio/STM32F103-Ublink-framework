@@ -13,6 +13,7 @@
 #define STM32F103_EXTI_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define _EXTI_(mem_offset) (*(volatile uint32_t *)(0x40010400 + (mem_offset)))
 

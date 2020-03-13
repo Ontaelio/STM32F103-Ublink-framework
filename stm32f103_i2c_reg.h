@@ -10,6 +10,7 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
 
 #ifndef STM32F103_I2C_REG_H_
 #define STM32F103_I2C_REG_H_

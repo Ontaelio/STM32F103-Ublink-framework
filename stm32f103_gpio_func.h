@@ -13,6 +13,7 @@
 #define STM32F103_GPIO_FUNC_H_
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stm32f103_gpio_reg.h>
 #include <stm32f103_rcc_reg.h>
 
@@ -201,6 +202,11 @@ inline void gpioB_init()
 inline void gpioC_init()
 {
 	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPCEN;
+}
+
+inline void afio_init()
+{
+	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
 }
 
 inline void pinB0_Input()

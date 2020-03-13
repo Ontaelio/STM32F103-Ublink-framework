@@ -13,6 +13,7 @@
 #define STM32F103_PWR_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define _PWR_(mem_offset) (*(volatile uint32_t *)(0x40007000 + (mem_offset)))
 

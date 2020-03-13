@@ -17,6 +17,7 @@
 #include <stm32f103_gpio_func.h>
 #include <stm32f103_timers_reg.h>
 #include <stdio.h>
+#include <stdint.h>
 
 //**** SysTick stuff
 

@@ -13,6 +13,7 @@
 #define STM32F103_RCC_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define _RCC_(mem_offset) (*(volatile uint32_t *)(0x40021000 + (mem_offset)))
 

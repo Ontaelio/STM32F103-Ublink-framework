@@ -13,6 +13,7 @@
 #define STM32F103_DMA_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define _DMA1_(mem_offset) (*(volatile uint32_t *)(0x40020000 + (mem_offset)))
 #define _DMA2_(mem_offset) (*(volatile uint32_t *)(0x40020400 + (mem_offset)))
@@ -126,21 +127,21 @@
 #define DMA_IFCR_CHTIF7	(uint32_t)0x04000000
 #define DMA_IFCR_CTEIF7	(uint32_t)0x08000000
 
-#define DMA_CCR_EN		(uint16_t)0x00000001
-#define DMA_CCR_TCIE	(uint16_t)0x00000002
-#define DMA_CCR_HTIE	(uint16_t)0x00000004
-#define DMA_CCR_TEIE	(uint16_t)0x00000008
-#define DMA_CCR_DIR		(uint16_t)0x00000010
-#define DMA_CCR_CIRC	(uint16_t)0x00000020
-#define DMA_CCR_PINC	(uint16_t)0x00000040
-#define DMA_CCR_MINC	(uint16_t)0x00000080
-#define DMA_CCR_PSIZE0	(uint16_t)0x00000100
-#define DMA_CCR_PSIZE1	(uint16_t)0x00000200
-#define DMA_CCR_MSIZE0	(uint16_t)0x00000400
-#define DMA_CCR_MSIZE1	(uint16_t)0x00000800
-#define DMA_CCR_PL0		(uint16_t)0x00001000
-#define DMA_CCR_PL1		(uint16_t)0x00002000
-#define DMA_CCR_MEM2MEM	(uint16_t)0x00004000
+#define DMA_CCR_EN		(uint32_t)0x00000001
+#define DMA_CCR_TCIE	(uint32_t)0x00000002
+#define DMA_CCR_HTIE	(uint32_t)0x00000004
+#define DMA_CCR_TEIE	(uint32_t)0x00000008
+#define DMA_CCR_DIR		(uint32_t)0x00000010
+#define DMA_CCR_CIRC	(uint32_t)0x00000020
+#define DMA_CCR_PINC	(uint32_t)0x00000040
+#define DMA_CCR_MINC	(uint32_t)0x00000080
+#define DMA_CCR_PSIZE0	(uint32_t)0x00000100
+#define DMA_CCR_PSIZE1	(uint32_t)0x00000200
+#define DMA_CCR_MSIZE0	(uint32_t)0x00000400
+#define DMA_CCR_MSIZE1	(uint32_t)0x00000800
+#define DMA_CCR_PL0		(uint32_t)0x00001000
+#define DMA_CCR_PL1		(uint32_t)0x00002000
+#define DMA_CCR_MEM2MEM	(uint32_t)0x00004000
 //reserved
 
 #endif //CMSIS stuff

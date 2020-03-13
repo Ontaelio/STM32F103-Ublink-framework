@@ -12,6 +12,8 @@
 #ifndef STM32F103_I2C_MASTER_H_
 #define STM32F103_I2C_MASTER_H_
 
+#include <stdio.h>
+#include <stdint.h>
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_i2c_reg.h>
 

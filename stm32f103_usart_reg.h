@@ -13,6 +13,7 @@
 #define STM32F103_USART_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 //base addresses
 #define _USART1_(mem_offset) (*(volatile uint32_t *)(0x40013800 + (mem_offset)))

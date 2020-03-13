@@ -13,6 +13,7 @@
 #define STM32F103_GPIO_REG_H_
 
 #include <stdio.h>
+#include <stdint.h>
 
 //ports
 #define _GPIOA_(mem_offset) (*(volatile uint32_t *)(0x40010800 + (mem_offset)))

@@ -12,6 +12,9 @@
 #ifndef STM32F103_SPI_REG_H_
 #define STM32F103_SPI_REG_H_
 
+#include <stdio.h>
+#include <stdint.h>
+
 #define _SPI1_(mem_offset) (*(volatile uint32_t *)(0x40013000 + (mem_offset)))
 #define _SPI2_(mem_offset) (*(volatile uint32_t *)(0x40003800 + (mem_offset)))
 #define _SPI3_(mem_offset) (*(volatile uint32_t *)(0x40003C00 + (mem_offset)))

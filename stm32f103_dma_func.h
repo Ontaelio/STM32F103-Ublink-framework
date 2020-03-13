@@ -12,8 +12,9 @@
 #ifndef STM32F103_DMA_FUNC_H_
 #define STM32F103_DMA_FUNC_H_
 
-#include <stm32f103_usart_func.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stm32f103_usart_func.h>
 #include <stm32f103_dma_reg.h>
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_spi_func.h>
