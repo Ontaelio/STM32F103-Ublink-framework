@@ -89,6 +89,30 @@
 #define DMA_HALF_COMPLETE	0x0006
 #define DMA_ERROR		0x0008
 
+#define DMA_TIM1_CH1	0x12
+#define DMA_TIM1_CH4	0x14
+#define DMA_TIM1_TRIG	0x1C
+#define DMA_TIM1_COM	0x10
+#define DMA_TIM1_UP		0x15
+#define DMA_TIM1_CH3	0x16
+
+#define DMA_TIM2_CH3	0x21
+#define DMA_TIM2_UP		0x22
+#define DMA_TIM2_CH1	0x25
+#define DMA_TIM2_CH2	0x27
+#define DMA_TIM2_CH4	0x2F
+
+#define DMA_TIM3_CH3	0x32
+#define DMA_TIM3_CH4	0x33
+#define DMA_TIM3_UP		0x3B
+#define DMA_TIM3_CH1	0x36
+#define DMA_TIM3_TRIG	0x3E
+
+#define DMA_TIM4_CH1	0x41
+#define DMA_TIM4_CH2	0x44
+#define DMA_TIM4_CH3	0x45
+#define DMA_TIM4_UP		0x47
+
 //to use with <<(Channel-1) on IFCR
 #define DMA_GIFCLEAR (uint32_t)0x00000001
 
@@ -118,29 +142,7 @@ inline uint8_t dma1_transfercomplete(uint8_t channel) {return ((_DMA1_(DMA_ISR)>
 inline uint8_t dma1_halftransfer(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 2))&1);}
 inline uint8_t dma1_transfererror(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 3))&1);}
 
-#define DMA_TIM1_CH1	0x12
-#define DMA_TIM1_CH4	0x14
-#define DMA_TIM1_TRIG	0x1C
-#define DMA_TIM1_COM	0x10
-#define DMA_TIM1_UP		0x15
-#define DMA_TIM1_CH3	0x16
 
-#define DMA_TIM2_CH3	0x21
-#define DMA_TIM2_UP		0x22
-#define DMA_TIM2_CH1	0x25
-#define DMA_TIM2_CH2	0x27
-#define DMA_TIM2_CH4	0x2F
-
-#define DMA_TIM3_CH3	0x32
-#define DMA_TIM3_CH4	0x33
-#define DMA_TIM3_UP		0x3B
-#define DMA_TIM3_CH1	0x36
-#define DMA_TIM3_TRIG	0x3E
-
-#define DMA_TIM4_CH1	0x41
-#define DMA_TIM4_CH2	0x44
-#define DMA_TIM4_CH3	0x45
-#define DMA_TIM4_UP		0x47
 
 class usart1;
 class usart2;
