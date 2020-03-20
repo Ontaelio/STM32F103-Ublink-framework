@@ -183,7 +183,7 @@ public:
 	void init(usart3 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart3 2 mem
 
 	void init(analog_cont src, uint16_t targ, uint16_t pri = DMA_PLHIGH); //adc1 2 mem
-	void init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri = DMA_PLHIGH); //adc1&2 2 mem
+	void init(analog_cont src1, analog_cont src2, uint32_t targ, uint16_t pri = DMA_PLHIGH); //adc1&2 2 mem
 
 	void init(usart1 src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); //will write the rest once tested
 

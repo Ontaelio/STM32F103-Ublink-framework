@@ -360,6 +360,7 @@ void dma1::init(uint8_t* src, usart2 targ, uint16_t pri)
 	cha = 7-1; //Subtract one to use later with CCR register; channel 7 (TX)
 	targ.DMATXenable();
 	}
+	else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
@@ -375,6 +376,7 @@ void dma1::init(uint8_t* src, usart3 targ, uint16_t pri)
 	cha = 2-1; //Subtract one to use later with CCR register; channel 2 (TX)
 	targ.DMATXenable();
 	}
+	else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)src; //set memory address
@@ -396,7 +398,8 @@ void dma1::init(usart1 src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address
 	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)&(_USART1_(USART_DR)); //set peripheral address
 	//priority, 8 bit mem, 8 bit periph, memory increments,
-	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+	//_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | MSIZE8_INCR | PSIZE8);
 }
 
 void dma1::init(usart2 src, uint8_t* targ, uint16_t pri)
@@ -447,7 +450,7 @@ void dma1::init(analog_cont src, uint16_t targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma1::init(analog_cont src1, analog_cont src2, uint16_t targ, uint16_t pri)
+void dma1::init(analog_cont src1, analog_cont src2, uint32_t targ, uint16_t pri)
 {
 	if (cha == 0)
 	{
