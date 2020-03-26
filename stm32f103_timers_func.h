@@ -131,8 +131,10 @@ inline void timer4_init()
 class tim_pwm
 {
 protected:
+
 	tim_pwm(uint8_t ch_num, uint16_t d): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
-							  depth(d), channel(ch_num), ch_addr(channel*4 + 0x30){};
+							  depth(d), channel(ch_num), ch_addr(channel*4 + 0x30){}
+	tim_pwm() {}
 
 public:
 	uint8_t pwmMode, centerMode, direction, polarity;
@@ -296,6 +298,7 @@ public:
 //	tim1_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim1_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
+	tim1_pwm(): tim_pwm(){}
 	void init(uint8_t pushpull = 0);
 	void enable();
 	void disable() {_TIM1_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
@@ -333,6 +336,7 @@ public:
 //	tim2_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim2_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
+	tim2_pwm(): tim_pwm(){}
 	void init(uint8_t pushpull = 0);
 	void enable();
 	void disable() {_TIM2_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
@@ -370,6 +374,7 @@ public:
 //	tim3_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim3_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
+	tim3_pwm(): tim_pwm(){}
 	void init(uint8_t pushpull = 0);
 	void enable();
 	void disable() {_TIM3_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
@@ -407,6 +412,7 @@ public:
 //	tim4_pwm(uint8_t ch_num): pwmMode(1), centerMode(0), direction(0), polarity(0), prescaler(0),
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim4_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
+	tim4_pwm(): tim_pwm(){}
 	void init(uint8_t pushpull = 0);
 	void enable();
 	void disable() {_TIM4_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off

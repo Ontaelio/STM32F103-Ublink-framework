@@ -136,6 +136,12 @@ inline void dma1_enable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DM
 inline void dma1_disable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_CCR_EN;}
 inline void dma1_IRQenable(uint8_t channel) {IRQ_0TO31_SER |= (uint32_t)0x0000400<<channel;}
 inline void dma1_IRQdisable(uint8_t channel) {IRQ_0TO31_CER |= (uint32_t)0x0000400<<channel;}
+inline void dma1_errorenable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DMA_CCR_TEIE;}
+inline void dma1_halfenable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DMA_CCR_HTIE;}
+inline void dma1_completeenable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) |= DMA_CCR_TCIE;}
+inline void dma1_errordisable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_CCR_TEIE;}
+inline void dma1_halfdisable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_CCR_HTIE;}
+inline void dma1_completedisable(uint8_t channel) {_DMA1_(DMA_CCR + (--channel)*20) &= ~DMA_CCR_TCIE;}
 
 inline uint8_t dma1_globalinterrupt(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4))&1);}
 inline uint8_t dma1_transfercomplete(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>((--channel)*4 + 1))&1);}
@@ -213,10 +219,17 @@ public:
 	void disable() {_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN;} //disable dma channel
 	void priority(uint16_t pri);
 
-	void reset() {dma1_reset((cha - 1), 0);}
+	void reset() {dma1_reset((cha + 1), 0);}
 
 	void IRQenable() {IRQ_0TO31_SER |= (uint32_t)0x0000800<<cha;}
 	void IRQdisable() {IRQ_0TO31_CER |= (uint32_t)0x0000800<<cha;}
+
+	void enableError() {dma1_errorenable(cha + 1);}
+	void enableHalf() {dma1_halfenable(cha + 1);}
+	void enableComplete() {dma1_completeenable(cha + 1);}
+	void disableError() {dma1_errordisable(cha + 1);}
+	void disableHalf() {dma1_halfdisable(cha + 1);}
+	void disableComplete() {dma1_completedisable(cha + 1);}
 
 	uint8_t interrupt(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4))&1);}
 	uint8_t complete(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4 + 1))&1);}
@@ -224,10 +237,10 @@ public:
 	uint8_t error(uint8_t channel) {return ((_DMA1_(DMA_ISR)>>(cha*4 + 3))&1);}
 
 
-	void clearError() {dma1_errorclear((cha - 1));}
-	void clearHalf() {dma1_halfclear((cha - 1));}
-	void clearComplete() {dma1_completeclear((cha - 1));}
-	void clearAll() {dma1_ifclear((cha - 1));}
+	void clearError() {dma1_errorclear((cha + 1));}
+	void clearHalf() {dma1_halfclear((cha + 1));}
+	void clearComplete() {dma1_completeclear((cha + 1));}
+	void clearAll() {dma1_ifclear((cha + 1));}
 
 	uint8_t cha;
 	//uint32_t* baza = _DMA1_(0);
