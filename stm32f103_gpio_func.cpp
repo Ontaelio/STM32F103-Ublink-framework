@@ -230,6 +230,291 @@ void gpioC::mode(uint8_t speed, uint8_t cnf)
 	}
 }
 
+gpioD::gpioD(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
+{
+	pin = pinnum;
+	mode(dir, cnfod);
+}
+
+gpioD::gpioD(uint8_t pinnum)
+{
+	pin = pinnum;
+}
+
+gpioD::gpioD()
+{
+	static uint8_t pincount;
+	pin = pincount;
+	pincount++;
+}
+
+void gpioD::set()
+{
+	_GPIOD_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioD::high()
+{
+	_GPIOD_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioD::reset()
+{
+	_GPIOD_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioD::low()
+{
+	_GPIOD_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioD::invert()
+{
+	_GPIOD_(GPIOX_BSRR) = 1 << (pin + ((_GPIOD_(GPIOX_ODR)>>pin)&1)*16);
+}
+
+uint8_t gpioD::read()
+{
+	uint8_t val = (_GPIOD_(GPIOX_IDR) >> pin) & 1;
+	return val;
+}
+
+void gpioD::write(uint8_t val)
+{
+	if (val) set(); else reset();
+}
+
+void gpioD::mode(uint8_t speed, uint8_t cnf)
+{
+	uint8_t pinpos = pin%8;
+	uint8_t highlow = (pin<8) ? GPIOX_CRL:GPIOX_CRH;
+
+	_GPIOD_(highlow) &= ~(0x0F << (pinpos*4));
+
+	if (speed) _GPIOD_(highlow) |= (speed + cnf) << (pinpos*4);
+	else
+	{
+		_GPIOD_(highlow) |= (cnf&0x0C) << (pinpos*4);
+		_GPIOD_(GPIOX_ODR) |= (cnf&1) << pin;
+	}
+}
+
+
+gpioE::gpioE(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
+{
+	pin = pinnum;
+	mode(dir, cnfod);
+}
+
+gpioE::gpioE(uint8_t pinnum)
+{
+	pin = pinnum;
+}
+
+gpioE::gpioE()
+{
+	static uint8_t pincount;
+	pin = pincount;
+	pincount++;
+}
+
+void gpioE::set()
+{
+	_GPIOE_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioE::high()
+{
+	_GPIOE_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioE::reset()
+{
+	_GPIOE_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioE::low()
+{
+	_GPIOE_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioE::invert()
+{
+	_GPIOE_(GPIOX_BSRR) = 1 << (pin + ((_GPIOE_(GPIOX_ODR)>>pin)&1)*16);
+}
+
+uint8_t gpioE::read()
+{
+	uint8_t val = (_GPIOE_(GPIOX_IDR) >> pin) & 1;
+	return val;
+}
+
+void gpioE::write(uint8_t val)
+{
+	if (val) set(); else reset();
+}
+
+void gpioE::mode(uint8_t speed, uint8_t cnf)
+{
+	uint8_t pinpos = pin%8;
+	uint8_t highlow = (pin<8) ? GPIOX_CRL:GPIOX_CRH;
+
+	_GPIOE_(highlow) &= ~(0x0F << (pinpos*4));
+
+	if (speed) _GPIOE_(highlow) |= (speed + cnf) << (pinpos*4);
+	else
+	{
+		_GPIOE_(highlow) |= (cnf&0x0C) << (pinpos*4);
+		_GPIOE_(GPIOX_ODR) |= (cnf&1) << pin;
+	}
+}
+
+gpioF::gpioF(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
+{
+	pin = pinnum;
+	mode(dir, cnfod);
+}
+
+gpioF::gpioF(uint8_t pinnum)
+{
+	pin = pinnum;
+}
+
+gpioF::gpioF()
+{
+	static uint8_t pincount;
+	pin = pincount;
+	pincount++;
+}
+
+void gpioF::set()
+{
+	_GPIOF_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioF::high()
+{
+	_GPIOF_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioF::reset()
+{
+	_GPIOF_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioF::low()
+{
+	_GPIOF_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioF::invert()
+{
+	_GPIOF_(GPIOX_BSRR) = 1 << (pin + ((_GPIOF_(GPIOX_ODR)>>pin)&1)*16);
+}
+
+uint8_t gpioF::read()
+{
+	uint8_t val = (_GPIOF_(GPIOX_IDR) >> pin) & 1;
+	return val;
+}
+
+void gpioF::write(uint8_t val)
+{
+	if (val) set(); else reset();
+}
+
+void gpioF::mode(uint8_t speed, uint8_t cnf)
+{
+	uint8_t pinpos = pin%8;
+	uint8_t highlow = (pin<8) ? GPIOX_CRL:GPIOX_CRH;
+
+	_GPIOF_(highlow) &= ~(0x0F << (pinpos*4));
+
+	if (speed) _GPIOF_(highlow) |= (speed + cnf) << (pinpos*4);
+	else
+	{
+		_GPIOF_(highlow) |= (cnf&0x0C) << (pinpos*4);
+		_GPIOF_(GPIOX_ODR) |= (cnf&1) << pin;
+	}
+}
+
+gpioG::gpioG(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
+{
+	pin = pinnum;
+	mode(dir, cnfod);
+}
+
+gpioG::gpioG(uint8_t pinnum)
+{
+	pin = pinnum;
+}
+
+gpioG::gpioG()
+{
+	static uint8_t pincount;
+	pin = pincount;
+	pincount++;
+}
+
+void gpioG::set()
+{
+	_GPIOG_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioG::high()
+{
+	_GPIOG_(GPIOX_BSRR) = 1<<pin;
+}
+
+void gpioG::reset()
+{
+	_GPIOG_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioG::low()
+{
+	_GPIOG_(GPIOX_BRR) = 1<<pin;
+}
+
+
+void gpioG::invert()
+{
+	_GPIOG_(GPIOX_BSRR) = 1 << (pin + ((_GPIOG_(GPIOX_ODR)>>pin)&1)*16);
+}
+
+uint8_t gpioG::read()
+{
+	uint8_t val = (_GPIOG_(GPIOX_IDR) >> pin) & 1;
+	return val;
+}
+
+void gpioG::write(uint8_t val)
+{
+	if (val) set(); else reset();
+}
+
+void gpioG::mode(uint8_t speed, uint8_t cnf)
+{
+	uint8_t pinpos = pin%8;
+	uint8_t highlow = (pin<8) ? GPIOX_CRL:GPIOX_CRH;
+
+	_GPIOG_(highlow) &= ~(0x0F << (pinpos*4));
+
+	if (speed) _GPIOG_(highlow) |= (speed + cnf) << (pinpos*4);
+	else
+	{
+		_GPIOG_(highlow) |= (cnf&0x0C) << (pinpos*4);
+		_GPIOG_(GPIOX_ODR) |= (cnf&1) << pin;
+	}
+}
+
 
 //pins:
 //1 = MODEX_0
