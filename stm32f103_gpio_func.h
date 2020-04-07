@@ -46,12 +46,14 @@ public:
 	virtual void low() =0;
 	//virtual void invert() =0;
 	virtual uint8_t read() =0;
-	//virtual void write(uint8_t val) =0;
+	virtual void write(uint8_t val) =0;
 	virtual void mode(uint8_t speed, uint8_t cnf = 4) =0;
 	uint8_t pin;
 	//virtual void setAll(uint32_t BSRR_value) =0;
 	//virtual void resetAll(uint32_t BRR_value) =0;
 	//virtual uint32_t readAll() =0;
+	//operator uint8_t() {return read();}
+	//gpio_pin& operator= (const uint8_t& a) {write(a); return *this;}
 };
 
 class gpioA : public gpio_pin

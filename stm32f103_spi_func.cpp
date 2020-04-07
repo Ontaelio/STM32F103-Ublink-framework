@@ -480,7 +480,7 @@ void spi2_init()
 
 
 	//enable spi2 clock; note that SPI2 is in APB1 domain, the slower one
-	_RCC_(RCC_APB2ENR) |= RCC_APB1ENR_SPI2EN;
+	_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_SPI2EN;
 }
 
 void spi2_initMaster(uint16_t bitmode, uint16_t prescaler, uint16_t bidimode, uint8_t sc)
