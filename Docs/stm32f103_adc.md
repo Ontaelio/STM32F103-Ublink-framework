@@ -56,7 +56,7 @@ Starts a single conversion, waits for the End of Conversion (EOC) flag to set, t
 
  *Analog Pin* class is overloaded into `uint16_t` type and can be used as a right-hand operand as any normal `uint16_t` unsigned integer, e.g. `uint16_t res = analog_pin_object;`. Check the code [example](#analog-pin-adc-blink) below.
 
-###Analog Continuous Class
+### Analog Continuous Class
 
 Up to two pins (ADC1 _and_ ADC2) can be set up as *Analog Continuous* objects providing real-time continuous conversions on selected channels. Additional channels can be used in injected mode. The continuous mode uses its ADC peripheral fully, so no other `analog` object can be set up on the same ADC.
 
