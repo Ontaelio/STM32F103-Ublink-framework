@@ -9,7 +9,7 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#include <stm32f103_exti_func.h>
+#include <stm32f103_exti.h>
 
 
 void exti_interruptenable(uint8_t channel)

@@ -175,4 +175,20 @@ Reads last value from DR. Used to end a 'proper' transfer sequence.
 
 Simpler transfer sequence that should be a bit slower than the 'proper' one, as it doesn't write into DR while the previous value is getting shifted out and follows a sequentual procedure: write first, wait for TX, wait for RXNE, read.
 
+* void **spi1_IRQenable()**
+* void **spi1_IRQdisable()**
+
+Enable/disable global SPIx global interrupt in the ARM core.
+
+* void **spi1_TXinterrupt(uint8_t bit)**
+* void **spi1_RXinterrupt(uint8_t bit)**
+* void **spi1_JEOCinterrupt(uint8_t bit)**
+
+Enable (bit == 1) or disable (bit == 0) the particular interrupt generation (TX empty, RX not empty, error).
+
+* void **spi1_SSoutput(uint8_t bit)**
+
+Enable/disable SS output in master mode.
+
+
 

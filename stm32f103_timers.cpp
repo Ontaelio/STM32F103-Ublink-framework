@@ -9,10 +9,10 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#include <stm32f103_timers_func.h>
+#include <stm32f103_gpio.h>
 #include <stm32f103_timers_reg.h>
 #include <stm32f103_gpio_reg.h>
-#include <stm32f103_gpio_func.h>
+#include <stm32f103_timers.h>
 
 void delay_ms(uint32_t msecs)
 {

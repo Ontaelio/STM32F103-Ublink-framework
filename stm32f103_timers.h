@@ -9,15 +9,15 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_TIMERS_FUNC_H_
-#define STM32F103_TIMERS_FUNC_H_
+#ifndef STM32F103_TIMERS_H_
+#define STM32F103_TIMERS_H_
 
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_gpio_reg.h>
-#include <stm32f103_gpio_func.h>
 #include <stm32f103_timers_reg.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stm32f103_gpio.h>
 
 //**** SysTick stuff
 
@@ -444,6 +444,13 @@ private:
 	//uint8_t channel, ch_addr, ccmr, cms_dir, ccer;
 };
 
+typedef tim1_pwm tim1_pin;
+typedef tim2_pwm tim2_pin;
+typedef tim3_pwm tim3_pin;
+typedef tim4_pwm tim4_pin;
+
+
+
 class timer1: public timer
 {
 public:
@@ -822,4 +829,4 @@ public:
 private:
 };
 
-#endif /* STM32F103_TIMERS_FUNC_H_ */
+#endif /* STM32F103_TIMERS_H_ */

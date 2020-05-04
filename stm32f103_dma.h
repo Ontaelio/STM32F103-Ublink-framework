@@ -9,17 +9,17 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_DMA_FUNC_H_
-#define STM32F103_DMA_FUNC_H_
+#ifndef STM32F103_DMA_H_
+#define STM32F103_DMA_H_
 
 #include <stdio.h>
 #include <stdint.h>
-#include <stm32f103_usart_func.h>
+#include <stm32f103_adc.h>
 #include <stm32f103_dma_reg.h>
 #include <stm32f103_rcc_reg.h>
-#include <stm32f103_spi_func.h>
-#include <stm32f103_adc_func.h>
 #include <stm32f103_i2c_master.h>
+#include <stm32f103_spi.h>
+#include <stm32f103_usart.h>
 
 #ifndef STM32F103_TIMERS_REG_H_
 //interrupt set-enable registers
@@ -250,4 +250,4 @@ private:
 
 typedef dma1 dma;
 
-#endif /* STM32F103_DMA_FUNC_H_ */
+#endif /* STM32F103_DMA_H_ */

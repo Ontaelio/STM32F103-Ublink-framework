@@ -6,11 +6,10 @@
  */
 
 #include <stm32f103_rtc_reg.h>
-#include <stm32f103_rtc_func.h>
 #include <stm32f103_rcc_reg.h>
-#include <stm32f103_timers_func.h>
-
 #include <stdio.h>
+#include <stm32f103_rtc.h>
+#include <stm32f103_timers.h>
 
 void rtc_init(uint32_t presc)
 {
@@ -23,7 +22,8 @@ void rtc_init(uint32_t presc)
 		_RCC_(RCC_BDCR) |= RCC_BDCR_LSEON;
 		while (!(_RCC_(RCC_BDCR) & RCC_BDCR_LSERDY)) {}
 		_RCC_(RCC_BDCR) &= ~RCC_BDCR_RTCSEL;
-		_RCC_(RCC_BDCR) |= 1<<8; //LSE clock used; 01 in RTCSEL
+		_RCC_(RCC_BDCR) |= 1<<8; //LSE clock used; 01 in RTCSEL 1<<8 // 10 for LSI 1<<9
+								//3<<8 for HSI as a clock source
 
 		_RCC_(RCC_BDCR) |= RCC_BDCR_RTCEN; //enable RTC
 

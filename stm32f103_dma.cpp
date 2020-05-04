@@ -9,7 +9,7 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#include <stm32f103_dma_func.h>
+#include <stm32f103_dma.h>
 
 void dma1_reset(uint8_t channel, uint16_t ccr)
 {

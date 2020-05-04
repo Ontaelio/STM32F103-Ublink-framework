@@ -9,8 +9,8 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_RTC_FUNC_H_
-#define STM32F103_RTC_FUNC_H_
+#ifndef STM32F103_RTC_H_
+#define STM32F103_RTC_H_
 
 #include <stdio.h>
 #include <stdint.h>
@@ -118,4 +118,4 @@ void setDateTime(Date, Time);
 */
 
 
-#endif /* STM32F103_RTC_FUNC_H_ */
+#endif /* STM32F103_RTC_H_ */

@@ -14,10 +14,10 @@
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_gpio_reg.h>
 #include <stm32f103_spi_reg.h>
-#include <stm32f103_spi_func.h>
-#include <stm32f103_gpio_func.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stm32f103_gpio.h>
+#include <stm32f103_spi.h>
 
 
 void spi1_slave::init(uint16_t conf)

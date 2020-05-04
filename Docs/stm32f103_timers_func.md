@@ -127,9 +127,9 @@ Disables the output of the PWM channel.
 
 Sets the PWM output to the provided `value`. Can be used before `enable` to pre-set the compare value.
 
-* Overloaded functions **=**, **++**, **--**, **+=**, **-=**
+* Overloaded operators **=**, **++**, **--**, **+=**, **-=**
 
-The overloaded functions can be used to read, write, increase and decrease the PWM output (that is, the corresponding capture/compare register). I.e. with a PWM_pin object called `A11` you can use either `A11.write(1000);` or `A11 = 1000;`, the result will be equal. Pre- and post- increment/decrement produce the same result. `=` operator can also be used to get the current PWM value (`int a = A11;`).
+Overloaded operators can be used to read, write, increase and decrease the PWM output (that is, the corresponding capture/compare register). I.e. with a PWM_pin object called `A11` you can use either `A11.write(1000);` or `A11 = 1000;`, the result will be equal. Pre- and post- increment/decrement produce the same result. `=` operator can also be used to get the current PWM value (`int a = A11;`).
 
 * void **DMAenable()** 
 * void **DMAdisable()**

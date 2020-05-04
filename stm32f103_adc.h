@@ -8,18 +8,19 @@
  *
  * Can be freely used according to the GNU GPL license.
  */
-#ifndef STM32F103_ADC_FUNC_H_
-#define STM32F103_ADC_FUNC_H_
+#ifndef STM32F103_ADC_H_
+#define STM32F103_ADC_H_
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
 #include <stm32f103_adc_reg.h>
+#include <stm32f103_dma.h>
+#include <stm32f103_dma_reg.h>
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_gpio_reg.h>
-#include <stm32f103_gpio_func.h>
-#include <stm32f103_timers_func.h>
-#include <stm32f103_dma_func.h>
+#include <stm32f103_gpio.h>
+#include <stm32f103_timers.h>
 
 #define ADC_EXT_T1CC1	0
 #define ADC_EXT_T1CC2	1
@@ -171,10 +172,10 @@ inline void adc_IRQdisable() {IRQ_0TO31_CER |= IRQ_ADC1_2;}
 
 //interrupts - STM, bit banding
 inline void adc1_WDinterrupt(uint8_t bit) {BB_ADC1_CR1_AWDIE = bit;}
-inline void adc1_EOCintterrupt(uint8_t bit) {BB_ADC1_CR1_EOCIE = bit;}
+inline void adc1_EOCinterrupt(uint8_t bit) {BB_ADC1_CR1_EOCIE = bit;}
 inline void adc1_JEOCinterrupt(uint8_t bit) {BB_ADC1_CR1_JEOCIE = bit;}
 inline void adc2_WDinterrupt(uint8_t bit) {BB_ADC2_CR1_AWDIE = bit;}
-inline void adc2_EOCintterrupt(uint8_t bit) {BB_ADC2_CR1_EOCIE = bit;}
+inline void adc2_EOCinterrupt(uint8_t bit) {BB_ADC2_CR1_EOCIE = bit;}
 inline void adc2_JEOCinterrupt(uint8_t bit) {BB_ADC2_CR1_JEOCIE = bit;}
 
 //temperature sensor
@@ -186,4 +187,4 @@ inline void adc_dualMode(uint8_t dmode) {_ADC1_(ADC_CR1) &= ~(ADC_CR1_DUALMOD); 
 
 
 
-#endif /* STM32F103_ADC_FUNC_H_ */
+#endif /* STM32F103_ADC_H_ */

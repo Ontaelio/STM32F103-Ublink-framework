@@ -9,8 +9,8 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_USART_FUNC_H_
-#define STM32F103_USART_FUNC_H_
+#ifndef STM32F103_USART_H_
+#define STM32F103_USART_H_
 
 #define APB2SPEED 72000000
 #define APB1SPEED 36000000
@@ -24,9 +24,9 @@
 #include <math.h>
 #include <stm32f103_usart_reg.h>
 #include <stm32f103_rcc_reg.h>
-#include <stm32f103_timers_func.h>
-#include <stm32f103_gpio_func.h>
-#include <stm32f103_dma_func.h>
+#include <stm32f103_timers.h>
+#include <stm32f103_gpio.h>
+#include <stm32f103_dma.h>
 
 #define USART_TX_EMPTY USART_CR1_TXEIE
 #define USART_TRANSFER_COMPLETE USART_CR1_TCIE
@@ -300,4 +300,4 @@ inline void usart1_init(uint32_t brate)
 }
 */
 
-#endif /* STM32F103_USART_FUNC_H_ */
+#endif /* STM32F103_USART_H_ */

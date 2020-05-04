@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <stm32f103_rtc_func.h>
+#include <stm32f103_rtc.h>
 
 //#define WEEKDAYOFFSET 4 // for a leap year 0 use 4
 #define YEARZERO 2017  //2017 is default, starts on Sunday

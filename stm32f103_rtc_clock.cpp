@@ -5,7 +5,7 @@
  *      Author: Ontaelio
  */
 
-#include <stm32f103_rtc_func.h>
+#include <stm32f103_rtc.h>
 #include <stm32f103_rtc_clock.h>
 
 uint8_t daysPerMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -72,7 +72,7 @@ Date getDate()
 
 void setTime(Time time)
 {
-	uint32_t seconds = rtc_read() / 86400;
+	uint32_t seconds = rtc_read() / 86400; //discard time, keep date
 	seconds += time2seconds(time);// (uint32_t)time.Hour * 3600 + (uint32_t)time.Minute * 60 + (uint32_t)time.Second;
 	rtc_write(seconds);
 }

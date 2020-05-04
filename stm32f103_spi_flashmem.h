@@ -14,8 +14,8 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stm32f103_spi.h>
 #include <stm32f103_spi_reg.h>
-#include <stm32f103_spi_func.h>
 
 
 class spi_flash

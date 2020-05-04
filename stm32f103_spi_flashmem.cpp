@@ -10,9 +10,9 @@
  */
 
 #include <stm32f103_spi_reg.h>
-#include <stm32f103_spi_func.h>
 #include <stm32f103_spi_flashmem.h>
 #include <stdio.h>
+#include <stm32f103_spi.h>
 
 
 void spi_flash::write(uint32_t address, uint8_t* arr_out, uint8_t innum)

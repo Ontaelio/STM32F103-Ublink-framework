@@ -9,15 +9,16 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_SPI_FUNC_H_
-#define STM32F103_SPI_FUNC_H_
+#ifndef STM32F103_SPI_H_
+#define STM32F103_SPI_H_
 
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_spi_reg.h>
 #include <stm32f103_gpio_reg.h>
-#include <stm32f103_gpio_func.h>
+#include <stm32f103_timers_reg.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stm32f103_gpio.h>
 
 #define BIDI_INPUT  	0x8000
 #define BIDI_OUTPUT 	0xC000
@@ -190,6 +191,15 @@ inline uint16_t spi1_readData()
 
 uint16_t spi1_writeReadData(uint16_t dat_out);
 
+//interrupts - global
+inline void spi1_IRQenable() {IRQ_32TO63_SER |= IRQ_SPI1;}
+inline void spi1_IRQdisable() {IRQ_32TO63_CER |= IRQ_SPI1;}
+
+//interrupts - STM, bit banding
+inline void spi1_TXinterrupt(uint8_t bit) {BB_SPI1_CR2_TXEIE = bit;}
+inline void spi1_RXinterrupt(uint8_t bit) {BB_SPI1_CR2_RXNEIE = bit;}
+inline void spi1_JEOCinterrupt(uint8_t bit) {BB_SPI1_CR2_ERRIE = bit;}
+inline void spi1_SSoutput(uint8_t bit) {BB_SPI1_CR2_SSOE = bit;}
 
 inline void spi2_writeData(uint16_t dat)
 {
@@ -220,4 +230,14 @@ inline uint16_t spi2_readData()
 
 uint16_t spi2_writeReadData(uint16_t dat_out);
 
-#endif /* STM32F103_SPI_FUNC_H_ */
+//interrupts - global
+inline void spi2_IRQenable() {IRQ_32TO63_SER |= IRQ_SPI2;}
+inline void spi2_IRQdisable() {IRQ_32TO63_CER |= IRQ_SPI2;}
+
+//interrupts - STM, bit banding
+inline void spi2_TXinterrupt(uint8_t bit) {BB_SPI2_CR2_TXEIE = bit;}
+inline void spi2_RXinterrupt(uint8_t bit) {BB_SPI2_CR2_RXNEIE = bit;}
+inline void spi2_JEOCinterrupt(uint8_t bit) {BB_SPI2_CR2_ERRIE = bit;}
+inline void spi2_SSoutput(uint8_t bit) {BB_SPI2_CR2_SSOE = bit;}
+
+#endif /* STM32F103_SPI_H_ */

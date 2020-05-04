@@ -9,7 +9,7 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#include <stm32f103_usart_func.h>
+#include <stm32f103_usart.h>
 
 
 

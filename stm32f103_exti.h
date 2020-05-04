@@ -9,8 +9,8 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_EXTI_FUNC_H_
-#define STM32F103_EXTI_FUNC_H_
+#ifndef STM32F103_EXTI_H_
+#define STM32F103_EXTI_H_
 
 #include <stm32f103_exti_reg.h>
 #include <stm32f103_timers_reg.h>
@@ -51,4 +51,4 @@ class exti
 
 
 
-#endif /* STM32F103_EXTI_FUNC_H_ */
+#endif /* STM32F103_EXTI_H_ */

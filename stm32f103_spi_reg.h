@@ -15,14 +15,38 @@
 #include <stdio.h>
 #include <stdint.h>
 
+//bitband atomic access addresses
+//base addresses
+#define BB_SPI1_BASE		*(volatile uint32_t *) 0x42260000
+#define BB_SPI2_BASE		*(volatile uint32_t *) 0x42070000
+#define BB_SPI3_BASE		*(volatile uint32_t *) 0x42078000
+
+//IRQs
+#define BB_SPI1_CR2_TXEIE	*(volatile uint32_t *) 0x4226009C
+#define BB_SPI1_CR2_RXNEIE	*(volatile uint32_t *) 0x42260098
+#define BB_SPI1_CR2_ERRIE	*(volatile uint32_t *) 0x42260094
+#define BB_SPI1_CR2_SSOE	*(volatile uint32_t *) 0x42260088
+
+#define BB_SPI2_CR2_TXEIE	*(volatile uint32_t *) 0x4207009C
+#define BB_SPI2_CR2_RXNEIE	*(volatile uint32_t *) 0x42070098
+#define BB_SPI2_CR2_ERRIE	*(volatile uint32_t *) 0x42070094
+#define BB_SPI2_CR2_SSOE	*(volatile uint32_t *) 0x42070088
+
+#define BB_SPI3_CR2_TXEIE	*(volatile uint32_t *) 0x4207809C
+#define BB_SPI3_CR2_RXNEIE	*(volatile uint32_t *) 0x42078098
+#define BB_SPI3_CR2_ERRIE	*(volatile uint32_t *) 0x42078094
+#define BB_SPI3_CR2_SSOE	*(volatile uint32_t *) 0x42078088
+
+//base addresses
+
 #define _SPI1_(mem_offset) (*(volatile uint32_t *)(0x40013000 + (mem_offset)))
 #define _SPI2_(mem_offset) (*(volatile uint32_t *)(0x40003800 + (mem_offset)))
 #define _SPI3_(mem_offset) (*(volatile uint32_t *)(0x40003C00 + (mem_offset)))
 
-#define _BBSPI1_(mem_offset) (*(volatile uint32_t *)(0x42260000 + (mem_offset)))
-#define _BBSPI2_(mem_offset) (*(volatile uint32_t *)(0x42070000 + (mem_offset)))
-#define BB_SPI_CR1  0x0000
-#define BB_SPI_CR1_SPE 0x18
+//#define _BBSPI1_(mem_offset) (*(volatile uint32_t *)(0x42260000 + (mem_offset)))
+//#define _BBSPI2_(mem_offset) (*(volatile uint32_t *)(0x42070000 + (mem_offset)))
+//#define BB_SPI_CR1  0x0000
+//#define BB_SPI_CR1_SPE 0x18
 
 #define SPI_CR1		0x00
 #define SPI_CR2		0x04

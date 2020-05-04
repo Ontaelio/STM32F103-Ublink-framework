@@ -10,8 +10,9 @@
  */
 
 #include <stdio.h>
+#include <stm32f103_gpio.h>
 #include <stm32f103_gpio_reg.h>
-#include <stm32f103_gpio_func.h>
+
 
 gpioA::gpioA(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
