@@ -98,8 +98,83 @@ void spi_flash::block64erase(uint32_t address)
 	writeEnable();
 	device -> writeStream(command, 4);
 }
+
 void spi_flash::chipErase()
 {
 	device -> write(0xC7);
 }
 
+uint8_t spi_flash::manufacturer()
+{
+	uint8_t res;
+	device -> ss_low();
+	device -> writeData(0x9F);
+	device -> readData();
+	device -> writeData(0);
+	res = device -> readData();
+	device -> ss_high();
+	return res;
+}
+
+uint8_t spi_flash::deviceID()
+{
+	uint8_t res;
+	device -> ss_low();
+	device -> writeData(0x90);
+	device -> writeData(0);
+	device -> writeData(0);
+	device -> writeData(0);
+	device -> readData();
+	device -> writeData(0);
+	device -> readData();
+	device -> writeData(0);
+	res = device -> readData();
+	device -> ss_high();
+	return res;
+}
+
+uint32_t spi_flash::JEDEC()
+{
+	uint32_t res;
+	device -> ss_low();
+	device -> writeData(0x9F);
+	device -> readData();
+	device -> writeData(0);
+	res = (device -> readData()) << 16;
+	device -> writeData(0);
+	res |= (device -> readData()) << 8;
+	device -> writeData(0);
+	res |= device -> readData();
+	device -> ss_high();
+	return res;
+}
+
+uint64_t spi_flash::uniqueID()
+{
+	uint64_t res;
+	device -> ss_low();
+	device -> writeData(0x4B);
+	device -> writeData(0);
+	device -> writeData(0);
+	device -> writeData(0);
+	device -> writeData(0);
+	device -> readData();
+	device -> writeData(0);
+	res = (uint64_t)(device -> readData()) << 56;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData()) << 48;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData()) << 40;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData()) << 32;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData()) << 24;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData()) << 16;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData()) << 8;
+	device -> writeData(0);
+	res |= (uint64_t)(device -> readData());
+	device -> ss_high();
+	return res;
+}

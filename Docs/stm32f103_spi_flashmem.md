@@ -54,6 +54,22 @@ Block erase (64K) at `address`.
 
 Erases the chip memory. For safety reasons, `writeEnable()` must be explicitly called before the chip erase function.
 
+* uint8_t **manufacturer()**
+
+Returns the Manufacturer ID code.
+
+* uint8_t **deviceID()**
+
+Returns the Device ID code.
+
+* uint32_t **JEDEC()**
+
+Returns the JEDEC code: three bytes representing Manufacturer ID, Memory Type and Capacity.
+
+* uint64_t **uniqueID()**
+
+Returns the device's Unique ID.
+
 Example:
 
 ```c++

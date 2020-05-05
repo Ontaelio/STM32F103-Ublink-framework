@@ -32,6 +32,11 @@ public:
 	void block32erase(uint32_t address);
 	void block64erase(uint32_t address);
 	void chipErase();
+	uint8_t manufacturer();
+	uint8_t deviceID();
+	uint32_t JEDEC();
+	uint64_t uniqueID();
+
 
 private:
 	uint16_t static const default_config = 0x0300;
