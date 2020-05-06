@@ -24,7 +24,7 @@ uint16_t leds[16] = {0xFFFF, 0X00, 0X00, 0XF000}; //an array of LED values
 gpioA_pin PA2(2); //PA2 pin object
 spi1_slave dm634(&PA2); //PA2 is used as SS/Latch pin for the dm634 SPI slave
 
-main(){
+int main(){
 gpioA_init(); //init GPIOA
 spi1_init(); //init SPI1
 dm634.init(BIDI_OUTPUT | SOFT_SS | SPIBR8 | DATAFRAME_16); //init and config the object

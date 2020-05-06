@@ -174,15 +174,19 @@ void spi1_slave::seqTransfer(uint8_t* arr_out, uint16_t num_out, uint8_t* arr_in
 	uint8_t* aout = arr_out;
 	uint8_t* ain = arr_in;
 	uint16_t k = 0;
-	--num_in; --num_out;
+	--num_in;
 	ss_low();
-	_SPI1_(SPI_DR) = *aout; //put first data in DR
-	if (num_out) do
+	if (num_out)
 	{
-		spi1_transferData(*(aout + k +1));
-		++k;
+		--num_out;
+		_SPI1_(SPI_DR) = *aout; //put first data in DR
+		if (num_out) do
+		{
+			spi1_transferData(*(aout + k +1));
+			++k;
+		}
+		while (k<num_out);
 	}
-	while (k<num_out);
 	spi1_transferData(0);
 	k = 0;
 	do
@@ -352,15 +356,21 @@ void spi2_slave::seqTransfer(uint8_t* arr_out, uint16_t num_out, uint8_t* arr_in
 	uint8_t* aout = arr_out;
 	uint8_t* ain = arr_in;
 	uint16_t k = 0;
-	--num_in; --num_out;
+	--num_in;
 	ss_low();
-	_SPI2_(SPI_DR) = *aout; //put first data in DR
-	do
+
+	if (num_out)
 	{
-		spi2_transferData(*(aout + k +1));
-		++k;
+		--num_out;
+		_SPI1_(SPI_DR) = *aout; //put first data in DR
+		if (num_out) do
+		{
+			spi1_transferData(*(aout + k +1));
+			++k;
+		}
+		while (k<num_out);
 	}
-	while (k<num_out);
+
 	spi2_transferData(0);
 	k = 0;
 	do
