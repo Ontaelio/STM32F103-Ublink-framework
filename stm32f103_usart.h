@@ -55,6 +55,7 @@ public:
 	void fprintUInt(uint32_t a, uint_fast8_t s);
 
 	void printFloat(long double a, uint_fast8_t s = 2);
+	void printHex(unsigned val);
 
 	char getChar();
 	void getStream(uint8_t* dat, uint16_t size);
@@ -277,6 +278,8 @@ public:
 private:
 
 };
+
+char hexChar(uint8_t val);
 
 /*
 inline void usart1_send(uint8_t a)

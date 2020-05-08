@@ -149,6 +149,10 @@ Prints a C++ string (`string.h` standard library). Note that `<<` operator doesn
 
 Convert the number of the corresponding data type (`unsigned int`, `int` or `double`) into text and send the text over the USART. Functions dealing with 64-bit integers use a buffer to order the symbols, while 32-bit values are ordered using stack (with inline assembly).
 
+* void **printHex(unsigned val)**
+
+Prints the provided number in hex in 0x123... format. Leading zeroes omitted.
+
 * void **fprintUInt(uint32_t a, uint_fast8_t s)**
 
 Formatted print for the unsigned int types. Adds '0's at the beginning to make the total number of characters equal to `s`.

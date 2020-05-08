@@ -166,6 +166,17 @@ void usart::printFloat(long double a, uint_fast8_t s)
 	}
 }
 
+void usart::printHex(unsigned val)
+{
+	uint8_t k = 32;
+	printString("0x");
+	while (k-=4)
+		if (val >> k) sendByte(hexChar((val >> k)&0x0F));
+	sendByte(hexChar(val&0x0F));
+}
+
+
+
 void usart::getStream(uint8_t* dat, uint16_t size)
 {
 	for (uint16_t k = 0; k<size; k++)
@@ -954,3 +965,11 @@ void usart3::startRX(uint8_t* dat, uint16_t size, uint16_t pri)
 
 void usart3::stopTX() {dma1_disable(4); DMATXdisable();}
 void usart3::stopRX() {dma1_disable(5); DMARXdisable();}
+
+char hexChar(uint8_t val)
+{
+	char c;
+	if (val > 9) c = val + 55;
+	else c = val + 48;
+	return c;
+}
