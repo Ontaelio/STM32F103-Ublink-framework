@@ -22,6 +22,7 @@ class spi_flash
 {
 public:
 	spi_flash(spi_slave* target) : device(target){}
+	void init() {device -> init(0x0300);}
 	void write(uint32_t address, uint8_t* arr_out, uint8_t num = 0);
 	void read(uint32_t address, uint8_t* arr_in, uint16_t num);
 	void fastRead(uint32_t address, uint8_t* arr_in, uint16_t num);

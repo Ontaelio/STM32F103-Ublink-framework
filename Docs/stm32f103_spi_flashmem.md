@@ -10,6 +10,10 @@ Constructor:
 
 Creates a `spi_flash` object that works with the `spi_slave` object pointed by `target`.
 
+* void **init()**
+
+Calls the `spi_slave` `init()` function with the default argument 0x0300.
+
 * void **write(uint32_t address, uint8_t&ast; arr_out [, uint8_t num = 0])**
 
 Enables write, then page-writes data from a container pointed by `arr_out` at the flash memory `address`. If `num` is 0 (default) the full page of 256 bytes is written, else `num` provides the number of bytes to be written (max 255).
