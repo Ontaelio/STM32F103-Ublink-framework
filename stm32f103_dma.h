@@ -16,8 +16,8 @@
 #include <stdint.h>
 #include <stm32f103_adc.h>
 #include <stm32f103_dma_reg.h>
+#include <stm32f103_i2c.h>
 #include <stm32f103_rcc_reg.h>
-#include <stm32f103_i2c_master.h>
 #include <stm32f103_spi.h>
 #include <stm32f103_usart.h>
 

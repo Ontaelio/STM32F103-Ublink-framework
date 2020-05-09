@@ -12,9 +12,9 @@
 
 #include <stdio.h>
 #include <stm32f103_gpio_reg.h>
+#include <stm32f103_i2c.h>
 #include <stm32f103_i2c_reg.h>
 #include <stm32f103_rcc_reg.h>
-#include <stm32f103_i2c_master.h>
 //#include <stm32f103_debugLED.h>
 
 /* ----------- I2C1 -------------------- */

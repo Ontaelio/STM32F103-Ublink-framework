@@ -9,8 +9,8 @@
  * Can be freely used according to the GNU GPL license.
  */
 
-#ifndef STM32F103_I2C_MASTER_H_
-#define STM32F103_I2C_MASTER_H_
+#ifndef STM32F103_I2C_H_
+#define STM32F103_I2C_H_
 
 #include <stdio.h>
 #include <stdint.h>
@@ -156,4 +156,4 @@ uint8_t i2c2_readByte();
 uint8_t i2c2_readLast();
 void i2c2_readStream(uint8_t* arr, uint8_t num);
 
-#endif /* STM32F103_I2C_MASTER_H_ */
+#endif /* STM32F103_I2C_H_ */
