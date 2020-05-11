@@ -152,7 +152,7 @@ public:
 	void parityDisable() {_USART1_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
 
 	void IRQenable(uint16_t irqs);
-	void IRQdisable() {IRQ_32TO63_CER |= IRQ_USART1;}
+	void IRQdisable() {IRQ_32TO63_CER |= IRQ_BITMASK_USART1;}
 
 	void clearCTS() {_USART1_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART1_(USART_SR) & 0x001F);}
@@ -205,7 +205,7 @@ public:
 	void parityDisable() {_USART2_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
 
 	void IRQenable(uint16_t irqs);
-	void IRQdisable() {IRQ_32TO63_CER |= IRQ_USART2;}
+	void IRQdisable() {IRQ_32TO63_CER |= IRQ_BITMASK_USART2;}
 
 	void clearCTS() {_USART2_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART2_(USART_SR) & 0x001F);}
@@ -260,7 +260,7 @@ public:
 	void parityDisable() {_USART3_(USART_CR1) &= ~(USART_CR1_PCE | USART_CR1_PS);}
 
 	void IRQenable(uint16_t irqs);
-	void IRQdisable() {IRQ_32TO63_CER |= IRQ_USART3;}
+	void IRQdisable() {IRQ_32TO63_CER |= IRQ_BITMASK_USART3;}
 
 	void clearCTS() {_USART3_(USART_SR) &= ~USART_SR_CTS;}
 	uint16_t checkError() {return (_USART3_(USART_SR) & 0x001F);}

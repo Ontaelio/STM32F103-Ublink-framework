@@ -167,8 +167,8 @@ inline void adc2_watchdogLowHigh(uint32_t low, uint32_t high) {_ADC2_(ADC_LTR) =
 
 
 //interrupts - global
-inline void adc_IRQenable() {IRQ_0TO31_SER |= IRQ_ADC1_2;}
-inline void adc_IRQdisable() {IRQ_0TO31_CER |= IRQ_ADC1_2;}
+inline void adc_IRQenable() {IRQ_0TO31_SER |= IRQ_BITMASK_ADC1_2;}
+inline void adc_IRQdisable() {IRQ_0TO31_CER |= IRQ_BITMASK_ADC1_2;}
 
 //interrupts - STM, bit banding
 inline void adc1_WDinterrupt(uint8_t bit) {BB_ADC1_CR1_AWDIE = bit;}

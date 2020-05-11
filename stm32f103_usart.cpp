@@ -574,7 +574,7 @@ uint8_t usart1::getByte()
 
 void usart1::IRQenable(uint16_t irqs)
 {
-	IRQ_32TO63_SER |= IRQ_USART1;
+	IRQ_32TO63_SER |= IRQ_BITMASK_USART1;
 	_USART1_(USART_CR1) &= ~0x01F0; //clear interrupt enables
 	_USART1_(USART_CR3) &= ~0x0401; //clear interrupt enables
 	_USART1_(USART_CR1) |= (irqs & 0x01F0); //set particular bits
@@ -740,7 +740,7 @@ uint8_t usart2::getByte()
 
 void usart2::IRQenable(uint16_t irqs)
 {
-	IRQ_32TO63_SER |= IRQ_USART2;
+	IRQ_32TO63_SER |= IRQ_BITMASK_USART2;
 	_USART2_(USART_CR1) &= ~0x01F0; //clear interrupt enables
 	_USART2_(USART_CR3) &= ~0x0401; //clear interrupt enables
 	_USART2_(USART_CR1) |= (irqs & 0x01F0); //set particular bits
@@ -904,7 +904,7 @@ uint8_t usart3::getByte()
 
 void usart3::IRQenable(uint16_t irqs)
 {
-	IRQ_32TO63_SER |= IRQ_USART3;
+	IRQ_32TO63_SER |= IRQ_BITMASK_USART3;
 	_USART3_(USART_CR1) &= ~0x01F0; //clear interrupt enables
 	_USART3_(USART_CR3) &= ~0x0401; //clear interrupt enables
 	_USART3_(USART_CR1) |= (irqs & 0x01F0); //set particular bits

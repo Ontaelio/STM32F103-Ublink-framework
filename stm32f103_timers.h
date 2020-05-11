@@ -41,6 +41,10 @@ inline void sysTick_intDisable()
 	SYSTICK_CSR &= ~SYSTICK_CSR_TICKINT;
 }
 
+//**** IRQ stuff
+
+void irq_priority(uint8_t irq, uint8_t pri);
+
 //**** STM timers stuff
 
 //center mode and direction values, CR1
@@ -478,18 +482,18 @@ public:
 	void pwmDisable(uint8_t ch_num);
 
 	//for consistency with other timers. Here they enable the update event IRQ
-	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM1_UP;}
-	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM1_UP;}
+	void IRQenable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM1_UP;}
+	void IRQdisable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM1_UP;}
 
 	//tim1 only
-	void IRQ_BRK_enable() {IRQ_0TO31_SER |= IRQ_TIM1_BRK;}
-	void IRQ_UP_enable() {IRQ_0TO31_SER |= IRQ_TIM1_UP;}
-	void IRQ_TRG_COM_enable() {IRQ_0TO31_SER |= IRQ_TIM1_TRG_COM;}
-	void IRQ_CC_enable() {IRQ_0TO31_SER |= IRQ_TIM1_CC;}
-	void IRQ_BRK_disable() {IRQ_0TO31_CER |= IRQ_TIM1_BRK;}
-	void IRQ_UP_disable() {IRQ_0TO31_CER |= IRQ_TIM1_UP;}
-	void IRQ_TRG_COM_disable() {IRQ_0TO31_CER |= IRQ_TIM1_TRG_COM;}
-	void IRQ_CC_disable() {IRQ_0TO31_CER |= IRQ_TIM1_CC;}
+	void IRQ_BRK_enable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM1_BRK;}
+	void IRQ_UP_enable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM1_UP;}
+	void IRQ_BITMASK_TRG_COM_enable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM1_TRG_COM;}
+	void IRQ_CC_enable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM1_CC;}
+	void IRQ_BRK_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM1_BRK;}
+	void IRQ_UP_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM1_UP;}
+	void IRQ_BITMASK_TRG_COM_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM1_TRG_COM;}
+	void IRQ_CC_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM1_CC;}
 
 	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM1_(TIMX_CCR1) = val;}
@@ -586,8 +590,8 @@ public:
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
 
-	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM2;}
-	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM2;}
+	void IRQenable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM2;}
+	void IRQdisable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM2;}
 
 	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM2_(TIMX_CCR1) = val;}
@@ -676,8 +680,8 @@ public:
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
 
-	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM3;}
-	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM3;}
+	void IRQenable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM3;}
+	void IRQdisable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM3;}
 
 	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM3_(TIMX_CCR1) = val;}
@@ -764,8 +768,8 @@ public:
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
 
-	void IRQenable() {IRQ_0TO31_SER |= IRQ_TIM4;}
-	void IRQdisable() {IRQ_0TO31_CER |= IRQ_TIM4;}
+	void IRQenable() {IRQ_0TO31_SER |= IRQ_BITMASK_TIM4;}
+	void IRQdisable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM4;}
 
 	//capture/compare channels
 	void writeCC1(uint16_t val) {_TIM4_(TIMX_CCR1) = val;}

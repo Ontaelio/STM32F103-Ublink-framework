@@ -45,6 +45,15 @@ void sysTick_start(uint32_t val, uint8_t intext)
 	SYSTICK_CSR |= SYSTICK_CSR_ENABLE;
 }
 
+void irq_priority(uint8_t irq, uint8_t pri)
+{
+	uint8_t mo = irq & 0xFC;
+	uint8_t offs = (irq & 3) * 8 + 4;
+	uint32_t val = pri << offs;
+	uint32_t c_val = 0xF << offs;
+	IRQ_PRIORITY(mo) &= ~c_val;
+	IRQ_PRIORITY(mo) |= val;
+}
 
 void timer::setCC1mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {

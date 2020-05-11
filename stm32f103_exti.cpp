@@ -17,25 +17,25 @@ void exti_interruptenable(uint8_t channel)
 	_EXTI_(EXTI_IMR) |= (uint32_t)(1<<channel);
 	switch (channel)
 	{
-		case 0:  IRQ_0TO31_SER |= IRQ_EXTI0; break;
-		case 1:  IRQ_0TO31_SER |= IRQ_EXTI1; break;
-		case 2:  IRQ_0TO31_SER |= IRQ_EXTI2; break;
-		case 3:  IRQ_0TO31_SER |= IRQ_EXTI3; break;
-		case 4:  IRQ_0TO31_SER |= IRQ_EXTI4; break;
+		case 0:  IRQ_0TO31_SER |= IRQ_BITMASK_EXTI0; break;
+		case 1:  IRQ_0TO31_SER |= IRQ_BITMASK_EXTI1; break;
+		case 2:  IRQ_0TO31_SER |= IRQ_BITMASK_EXTI2; break;
+		case 3:  IRQ_0TO31_SER |= IRQ_BITMASK_EXTI3; break;
+		case 4:  IRQ_0TO31_SER |= IRQ_BITMASK_EXTI4; break;
 		case 5:
 		case 6:
 		case 7:
 		case 8:
-		case 9:  IRQ_0TO31_SER |= IRQ_EXTI9_5; break;
+		case 9:  IRQ_0TO31_SER |= IRQ_BITMASK_EXTI9_5; break;
 		case 10:
 		case 11:
 		case 12:
 		case 13:
 		case 14:
-		case 15: IRQ_32TO63_SER |= IRQ_EXTI15_10; break;
-		case 16:  IRQ_0TO31_SER |= IRQ_PVD; break;
-		case 17:  IRQ_32TO63_SER |= IRQ_RTCAlarm; break;
-		case 18:  IRQ_32TO63_SER |= IRQ_USBWakeup; break;
+		case 15: IRQ_32TO63_SER |= IRQ_BITMASK_EXTI15_10; break;
+		case 16:  IRQ_0TO31_SER |= IRQ_BITMASK_PVD; break;
+		case 17:  IRQ_32TO63_SER |= IRQ_BITMASK_RTCAlarm; break;
+		case 18:  IRQ_32TO63_SER |= IRQ_BITMASK_USBWakeup; break;
 		default: break;
 	}
 }

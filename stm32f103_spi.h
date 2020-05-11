@@ -192,8 +192,8 @@ inline uint16_t spi1_readData()
 uint16_t spi1_writeReadData(uint16_t dat_out);
 
 //interrupts - global
-inline void spi1_IRQenable() {IRQ_32TO63_SER |= IRQ_SPI1;}
-inline void spi1_IRQdisable() {IRQ_32TO63_CER |= IRQ_SPI1;}
+inline void spi1_IRQenable() {IRQ_32TO63_SER |= IRQ_BITMASK_SPI1;}
+inline void spi1_IRQdisable() {IRQ_32TO63_CER |= IRQ_BITMASK_SPI1;}
 
 //interrupts - STM, bit banding
 inline void spi1_TXinterrupt(uint8_t bit) {BB_SPI1_CR2_TXEIE = bit;}
@@ -231,8 +231,8 @@ inline uint16_t spi2_readData()
 uint16_t spi2_writeReadData(uint16_t dat_out);
 
 //interrupts - global
-inline void spi2_IRQenable() {IRQ_32TO63_SER |= IRQ_SPI2;}
-inline void spi2_IRQdisable() {IRQ_32TO63_CER |= IRQ_SPI2;}
+inline void spi2_IRQenable() {IRQ_32TO63_SER |= IRQ_BITMASK_SPI2;}
+inline void spi2_IRQdisable() {IRQ_32TO63_CER |= IRQ_BITMASK_SPI2;}
 
 //interrupts - STM, bit banding
 inline void spi2_TXinterrupt(uint8_t bit) {BB_SPI2_CR2_TXEIE = bit;}
