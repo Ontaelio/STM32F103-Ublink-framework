@@ -12,6 +12,7 @@
 #include <stm32f103_exti.h>
 
 
+
 void exti_interruptenable(uint8_t channel)
 {
 	_EXTI_(EXTI_IMR) |= (uint32_t)(1<<channel);
@@ -54,4 +55,11 @@ void exti::init(uint8_t crbits)
 	if (crbits & EXTI_INTERRUPT) exti_interruptenable(channel); else exti_interruptdisable(channel);
 	if (crbits & EXTI_RISING) exti_rising(channel); else exti_risingdisable(channel);
 	if (crbits & EXTI_FALLING) exti_falling(channel); else exti_fallingdisable(channel);
+}
+
+void exti::gpio(uint8_t gpio)
+{
+	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
+	_AFIO_(AFIO_EXTICR1 + (channel/4)*4) &= ~(0xF << ((channel&3)*4));
+	_AFIO_(AFIO_EXTICR1 + (channel/4)*4) |= gpio << ((channel&3)*4);
 }

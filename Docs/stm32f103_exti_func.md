@@ -35,13 +35,17 @@ Any number of these values can be or-ed or added as an argument for `init()`. If
 
 If interrupt is enabled in `init()`, the corresponding bit in the ARM core will also be set.
 
+* void **gpio(uint8_t gpio)**
+
+Enables AFIO and sets the GPIO port of the EXTI pin. `gpio` is 0 for GPIOA, 1 for GPIOB, etc. Macro constants EXTI_GPIOA, EXTI_GPIOB, etc can be used too.
+
 * void **reset()**
 
 Resers all the control bits for the bound EXTI line; the line can be initialized again thereafter.
 
 * uint8_t **check()**
 
-Returns the 'pending' status of the EXTI line (`1` is the trigger request occured and `0` if not).
+Returns the 'pending' status of the EXTI line (`1` if the trigger request occured and `0` if not).
 
 * void **clear()**
 

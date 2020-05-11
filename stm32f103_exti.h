@@ -14,6 +14,8 @@
 
 #include <stm32f103_exti_reg.h>
 #include <stm32f103_timers_reg.h>
+#include <stm32f103_rcc_reg.h>
+#include <stm32f103_gpio_reg.h>
 #include <stdio.h>
 #include <stdint.h>
 
@@ -22,6 +24,15 @@
 #define EXTI_IRQ		0x02
 #define EXTI_RISING		0x04
 #define EXTI_FALLING	0x08
+
+#define EXTI_GPIOA		0
+#define EXTI_GPIOB		1
+#define EXTI_GPIOC		2
+#define EXTI_GPIOD		3
+#define EXTI_GPIOE		4
+#define EXTI_GPIOF		5
+#define EXTI_GPIOG		6
+
 
 
 inline void exti_eventenable(uint8_t channel) {_EXTI_(EXTI_EMR) |= (uint32_t)(1<<channel);}
@@ -38,9 +49,11 @@ inline void exti_clear(uint8_t channel) {_EXTI_(EXTI_PR) |= (uint32_t)(1<<channe
 
 class exti
 {
+public:
 	exti(uint8_t ch_num): channel(ch_num){};
 
 	void init(uint8_t crbits);
+	void gpio(uint8_t gpio);
 	void reset();
 	uint8_t check() {return exti_check(channel);}
 	void clear() {exti_clear(channel);}
