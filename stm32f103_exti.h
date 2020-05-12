@@ -24,6 +24,10 @@
 #define EXTI_IRQ		0x02
 #define EXTI_RISING		0x04
 #define EXTI_FALLING	0x08
+#define EXTI_IRQ_RISING		0x06
+#define EXTI_IRQ_FALLING	0x0A
+#define EXTI_EVENT_RISING	0x05
+#define EXTI_EVENT_FALLING	0x09
 
 #define EXTI_GPIOA		0
 #define EXTI_GPIOB		1
@@ -37,7 +41,7 @@
 
 inline void exti_eventenable(uint8_t channel) {_EXTI_(EXTI_EMR) |= (uint32_t)(1<<channel);}
 inline void exti_eventdisable(uint8_t channel) {_EXTI_(EXTI_EMR) &= ~((uint32_t)(1<<channel));}
-inline void exti_interruptenable(uint8_t channel); // sets up both STM and Cortex core interrupts
+void exti_interruptenable(uint8_t channel); // sets up both STM and Cortex core interrupts
 inline void exti_interruptdisable(uint8_t channel) {_EXTI_(EXTI_IMR) &= ~((uint32_t)(1<<channel));}
 inline void exti_rising(uint8_t channel) {_EXTI_(EXTI_RTSR) |= (uint32_t)(1<<channel);} // rising edge
 inline void exti_risingdisable(uint8_t channel) {_EXTI_(EXTI_RTSR) &= ~((uint32_t)(1<<channel));} // rising edge

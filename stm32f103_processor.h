@@ -40,7 +40,7 @@ inline static int _iSetPrimask(int priMask)
     return 0;
 }
 
-#define ATOMIC_BLOCK_RESTORATE \
+#define ATOMIC_BLOCK_RESTORE \
      for(int mask = _iDisGetPrimask(), flag = 1;\
          flag;\
          flag = _iSetPrimask(mask))

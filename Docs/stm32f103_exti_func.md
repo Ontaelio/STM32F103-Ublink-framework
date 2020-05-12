@@ -27,11 +27,11 @@ Initializes the line and sets it up according to the `crbits`. The following val
 macro name | value | meaning
 ---|---|---
 EXTI_EVENT |		0x01 | EXTI event enabled
-EXTI_INTERRUPT |	0x02 | EXTI interrupt enabled
+EXTI_IRQ |	0x02 | EXTI interrupt enabled
 EXTI_RISING	|	0x04 | Rising edge on the EXTI line acts as a trigger
 EXTI_FALLING	| 0x08 | Falling edge on the EXTI line acts as a trigger
 
-Any number of these values can be or-ed or added as an argument for `init()`. If both rising and falling edge triggers are enabled, the EXTI line will trigger an event/interrupt twice for each incoming signal.
+Any number of these values can be or-ed or added as an argument for `init()`. If both rising and falling edge triggers are enabled, the EXTI line will trigger an event/interrupt twice for each incoming signal. In addition, the following combined macros can be used: EXTI_IRQ_RISING, EXTI_IRQ_FALLING, EXTI_EVENT_RISING and EXTI_EVENT_FALLING.
 
 If interrupt is enabled in `init()`, the corresponding bit in the ARM core will also be set.
 

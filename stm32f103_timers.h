@@ -44,6 +44,8 @@ inline void sysTick_intDisable()
 //**** IRQ stuff
 
 void irq_priority(uint8_t irq, uint8_t pri);
+void irq_enable(uint8_t irq);
+void irq_disable(uint8_t irq);
 
 //**** STM timers stuff
 

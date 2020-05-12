@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stm32f103_gpio.h>
 #include <stm32f103_gpio_reg.h>
+#include <stm32f103_exti.h>
+
 
 
 gpioA::gpioA(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
@@ -82,6 +84,17 @@ void gpioA::mode(uint8_t speed, uint8_t cnf)
 		_GPIOA_(highlow) |= (cnf&0x0C) << (pinpos*4);
 		_GPIOA_(GPIOX_ODR) |= (cnf&1) << pin;
 	}
+}
+
+void gpioA::exti(uint8_t crbits)
+{
+	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
+	_AFIO_(AFIO_EXTICR1 + (pin/4)*4) &= ~(0xF << ((pin&3)*4));
+	//_AFIO_(AFIO_EXTICR1 + (pin/4)*4) |= EXTI_GPIOA << ((pin&3)*4);
+	if (crbits & EXTI_EVENT) exti_eventenable(pin); else exti_eventdisable(pin);
+	if (crbits & EXTI_INTERRUPT) exti_interruptenable(pin); else exti_interruptdisable(pin);
+	if (crbits & EXTI_RISING) exti_rising(pin); else exti_risingdisable(pin);
+	if (crbits & EXTI_FALLING) exti_falling(pin); else exti_fallingdisable(pin);
 }
 
 
@@ -158,6 +171,16 @@ void gpioB::mode(uint8_t speed, uint8_t cnf)
 	}
 }
 
+void gpioB::exti(uint8_t crbits)
+{
+	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
+	_AFIO_(AFIO_EXTICR1 + (pin/4)*4) &= ~(0xF << ((pin&3)*4));
+	_AFIO_(AFIO_EXTICR1 + (pin/4)*4) |= EXTI_GPIOB << ((pin&3)*4);
+	if (crbits & EXTI_EVENT) exti_eventenable(pin); else exti_eventdisable(pin);
+	if (crbits & EXTI_INTERRUPT) exti_interruptenable(pin); else exti_interruptdisable(pin);
+	if (crbits & EXTI_RISING) exti_rising(pin); else exti_risingdisable(pin);
+	if (crbits & EXTI_FALLING) exti_falling(pin); else exti_fallingdisable(pin);
+}
 
 
 gpioC::gpioC(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
@@ -229,6 +252,17 @@ void gpioC::mode(uint8_t speed, uint8_t cnf)
 		_GPIOC_(highlow) |= (cnf&0x0C) << (pinpos*4);
 		_GPIOC_(GPIOX_ODR) |= (cnf&1) << pin;
 	}
+}
+
+void gpioC::exti(uint8_t crbits)
+{
+	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
+	_AFIO_(AFIO_EXTICR1 + (pin/4)*4) &= ~(0xF << ((pin&3)*4));
+	_AFIO_(AFIO_EXTICR1 + (pin/4)*4) |= EXTI_GPIOC << ((pin&3)*4);
+	if (crbits & EXTI_EVENT) exti_eventenable(pin); else exti_eventdisable(pin);
+	if (crbits & EXTI_INTERRUPT) exti_interruptenable(pin); else exti_interruptdisable(pin);
+	if (crbits & EXTI_RISING) exti_rising(pin); else exti_risingdisable(pin);
+	if (crbits & EXTI_FALLING) exti_falling(pin); else exti_fallingdisable(pin);
 }
 
 gpioD::gpioD(uint8_t pinnum, uint8_t dir, uint8_t cnfod)

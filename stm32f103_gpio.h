@@ -17,6 +17,7 @@
 #include <stm32f103_gpio_reg.h>
 #include <stm32f103_gpio_lowfunc.h>
 #include <stm32f103_rcc_reg.h>
+#include <stm32f103_exti.h>
 
 //MODEX
 #define INPUT		 0
@@ -49,6 +50,12 @@ public:
 	virtual uint8_t read() =0;
 	virtual void write(uint8_t val) =0;
 	virtual void mode(uint8_t speed, uint8_t cnf = 4) =0;
+
+	virtual void exti(uint8_t crbits) =0;
+	uint8_t pending() {return ((_EXTI_(EXTI_PR)>>pin)&1);} // check pending bit
+	void clear() {_EXTI_(EXTI_PR) |= (uint32_t)(1<<pin);} // clear pending bit by writing 1
+	void interrupt() {_EXTI_(EXTI_SWIER) |= (uint32_t)(1<<pin);} // generate interrupt
+
 	uint8_t pin;
 	//virtual void setAll(uint32_t BSRR_value) =0;
 	//virtual void resetAll(uint32_t BRR_value) =0;
@@ -91,6 +98,9 @@ public:
 	{
 		return(_GPIOA_(GPIOX_IDR));
 	}
+
+	void exti(uint8_t crbits);
+	//the rest of the exti functions in the parent class
 
 	operator uint8_t() {return read();}
 	gpioA& operator= (const uint8_t& a) {write(a); return *this;}
@@ -135,6 +145,8 @@ public:
 		return(_GPIOB_(GPIOX_IDR));
 	}
 
+	void exti(uint8_t crbits);
+
 	operator uint8_t() {return (_GPIOB_(GPIOX_IDR) >> pin) & 1;} //read();}
 	gpioB& operator= (const uint8_t& a) {write(a); return *this;}
 
@@ -177,6 +189,8 @@ public:
 	{
 		return(_GPIOC_(GPIOX_IDR));
 	}
+
+	void exti(uint8_t crbits);
 
 	operator uint8_t() {return read();}
 	gpioC& operator= (const uint8_t& a) {write(a); return *this;}

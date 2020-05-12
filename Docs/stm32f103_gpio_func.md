@@ -46,7 +46,7 @@ void debugLed()
 |OUTPUT10MHZ|_(any)_|Output speed 10MHz|
 |OUTPUT50MHZ|_(any)_|Output speed 50MHz|
 
-_Note that it is not possible to set Alternate Functions or Analog mode with the class object; this should be done by the corresponding periphery libraries._
+_Note that it is not possible to set Alternate Functions or Analog mode with the class object; this should be done by the corresponding peripheral libraries._
 
 * `void set()` sets the OUTPUT pin
 * `void high()` sets the OUTPUT pin (same as above)
@@ -58,6 +58,22 @@ _Note that it is not possible to set Alternate Functions or Analog mode with the
 * `void setAll(uint32_t val)` writes `val` into the BSRR register (see STM32f103x reference manual).
 * `void resetAll(uint32_t val)` writes `val` into the BRR register.
 * `uint32_t readAll()` reads the contents of the IDR register.
+
+* `void exti(uint8_t crbits)` sets the pin as a source for external interrupt/event. The following values can be used in the `crbits` argument:
+
+macro name | value | meaning
+---|---|---
+EXTI_EVENT |		0x01 | EXTI event enabled
+EXTI_IRQ |	0x02 | EXTI interrupt enabled
+EXTI_RISING	|	0x04 | Rising edge on the EXTI line acts as a trigger
+EXTI_FALLING	| 0x08 | Falling edge on the EXTI line acts as a trigger
+
+Any number of these values can be or-ed or added as an argument for `exti()`. In addition, the following combined macros can be used: EXTI_IRQ_RISING, EXTI_IRQ_FALLING, EXTI_EVENT_RISING and EXTI_EVENT_FALLING.
+
+* `uint8_t pending()` Checks the EXTI pending bit, returns 1 or 0.
+* `void clear()` Clears the EXTI pending bit.
+* `void interrupt()` Call the EXTI interrupt.
+
 
 The following variables are commented out in the source code because they produce warnings from the compiler, although they _do_ work:
 

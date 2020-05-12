@@ -55,6 +55,27 @@ void irq_priority(uint8_t irq, uint8_t pri)
 	IRQ_PRIORITY(mo) |= val;
 }
 
+void irq_enable(uint8_t irq)
+{
+	switch (irq >> 5)
+	{
+	case 0: IRQ_0TO31_SER |= 1 << (irq&31); break;
+	case 1: IRQ_32TO63_SER |= 1 << (irq&31); break;
+	default: break;
+	}
+}
+
+void irq_disable(uint8_t irq)
+{
+	switch (irq >> 5)
+	{
+	case 0: IRQ_0TO31_CER |= 1 << (irq&31); break;
+	case 1: IRQ_32TO63_CER |= 1 << (irq&31); break;
+	default: break;
+	}
+}
+
+
 void timer::setCC1mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
 	CCMR1 &= ~TIMX_CCMR1_OC1M; //clear
