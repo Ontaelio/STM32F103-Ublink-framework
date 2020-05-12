@@ -335,17 +335,6 @@ The library will provide the correct ITR value for the TS bits according to the 
 
 Set the capture/compare value for channels 1..4 (CCRX).
 
-* void **setUpdateIRQ ([uint8_t bit=1])**
-* void **setCC1IRQ ([uint8_t bit=1]})**	
-* void **setCC2IRQ ([uint8_t bit=1])**	
-* void **setCC3IRQ ([uint8_t bit=1])**	
-* void **setCC4IRQ ([uint8_t bit=1])**	
-* void **setCOMIRQ ([uint8_t bit=1])** *Timer1 only*
-* void **setTriggerIRQ ([uint8_t bit=1])**
-* void **setBreakIRQ ([uint8_t bit=1])** *Timer1 only*
-
-Set (1, default) or reset (0) the corresponding interrupt enable bits (DIER).
-
 #### PWM control member functions
 
 * void **pwmSetup (uint8_t center, uint8_t dir)**
