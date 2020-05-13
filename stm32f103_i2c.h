@@ -2,7 +2,7 @@
  * STM32F103 I2C Master library header
  * Part of STM32F103 register and peripherals library
  *
- * Dpcumentation available in the provided MD file.
+ * Documentation available in the provided MD file.
  *
  * (c) 2019 Dmitry Reznikov ontaelio(at)gmail.com
  *

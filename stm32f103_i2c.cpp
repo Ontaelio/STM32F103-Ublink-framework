@@ -197,8 +197,9 @@ void i2c1_init(uint8_t speed, uint8_t altpins)
 	//      SCL = PB8
 
 	//turn clocks on
-	_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_I2C1EN;
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_AFIOEN;
+	I2C1_CLOCK = 1;
+	GPIOB_CLOCK = 1;
+	AFIO_CLOCK = 1;
 
 	//setup SDA and SCL pins
 	if (altpins == I2C1_ALT)
@@ -883,8 +884,9 @@ void i2c2_init(uint8_t speed)
 	//      SCL = PB10
 
 	//turn clocks on
-	_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_I2C2EN;
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_AFIOEN;
+	I2C2_CLOCK = 1;
+	GPIOB_CLOCK = 1;
+	AFIO_CLOCK = 1;
 
 	//setup SDA and SCL pins
 	//GPIOB: output open drain, AF

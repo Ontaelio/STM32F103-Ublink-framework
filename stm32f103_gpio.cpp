@@ -14,6 +14,29 @@
 #include <stm32f103_gpio_reg.h>
 #include <stm32f103_exti.h>
 
+void gpio_pin::priority(uint8_t pri)
+{
+	switch (pin)
+	{
+		case 0:  irq_priority(EXTI0_IRQ, pri); break;
+		case 1:  irq_priority(EXTI1_IRQ, pri); break;
+		case 2:  irq_priority(EXTI2_IRQ, pri); break;
+		case 3:  irq_priority(EXTI3_IRQ, pri); break;
+		case 4:  irq_priority(EXTI4_IRQ, pri); break;
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:  irq_priority(EXTI9_5_IRQ, pri); break;
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15: irq_priority(EXTI15_10_IRQ, pri); break;
+		default: break;
+	}
+}
 
 
 gpioA::gpioA(uint8_t pinnum, uint8_t dir, uint8_t cnfod)

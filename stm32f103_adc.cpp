@@ -196,7 +196,7 @@ uint16_t analog_scan::injectRead(uint_fast8_t jcha)
 void adc1_init()
 {
 	if (_ADC1_(ADC_CR2) & ADC_CR2_ADON) return; //check if init() already done
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_ADC1EN;
+	ADC1_CLOCK = 1;
 	_ADC1_(ADC_CR2) |= ADC_CR2_ADON;
 	delay_us(2); // 1us to power up ADC, second to make sure 2 cycles passed
 	_ADC1_(ADC_CR2) |= ADC_CR2_CAL;
@@ -206,7 +206,7 @@ void adc1_init()
 void adc2_init()
 {
 	if (_ADC2_(ADC_CR2) & ADC_CR2_ADON) return; //check if init() already done
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_ADC2EN;
+	ADC2_CLOCK = 1;
 	_ADC2_(ADC_CR2) |= ADC_CR2_ADON;
 	delay_us(2); // 1us to power up ADC, second to make sure 2 cycles passed
 	_ADC2_(ADC_CR2) |= ADC_CR2_CAL;

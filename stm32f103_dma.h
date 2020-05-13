@@ -122,7 +122,7 @@ void dma1_setup(uint8_t channel, uint32_t paddr, uint32_t maddr, uint16_t datanu
 
 //DMA registers are calculated as [offset] + 0d20*(channel_num - 1)
 
-inline void dma1_init() {_RCC_(RCC_AHBENR) |= RCC_AHBENR_DMA1EN;}
+inline void dma1_init() {DMA1_CLOCK = 1;}
 
 
 inline void dma1_ifclear(uint8_t channel) {_DMA1_(DMA_IFCR) |= DMA_IFCR_CGIF << (--channel)*4;}

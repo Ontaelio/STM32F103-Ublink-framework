@@ -29,6 +29,86 @@
 #define RCC_BDCR 0x20
 #define RCC_CSR 0x24
 
+//bitband
+//0x42000000 + offset * 0x20 + bit * 4
+
+#define BB_RCC_BASE 	*(volatile uint32_t *) 0x42420000
+#define BB_RCC_AHBENR	*(volatile uint32_t *) 0x42420280
+#define BB_RCC_APB2ENR	*(volatile uint32_t *) 0x42420300
+#define BB_RCC_APB1ENR	*(volatile uint32_t *) 0x42420380
+
+//AHB
+#define DMA1_CLOCK		*(volatile uint32_t *) 0x42420280
+#define DMA2_CLOCK		*(volatile uint32_t *) 0x42420284
+#define SRAM_CLOCK		*(volatile uint32_t *) 0x42420288
+//reserved
+#define FLITF_CLOCK	*(volatile uint32_t *) 0x42420290
+//reserved
+#define CRC_CLOCK		*(volatile uint32_t *) 0x42420298
+//reserved
+#define FSMC_CLOCK		*(volatile uint32_t *) 0x424202A0
+//reserved
+#define SDIO_CLOCK		*(volatile uint32_t *) 0x424202A8
+//rest reserved
+
+//APB2
+#define AFIO_CLOCK		*(volatile uint32_t *) 0x42420300
+//reserved
+#define GPIOA_CLOCK		*(volatile uint32_t *) 0x42420308
+#define GPIOB_CLOCK		*(volatile uint32_t *) 0x4242030C
+#define GPIOC_CLOCK		*(volatile uint32_t *) 0x42420310
+#define GPIOD_CLOCK		*(volatile uint32_t *) 0x42420314
+#define GPIOE_CLOCK		*(volatile uint32_t *) 0x42420318
+#define GPIOF_CLOCK		*(volatile uint32_t *) 0x4242031C
+#define GPIOG_CLOCK		*(volatile uint32_t *) 0x42420320
+#define ADC1_CLOCK		*(volatile uint32_t *) 0x42420324
+#define ADC2_CLOCK		*(volatile uint32_t *) 0x42420328
+#define TIM1_CLOCK		*(volatile uint32_t *) 0x4242032C
+#define SPI1_CLOCK		*(volatile uint32_t *) 0x42420330
+#define TIM8_CLOCK		*(volatile uint32_t *) 0x42420334
+#define USART1_CLOCK	*(volatile uint32_t *) 0x42420338
+#define ADC3_CLOCK		*(volatile uint32_t *) 0x4242033C
+//reserved
+//reserved
+//reserved
+#define TIM9_CLOCK		*(volatile uint32_t *) 0x4242034C
+#define TIM10_CLOCK		*(volatile uint32_t *) 0x42420350
+#define TIM11_CLOCK		*(volatile uint32_t *) 0x42420354
+//rest reserved
+
+//APB1
+#define TIM2_CLOCK		*(volatile uint32_t *) 0x42420380
+#define TIM3_CLOCK		*(volatile uint32_t *) 0x42420384
+#define TIM4_CLOCK		*(volatile uint32_t *) 0x42420388
+#define TIM5_CLOCK		*(volatile uint32_t *) 0x4242038C
+#define TIM6_CLOCK		*(volatile uint32_t *) 0x42420390
+#define TIM7_CLOCK		*(volatile uint32_t *) 0x42420394
+#define TIM12_CLOCK		*(volatile uint32_t *) 0x42420398
+#define TIM13_CLOCK		*(volatile uint32_t *) 0x4242039C
+#define TIM14_CLOCK		*(volatile uint32_t *) 0x424203A0
+//reserved
+//reserved
+#define WWDG_CLOCK		*(volatile uint32_t *) 0x424203AC
+//reserved
+//reserved
+#define SPI2_CLOCK		*(volatile uint32_t *) 0x424203B8
+#define SPI3_CLOCK		*(volatile uint32_t *) 0x424203BC
+//reserved
+#define USART2_CLOCK	*(volatile uint32_t *) 0x424203C4
+#define USART3_CLOCK	*(volatile uint32_t *) 0x424203C8
+#define USART4_CLOCK	*(volatile uint32_t *) 0x424203CC
+#define USART5_CLOCK	*(volatile uint32_t *) 0x424203D0
+#define I2C1_CLOCK		*(volatile uint32_t *) 0x424203D4
+#define I2C2_CLOCK		*(volatile uint32_t *) 0x424203D8
+#define USB_CLOCK		*(volatile uint32_t *) 0x424203DC
+//reserved
+#define CAN_CLOCK		*(volatile uint32_t *) 0x424203E4
+//reserved
+#define BKP_CLOCK		*(volatile uint32_t *) 0x424203EC
+#define PWR_CLOCK		*(volatile uint32_t *) 0x424203F0
+#define DAC_CLOCK		*(volatile uint32_t *) 0x424203F4
+//2x reserved
+
 #ifndef __STM32F10x_H //avoid redefining if CMSIS library present
 
 // values
@@ -208,6 +288,10 @@
 //reserved
 //reserved
 
+#define RCC_APB2ENR_ALL		0x0038FFFD //mask
+#define RCC_APB1ENR_ALL		0x3AFEC9FF //mask
+#define RCC_AHBENR_ALL		0x00000557 //mask
+
 #define RCC_BDCR_LSEON		0x00000001
 #define RCC_BDCR_LSERDY		0x00000002
 #define RCC_BDCR_LSEBYP		0x00000004
@@ -235,5 +319,11 @@
 //CMSIS defines these as CAN1
 #define RCC_APB1RSTR_CANRST  0x02000000
 #define RCC_APB1ENR_CANEN    0x02000000
+
+#define RCC_APB2ENR_ALL		0x0038FFFD //mask
+#define RCC_APB1ENR_ALL		0x3AFEC9FF //mask
+#define RCC_AHBENR_ALL		0x00000557 //mask
+
+
 
 #endif /* STM32F103_RCC_REG_H_ */

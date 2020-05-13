@@ -18,6 +18,7 @@
 #include <stm32f103_gpio_lowfunc.h>
 #include <stm32f103_rcc_reg.h>
 #include <stm32f103_exti.h>
+#include <stm32f103_timers.h>
 
 //MODEX
 #define INPUT		 0
@@ -34,6 +35,51 @@
 #define FLOATING	 4
 #define PULLUP		 9
 #define PULLDOWN	 8
+
+inline void gpioA_init()
+{
+	GPIOA_CLOCK = 1;
+}
+
+inline void gpioB_init()
+{
+	GPIOB_CLOCK = 1;
+}
+
+inline void gpioC_init()
+{
+	GPIOC_CLOCK = 1;
+}
+
+inline void gpioD_init()
+{
+	GPIOD_CLOCK = 1;
+}
+
+inline void gpioE_init()
+{
+	GPIOE_CLOCK = 1;
+}
+
+inline void gpioF_init()
+{
+	GPIOF_CLOCK = 1;
+}
+
+inline void gpioG_init()
+{
+	GPIOG_CLOCK = 1;
+}
+
+inline void afio_init()
+{
+	AFIO_CLOCK = 1;
+}
+
+inline void jtag_release()
+{
+	_AFIO_(AFIO_MAPR) |= 1<<25;
+}
 
 class gpio_pin
 {
@@ -55,6 +101,7 @@ public:
 	uint8_t pending() {return ((_EXTI_(EXTI_PR)>>pin)&1);} // check pending bit
 	void clear() {_EXTI_(EXTI_PR) |= (uint32_t)(1<<pin);} // clear pending bit by writing 1
 	void interrupt() {_EXTI_(EXTI_SWIER) |= (uint32_t)(1<<pin);} // generate interrupt
+	void priority(uint8_t pri);
 
 	uint8_t pin;
 	//virtual void setAll(uint32_t BSRR_value) =0;
@@ -72,7 +119,7 @@ public:
 	gpioA();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPAEN;
+		gpioA_init();
 	}
 	void set();
 	void high();
@@ -121,7 +168,7 @@ public:
 	gpioB();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN;
+		gpioB_init();
 	}
 	void set();
 	void high();
@@ -165,7 +212,7 @@ public:
 	gpioC();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPCEN;
+		gpioC_init();
 	}
 	void set();
 	void high();
@@ -210,7 +257,7 @@ public:
 	gpioD();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPDEN;
+		gpioD_init();
 	}
 	void set();
 	void high();
@@ -253,7 +300,7 @@ public:
 	gpioE();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPEEN;
+		gpioE_init();
 	}
 	void set();
 	void high();
@@ -296,7 +343,7 @@ public:
 	gpioF();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPFEN;
+		gpioF_init();
 	}
 	void set();
 	void high();
@@ -339,7 +386,7 @@ public:
 	gpioG();
 	void init()
 	{
-		_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPGEN;
+		gpioG_init();
 	}
 	void set();
 	void high();
@@ -381,51 +428,5 @@ typedef gpioD gpioD_pin;
 typedef gpioE gpioE_pin;
 typedef gpioF gpioF_pin;
 typedef gpioG gpioG_pin;
-
-inline void gpioA_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPAEN;
-}
-
-inline void gpioB_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPBEN;
-}
-
-inline void gpioC_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPCEN;
-}
-
-inline void gpioD_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPDEN;
-}
-
-inline void gpioE_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPEEN;
-}
-
-inline void gpioF_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPFEN;
-}
-
-inline void gpioG_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_IOPGEN;
-}
-
-inline void afio_init()
-{
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
-}
-
-inline void jtag_release()
-{
-	_AFIO_(AFIO_MAPR) |= 1<<25;
-}
-
 
 #endif /* STM32F103_GPIO_H_ */
