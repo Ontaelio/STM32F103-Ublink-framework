@@ -234,6 +234,8 @@ public:
 	virtual void IRQenable() =0;
 	virtual void IRQdisable() =0;
 
+	virtual void priority(uint8_t pri) =0;
+
 	virtual void writeCC1(uint16_t val) =0;
 	virtual void writeCC2(uint16_t val) =0;
 	virtual void writeCC3(uint16_t val) =0;
@@ -291,7 +293,6 @@ public:
 	virtual void DMAUPdisable() =0;
 	virtual void DMAburst(uint8_t burst) =0;
 	virtual void DMAbase(uint8_t base) =0;
-
 
 
 };
@@ -555,6 +556,13 @@ public:
 	void clearBreak() {BB_TIM1_SR_BIF = 0;}
 	void clearAll() {_TIM1_(TIMX_SR) = 0;}
 
+	//IRQ priority
+	void priority(uint8_t pri);
+	void BRKpriority(uint8_t pri) {irq_priority(TIM1_BRK_IRQ, pri);}
+	void UPpriority(uint8_t pri) {irq_priority(TIM1_UP_IRQ, pri);}
+	void TRG_COMpriority(uint8_t pri) {irq_priority(TIM1_TRG_COM_IRQ, pri);}
+	void CCpriority(uint8_t pri) {irq_priority(TIM1_CC_IRQ, pri);}
+
 	//DMA stuff
 	void DMACOMenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_COMDE;}
 	void DMATRGenable() {_TIM1_(TIMX_DIER) |= TIMX_DIER_TDE;}
@@ -645,6 +653,9 @@ public:
 	void clearTrigger() {BB_TIM2_SR_TIF = 0;} //{_TIM2_(TIMX_SR) &= ~TIMX_SR_TIF;}
 	void clearAll() {_TIM2_(TIMX_SR) = 0;}
 
+	//IRQ priority
+	void priority(uint8_t pri) {irq_priority(TIM2_IRQ, pri);}
+
 	//DMA stuff
 	void DMATRGenable() {_TIM2_(TIMX_DIER) |= TIMX_DIER_TDE;}
 	void DMACCenable(uint8_t ch_num = 0);
@@ -734,6 +745,9 @@ public:
 	void clearTrigger() {BB_TIM3_SR_TIF = 0;} //{_TIM3_(TIMX_SR) &= ~TIMX_SR_TIF;}
 	void clearAll() {_TIM3_(TIMX_SR) = 0;}
 
+	//IRQ priority
+	void priority(uint8_t pri) {irq_priority(TIM3_IRQ, pri);}
+
 	//DMA stuff
 	void DMATRGenable() {_TIM3_(TIMX_DIER) |= TIMX_DIER_TDE;}
 	void DMACCenable(uint8_t ch_num = 0);
@@ -821,6 +835,9 @@ public:
 	void clearCC4() {BB_TIM4_SR_CC4IF = 0;} //{_TIM4_(TIMX_SR) &= ~TIMX_SR_CC4IF;}
 	void clearTrigger() {BB_TIM4_SR_TIF = 0;} //{_TIM4_(TIMX_SR) &= ~TIMX_SR_TIF;}
 	void clearAll() {_TIM4_(TIMX_SR) = 0;}
+
+	//IRQ priority
+	void priority(uint8_t pri) {irq_priority(TIM4_IRQ, pri);}
 
 		//DMA stuff
 	void DMATRGenable() {_TIM4_(TIMX_DIER) |= TIMX_DIER_TDE;}

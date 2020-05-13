@@ -390,7 +390,7 @@ Set the DMA burst length to `burst`, where `0` is one transfer and the maximum v
 
 Set the base address for DMA-to-timer transfer. This governs transfers done via TIMx_DMAR register that allows bursts; `base` is the number of the timer register to be written to first: `0` is for CR1, `1` for CR2, etc, as they're listed in the Reference Manual RM0008 section 14.4. CCR1 register that is the most likely target here is `13` (`0xE`)
 
-#### Direct register manipulation member functions
+#### Interrupts and Direct register manipulation member functions
 
 The following access the timer and/or ARM core registers directly without modifying the internal class variables.
 
@@ -410,6 +410,18 @@ Enables/disables Timer IRQ for timers 2, 3 and 4 (ARM core). For timer1 this ena
 * void **IRQ_CC_disable ()**
 
 Enable/disable specific Timer1 interrupts in ARM core.
+
+* void **priority(uint8_t pri)**
+
+Set IRQ priority to `pri`. `pri` is 0..15, 0 is highest priority.
+
+*TIM1 only:*
+* void **BRKpriority(uint8_t pri)**
+* void **UPpriority(uint8_t pri)**
+* void **TRG_COMpriority(uint8_t pri)**
+* void **CCpriority(uint8_t pri)**
+
+Set advanced timer's priorities (break, update, trigger/commutation, capture/compare). Basic `priority` member function, if used with an advanced timer, sets all four to the same `pri`.
 
 * void **writeCC1 (uint16_t val)**
 * void **writeCC2 (uint16_t val)**

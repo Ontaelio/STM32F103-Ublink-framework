@@ -541,6 +541,13 @@ void timer1::DMACCdisable(uint8_t ch_num)
 	else _TIM1_(TIMX_DIER) &= ~TIMX_DIER_CCDE;
 }
 
+void timer1::priority(uint8_t pri)
+{
+	irq_priority(TIM1_BRK_IRQ, pri);
+	irq_priority(TIM1_UP_IRQ, pri);
+	irq_priority(TIM1_TRG_COM_IRQ, pri);
+	irq_priority(TIM1_CC_IRQ, pri);
+}
 
 void timer2::config()
 {
