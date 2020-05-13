@@ -96,9 +96,9 @@ Timer4 Channel 2 | PB7 |
 Timer4 Channel 3 | PB8 |
 Timer4 Channel 4 | PB9 |
 
-* void **init ([uint8_t pushpull = 0])**
+* void **init ([uint8_t opendrain = 1])**
 
-Initializes the SS pin and its GPIO port. If `pushpull` is non-zero, the pin will be configured as a push-pull output, else an open-drain output (default). `init()` checks whether the timer outputs were remapped and adjusts accordingly. Timer1 complementary outputs not supported.
+Initializes the SS pin and its GPIO port. If optional `opendrain` is `0` (or `PUSHPULL`), the pin will be configured as a push-pull output, else an open-drain output (default). `init()` checks whether the timer outputs were remapped and adjusts accordingly. Timer1 complementary outputs not supported.
 
 *Note: `init` doesn't initialize the timer, `timerX_init()` must be used.*
 
@@ -341,9 +341,9 @@ Set the capture/compare value for channels 1..4 (CCRX).
 
 Sets up PWM mode. `center` corresponds to the CMS bits in CR1; `dir` is the DIR bit. `center == 1` selects center-aligned mode, while `dir` selects the counter direction if `center` is zero (`0` for up, `1` for down). Sets the ARPE (auto reload preload enable) bit in CR1. This function doesn't write into the actual register and is similar to the `setMode` function.
 
-* void **pwmChannel (uint8_t ch_num, uint8_t mode, uint8_t plrty [, uint8_t pushpull = 0])**
+* void **pwmChannel (uint8_t ch_num, uint8_t mode, uint8_t plrty [, uint8_t opendrain = 1])**
 
-Sets up the PWM channel `ch_num`. `mode` is the PWM mode (1 or 2), `plrty` is polarity (0 or 1), check `setCCXmode()` above for values. Optional `pushpull` argument, if set, will configure the output pin into the push-pull mode; defaul is open-drain. This function will initialize the output pin, but won't write anything into the timer registers.
+Sets up the PWM channel `ch_num`. `mode` is the PWM mode (1 or 2), `plrty` is polarity (0 or 1), check `setCCXmode()` above for values. Optional `opendrain` argument will configure the output pin into the push-pull mode (`PUSHPULL` or `0`); default is open-drain. This function will initialize the output pin, but won't write anything into the timer registers.
 
 * void **pwmWrite (uint8_t ch_num, uint16_t val)**
 

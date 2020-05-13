@@ -109,11 +109,21 @@ void timer::setCC4mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe
 }
 
 
-void tim1_pwm::init(uint8_t pushpull)
+void tim1_pwm::init(uint8_t opendrain)
 {
 	gpioA_init();
 
-	if (pushpull)
+	if (opendrain)
+	switch (channel)
+	{
+		case 1: pinA8_Output_AFOD_50(); break;
+		case 2: pinA9_Output_AFOD_50(); break;
+		case 3: pinA10_Output_AFOD_50(); break;
+		case 4: pinA11_Output_AFOD_50(); break;
+	}
+
+	else
+
 	switch (channel)
 	{
 		case 1: pinA8_Output_AFPP_50(); break;
@@ -122,15 +132,7 @@ void tim1_pwm::init(uint8_t pushpull)
 		case 4: pinA11_Output_AFPP_50(); break;
 	}
 
-	else
 
-	switch (channel)
-	{
-		case 1: pinA8_Output_AFOD_50(); break;
-		case 2: pinA9_Output_AFOD_50(); break;
-		case 3: pinA10_Output_AFOD_50(); break;
-		case 4: pinA11_Output_AFOD_50(); break;
-	}
 }
 
 void tim1_pwm::enable()
@@ -189,13 +191,23 @@ void tim1_pwm::enable()
 	BB_TIM1_CR1_CEN = 1;
 }
 
-void tim2_pwm::init(uint8_t pushpull)
+void tim2_pwm::init(uint8_t opendrain)
 {
 	uint8_t remap = (_AFIO_(AFIO_MAPR) & AFIO_MAPR_TIM2_REMAP) >> 8;
 	gpioA_init();
 	if (remap) gpioB_init();
 
-	if (pushpull)
+	if (opendrain)
+	switch (channel)
+	{
+		case 1: if (remap&1) pinA15_Output_AFOD_50(); else pinA0_Output_AFOD_50(); break;
+		case 2: if (remap&1) pinB3_Output_AFOD_50(); else pinA1_Output_AFOD_50(); break;
+		case 3: if (remap&2) pinB10_Output_AFOD_50(); else pinA2_Output_AFOD_50(); break;
+		case 4: if (remap&2) pinB11_Output_AFOD_50(); else pinA3_Output_AFOD_50(); break;
+	}
+
+	else
+
 	switch (channel)
 	{
 		case 1: if (remap&1) pinA15_Output_AFPP_50(); else pinA0_Output_AFPP_50(); break;
@@ -204,15 +216,6 @@ void tim2_pwm::init(uint8_t pushpull)
 		case 4: if (remap&2) pinB11_Output_AFPP_50(); else pinA3_Output_AFPP_50(); break;
 	}
 
-	else
-
-	switch (channel)
-	{
-		case 1: if (remap&1) pinA15_Output_AFOD_50(); else pinA0_Output_AFOD_50(); break;
-		case 2: if (remap&1) pinB3_Output_AFOD_50(); else pinA1_Output_AFOD_50(); break;
-		case 3: if (remap&2) pinB10_Output_AFOD_50(); else pinA2_Output_AFOD_50(); break;
-		case 4: if (remap&2) pinB11_Output_AFOD_50(); else pinA3_Output_AFOD_50(); break;
-	}
 }
 
 void tim2_pwm::enable()
@@ -271,29 +274,28 @@ void tim2_pwm::enable()
 	BB_TIM2_CR1_CEN = 1;
 }
 
-void tim3_pwm::init(uint8_t pushpull)
+void tim3_pwm::init(uint8_t opendrain)
 {
 	uint8_t remap = (_AFIO_(AFIO_MAPR) & AFIO_MAPR_TIM3_REMAP) >> 8;
 	gpioB_init();
 	if (!remap) gpioA_init();
 
-	if (pushpull)
-	switch (channel)
-	{
-		case 1: if (remap&2) pinB4_Output_AFPP_50(); else pinA6_Output_AFPP_50(); break;
-		case 2: if (remap&2) pinB5_Output_AFPP_50(); else pinA7_Output_AFPP_50(); break;
-		case 3: pinB0_Output_AFPP_50(); break;
-		case 4: pinB1_Output_AFPP_50(); break;
-	}
-
-	else
-
+	if (opendrain)
 	switch (channel)
 	{
 		case 1: if (remap&2) pinB4_Output_AFOD_50(); else pinA6_Output_AFOD_50(); break;
 		case 2: if (remap&2) pinB5_Output_AFOD_50(); else pinA7_Output_AFOD_50(); break;
 		case 3: pinB0_Output_AFOD_50(); break;
 		case 4: pinB1_Output_AFOD_50(); break;
+	}
+
+	else
+	switch (channel)
+	{
+		case 1: if (remap&2) pinB4_Output_AFPP_50(); else pinA6_Output_AFPP_50(); break;
+		case 2: if (remap&2) pinB5_Output_AFPP_50(); else pinA7_Output_AFPP_50(); break;
+		case 3: pinB0_Output_AFPP_50(); break;
+		case 4: pinB1_Output_AFPP_50(); break;
 	}
 }
 
@@ -353,27 +355,25 @@ void tim3_pwm::enable()
 	BB_TIM3_CR1_CEN = 1;
 }
 
-void tim4_pwm::init(uint8_t pushpull)
+void tim4_pwm::init(uint8_t opendrain)
 {
 	gpioB_init();
 
-	if (pushpull)
-	switch (channel)
-	{
-		case 1: pinB6_Output_AFPP_50(); break;
-		case 2: pinB7_Output_AFPP_50(); break;
-		case 3: pinB8_Output_AFPP_50(); break;
-		case 4: pinB9_Output_AFPP_50(); break;
-	}
-
-	else
-
+	if (opendrain)
 	switch (channel)
 	{
 		case 1: pinB6_Output_AFOD_50(); break;
 		case 2: pinB7_Output_AFOD_50(); break;
 		case 3: pinB8_Output_AFOD_50(); break;
 		case 4: pinB9_Output_AFOD_50(); break;
+	}
+	else
+	switch (channel)
+	{
+		case 1: pinB6_Output_AFPP_50(); break;
+		case 2: pinB7_Output_AFPP_50(); break;
+		case 3: pinB8_Output_AFPP_50(); break;
+		case 4: pinB9_Output_AFPP_50(); break;
 	}
 }
 
@@ -502,13 +502,13 @@ void timer1::pwmSetup(uint8_t center, uint8_t dir)
     CR1 |= TIMX_CR1_ARPE;
 }
 
-void timer1::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
+void timer1::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim1_pwm a(ch_num);
 	uint16_t CCMR_clr;
 	uint16_t CCMR_tmp = 0x68 | (mode - 1)<<4;
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
-	a.init(pushpull);
+	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
 	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
 				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
@@ -610,13 +610,13 @@ void timer2::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 |= TIMX_CR1_ARPE;
 }
 
-void timer2::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
+void timer2::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim2_pwm a(ch_num);
 	uint16_t CCMR_clr;
 	uint16_t CCMR_tmp = 0x68 | (mode - 1)<<4;
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
-	a.init(pushpull);
+	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
 	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
 				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
@@ -718,13 +718,13 @@ void timer3::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 |= TIMX_CR1_ARPE;
 }
 
-void timer3::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
+void timer3::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim3_pwm a(ch_num);
 	uint16_t CCMR_clr;
 	uint16_t CCMR_tmp = 0x68 | (mode - 1)<<4;
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
-	a.init(pushpull);
+	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
 	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
 				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
@@ -826,13 +826,13 @@ void timer4::pwmSetup(uint8_t center, uint8_t dir)
 	CR1 |= TIMX_CR1_ARPE;
 }
 
-void timer4::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull)
+void timer4::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim4_pwm a(ch_num);
 	uint16_t CCMR_clr;
 	uint16_t CCMR_tmp = 0x68 | (mode - 1)<<4;
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
-	a.init(pushpull);
+	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
 	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
 				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}

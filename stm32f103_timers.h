@@ -111,25 +111,25 @@ void irq_disable(uint8_t irq);
 
 inline void timer1_init()
 {
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_TIM1EN | RCC_APB2ENR_AFIOEN;
+	TIM1_CLOCK = 1;
+	AFIO_CLOCK = 1;
 }
 
 inline void timer2_init()
 {
-	_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_TIM2EN;
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
-}
+	TIM2_CLOCK = 1;
+	AFIO_CLOCK = 1;}
 
 inline void timer3_init()
 {
-	_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_TIM3EN;
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
+	TIM3_CLOCK = 1;
+	AFIO_CLOCK = 1;
 }
 
 inline void timer4_init()
 {
-	_RCC_(RCC_APB1ENR) |= RCC_APB1ENR_TIM4EN;
-	_RCC_(RCC_APB2ENR) |= RCC_APB2ENR_AFIOEN;
+	TIM4_CLOCK = 1;
+	AFIO_CLOCK = 1;
 }
 
 // abstract classes
@@ -147,7 +147,7 @@ public:
 	uint16_t prescaler, depth;
 
 	virtual ~tim_pwm() {}
-	virtual void init(uint8_t pushpull = 0) =0;
+	virtual void init(uint8_t opendrain = 1) =0;
 	virtual void enable() =0;
 	virtual void disable() =0;
 	virtual void write(uint16_t pwm_val) =0;
@@ -226,7 +226,7 @@ public:
 	void setPrescaler(uint16_t val) {PSC = val;}
 
 	virtual void pwmSetup(uint8_t center, uint8_t dir)  =0;
-	virtual void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0) =0;// {tim2_pwm a(ch_num); a.init();}
+	virtual void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
 	virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
 	virtual void pwmEnable(uint8_t ch_num) =0;
 	virtual void pwmDisable(uint8_t ch_num) =0;
@@ -305,7 +305,7 @@ public:
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim1_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
 	tim1_pwm(): tim_pwm(){}
-	void init(uint8_t pushpull = 0);
+	void init(uint8_t opendrain = 1);
 	void enable();
 	void disable() {_TIM1_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM1_(ch_addr) = pwm_val;}
@@ -343,7 +343,7 @@ public:
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim2_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
 	tim2_pwm(): tim_pwm(){}
-	void init(uint8_t pushpull = 0);
+	void init(uint8_t opendrain = 1);
 	void enable();
 	void disable() {_TIM2_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM2_(ch_addr) = pwm_val;}
@@ -381,7 +381,7 @@ public:
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim3_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
 	tim3_pwm(): tim_pwm(){}
-	void init(uint8_t pushpull = 0);
+	void init(uint8_t opendrain = 1);
 	void enable();
 	void disable() {_TIM3_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM3_(ch_addr) = pwm_val;}
@@ -419,7 +419,7 @@ public:
 //							  depth(0xFFFF), channel(ch_num), ch_addr(channel*4 + 0x30){};
 	tim4_pwm(uint8_t ch_num, uint16_t d = 0xFFFF): tim_pwm(ch_num, d){}
 	tim4_pwm(): tim_pwm(){}
-	void init(uint8_t pushpull = 0);
+	void init(uint8_t opendrain = 1);
 	void enable();
 	void disable() {_TIM4_(TIMX_CCER) &= ~(1<<((channel-1)*4));} //output off
 	void write(uint16_t pwm_val) {_TIM4_(ch_addr) = pwm_val;}
@@ -478,7 +478,7 @@ public:
 	//void setBreakIRQ(uint8_t bit=1)		{DIER &= ~0x0080; DIER |= bit<<7;} //tim1 only
 
 	void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);
+	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM1_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
@@ -587,7 +587,7 @@ public:
 	void slave(uint16_t sms, uint16_t ts);
 
 	void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);// {tim2_pwm a(ch_num); a.init();}
+	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM2_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
@@ -677,7 +677,7 @@ public:
 	void slave(uint16_t sms, uint16_t ts);
 
 	void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);
+	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM3_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
@@ -765,7 +765,7 @@ public:
 	void slave(uint16_t sms, uint16_t ts);
 
 	void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t pushpull = 0);// {tim2_pwm a(ch_num); a.init();}
+	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM4_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
