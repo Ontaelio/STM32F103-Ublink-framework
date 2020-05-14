@@ -9,7 +9,7 @@ Contents:
 * [Read, print and formatted print functions](#read-print-and-formatted-print-functions)
 * [Interrupts and errors](#interrupts-and-errors)
 * [usart_mem class](#usart_mem-class)
-* [Lower level setup functions](#lower-level-setup-functions)
+* [Setup member functions](#setup-member-functions)
 * [Defined values and compiler directives](#defined-values-and-compiler-directives)
 * [Code examples](#examples)
 
@@ -222,7 +222,7 @@ The **init(uint8_t\* dat)** function binds the `usart_mem` object to an array `d
 
 The array is used as a circular buffer, once its end is reached, new output will start overwriting bytes from the beginning. `usart_mem` can store ASCII control characters (like `\r` and `\n`) to allow text formatting. A special `\e` (escape, 27) character can be used to mark the end of text and return the 'carriage' to the start of the array (new data will overwrite the existing one).
 
-## Lower level setup functions
+## Setup member functions
 
 * void **RXenable()**
 * void **RXdisable()**

@@ -156,11 +156,13 @@ Generate an update or capture/compare event.
 
 ## Timer class
 
-`timerX` objects hold all the settable register values and provide some rudimentary functions for the most common timer operations and register bits assignments. Multiple `timerX` objects with different configs for the same timer allow quick operation mode switching with `enable` member function.
+`timerX` objects hold all the settable register values and provide functions for the most common timer operations and register bits assignments. Multiple `timerX` objects with different configs for the same timer allow quick operation mode switching with `enable` member function.
 
 The object has several `public` variables corresponding to the number of settable timer registers. These variables can be assigned with values (16-bit half words, except Timer1 DMAR register that is 32-bit); these values are written into the corresponding registers with `config` or `enable` member functions. The variables are named according to the registers they represent:
 
 `CR1, CR2, SMCR, DIER, CCMR1, CCMR2, CCER, PSC, ARR, RCR, CCR1, CCR2, CCR3, CCR4, BDTR, DCR, DMAR` *(RCR and BDTR are Timer1 only)*
+
+*One doesn't have to change these variables manually, as most of them can be set up with setup member functions.*
 
 The call to constructor initializes all these variables to the corresponding register reset value (`0` for all except `ARR` that resets at `0xFFFF`) except `BDTR` for Timer1.
 
@@ -185,7 +187,7 @@ Calls `timerX_init()`, initializing the timerX. Included for possible convenienc
 
 * void **config ()**
 
-Assigns all the register variable values to the corresponding timer registers. Calls an update event (no interrupt generated) prior to writing CR1. Doesn't enable the timer, unless `CEN` bit was explicitly included in the `CR1` variable (not recommended).
+Assigns all the register variable values to the corresponding timer registers. Calls an update event (no interrupt generated) prior to writing CR1. Doesn't enable the timer, unless `CEN` bit was explicitly included in the `CR1` member variable (not recommended).
 
 * void **enableOnly ()**
 
