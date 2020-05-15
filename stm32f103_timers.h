@@ -225,7 +225,7 @@ public:
 	void setDepth(uint16_t val) {ARR = val;}
 	void setPrescaler(uint16_t val) {PSC = val;}
 
-	virtual void pwmSetup(uint8_t center, uint8_t dir)  =0;
+	void pwmSetup(uint8_t center, uint8_t dir);
 	virtual void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
 	virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
 	virtual void pwmEnable(uint8_t ch_num) =0;
@@ -478,7 +478,7 @@ public:
 	//void setCOMIRQ(uint8_t bit=1)		{DIER &= ~0x0020; DIER |= bit<<5;} //tim1 only
 	//void setBreakIRQ(uint8_t bit=1)		{DIER &= ~0x0080; DIER |= bit<<7;} //tim1 only
 
-	void pwmSetup(uint8_t center, uint8_t dir);
+	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM1_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
@@ -594,7 +594,7 @@ public:
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
 
-	void pwmSetup(uint8_t center, uint8_t dir);
+	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM2_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
@@ -687,7 +687,7 @@ public:
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
 
-	void pwmSetup(uint8_t center, uint8_t dir);
+	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM3_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
@@ -778,7 +778,7 @@ public:
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
 
-	void pwmSetup(uint8_t center, uint8_t dir);
+	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM4_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);

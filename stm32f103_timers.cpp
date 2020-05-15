@@ -108,6 +108,13 @@ void timer::setCC4mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe
 	if (oe) CCER |= TIMX_CCER_CC4E; else CCER &= ~(TIMX_CCER_CC4E);
 }
 
+void timer::pwmSetup(uint8_t center, uint8_t dir)
+{
+	CR1 &= ~TIMX_CR1_CMS;
+	CR1 |= center<<5;
+	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
+    CR1 |= TIMX_CR1_ARPE;
+}
 
 void tim1_pwm::init(uint8_t opendrain)
 {
@@ -494,14 +501,6 @@ void timer1::slave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-void timer1::pwmSetup(uint8_t center, uint8_t dir)
-{
-	CR1 &= ~TIMX_CR1_CMS;
-	CR1 |= center<<5;
-	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
-    CR1 |= TIMX_CR1_ARPE;
-}
-
 void timer1::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim1_pwm a(ch_num);
@@ -608,15 +607,6 @@ void timer2::slave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-
-void timer2::pwmSetup(uint8_t center, uint8_t dir)
-{
-	CR1 &= ~TIMX_CR1_CMS;
-	CR1 |= center<<5;
-	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
-	CR1 |= TIMX_CR1_ARPE;
-}
-
 void timer2::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim2_pwm a(ch_num);
@@ -716,15 +706,6 @@ void timer3::slave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-
-void timer3::pwmSetup(uint8_t center, uint8_t dir)
-{
-	CR1 &= ~TIMX_CR1_CMS;
-	CR1 |= center<<5;
-	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
-	CR1 |= TIMX_CR1_ARPE;
-}
-
 void timer3::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim3_pwm a(ch_num);
@@ -822,15 +803,6 @@ void timer4::slave(uint16_t sms, uint16_t ts)
 		default: break;
 		}
 	SMCR |= (ts<<4) | sms;
-}
-
-
-void timer4::pwmSetup(uint8_t center, uint8_t dir)
-{
-	CR1 &= ~TIMX_CR1_CMS;
-	CR1 |= center<<5;
-	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
-	CR1 |= TIMX_CR1_ARPE;
 }
 
 void timer4::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
