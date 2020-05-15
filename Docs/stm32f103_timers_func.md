@@ -6,7 +6,15 @@ The timer_func library provides some basic means to deal with timers, PWMs and i
 [Timer initialization](#timer-initialization) - Timer init() function
 [PWM pin class](#pwm-pin-class) - a simple way to create PWM pins
 [Timer class](#timer-class) - more comprehensive timers and interrupts control class
+* [Constructor](#constructor)
+* [Timer control](#timer-control-member-functions)
+* [Register setup](#setup-member-functions)
+* [PWM](#pwm-control-member-functions)
+* [DMA](#dma-control-member-functions)
+* [Interrupts](#interrupts)
+* [Direct register manipulation](#direct-register-manipulation-member-functions)
 
+[Examples](#examples)
 ## SysTick timer
 
 #### SysTick defined symbolic names
@@ -160,7 +168,7 @@ Generate an update or capture/compare event.
 
 The object has several `public` variables corresponding to the number of settable timer registers. These variables can be assigned with values (16-bit half words, except Timer1 DMAR register that is 32-bit); these values are written into the corresponding registers with `config` or `enable` member functions. The variables are named according to the registers they represent:
 
-`CR1, CR2, SMCR, DIER, CCMR1, CCMR2, CCER, PSC, ARR, RCR, CCR1, CCR2, CCR3, CCR4, BDTR, DCR, DMAR` *(RCR and BDTR are Timer1 only)*
+`CR1, CR2, SMCR, CCMR1, CCMR2, CCER, PSC, ARR, RCR, CCR1, CCR2, CCR3, CCR4, BDTR` *(RCR and BDTR are Timer1 only)*
 
 *One doesn't have to change these variables manually, as most of them can be set up with setup member functions.*
 
@@ -392,7 +400,7 @@ Set the DMA burst length to `burst`, where `0` is one transfer and the maximum v
 
 Set the base address for DMA-to-timer transfer. This governs transfers done via TIMx_DMAR register that allows bursts; `base` is the number of the timer register to be written to first: `0` is for CR1, `1` for CR2, etc, as they're listed in the Reference Manual RM0008 section 14.4. CCR1 register that is the most likely target here is `13` (`0xE`)
 
-#### Interrupts and Direct register manipulation member functions
+#### Interrupts
 
 The following access the timer and/or ARM core registers directly without modifying the internal class variables.
 
@@ -424,6 +432,8 @@ Set IRQ priority to `pri`. `pri` is 0..15, 0 is highest priority.
 * void **CCpriority(uint8_t pri)**
 
 Set advanced timer's priorities (break, update, trigger/commutation, capture/compare). Basic `priority` member function, if used with an advanced timer, sets all four to the same `pri`.
+
+#### Direct register manipulation member functions
 
 * void **writeCC1 (uint16_t val)**
 * void **writeCC2 (uint16_t val)**
