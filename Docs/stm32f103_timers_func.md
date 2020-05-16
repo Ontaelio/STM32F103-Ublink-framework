@@ -6,13 +6,12 @@ The timer_func library provides some basic means to deal with timers, PWMs and i
 [Timer initialization](#timer-initialization) - Timer init() function
 [PWM pin class](#pwm-pin-class) - a simple way to create PWM pins
 [Timer class](#timer-class) - more comprehensive timers and interrupts control class
-* [Constructor](#constructor)
-* [Timer control](#timer-control-member-functions)
-* [Register setup](#setup-member-functions)
-* [PWM](#pwm-control-member-functions)
-* [DMA](#dma-control-member-functions)
-* [Interrupts](#interrupts)
-* [Direct register manipulation](#direct-register-manipulation-member-functions)
+* [Timer :: Constructor](#constructor)
+* [Timer :: Timer control](#timer-control-member-functions)
+* [Timer :: Registers setup](#setup-member-functions)
+* [Timer :: PWM](#pwm-control-member-functions)
+* [Timer :: DMA](#dma-control-member-functions)
+* [Timer :: Interrupts](#irq-control-member-functions)
 
 [Examples](#examples)
 ## SysTick timer
@@ -172,13 +171,13 @@ The object has several `public` variables corresponding to the number of settabl
 
 *One doesn't have to change these variables manually, as most of them can be set up with setup member functions.*
 
-The call to constructor initializes all these variables to the corresponding register reset values except `CR` and `BDTR`. `CR` is initialized with Auto Reload Preload enabled (`ARPE` set) and `BDTR` is initialized with Master Output enabled (`MOE` set). Use corresponding `set` member functions to disable these.
+The call to constructor initializes all these variables to the corresponding register reset values except `CR` and `BDTR`. `CR` is initialized with Auto Reload Preload enabled (`ARPE` set) and `BDTR` is initialized with Master Output enabled (`MOE` set). Use `setPreload(0)` and `setMasterOutput(0)` member functions to disable these.
 
 `ARR` (`depth`) and `PSC` (`prsclr`) values can be assigned in the constructor.
 
 Timer1 register `BDTR` is initialized with `MOE` (Master Output Enable) bit **set** to avoid confusion. If it's not needed, it must be reset manually (`timer.BDTR = 0`) before the call to `enable()`.
 
-#### Constructor
+### Constructor
 
 * **timer1 ([uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF])**
 * **timer2 ([uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF])**
@@ -187,7 +186,7 @@ Timer1 register `BDTR` is initialized with `MOE` (Master Output Enable) bit **se
 
 Creates a `timerX` object and assigns default values to the internal register variables; prescaler and auto reload values may be provided here.
 
-#### Timer control member functions
+### Timer control member functions
 
 * void **init ())**
 
@@ -209,13 +208,17 @@ Enables the timer resetting the `CEN` bit in CR1.
 
 Configures and enables the timer, optionally setting the CNT counter register to `count` and not the default value provided by the update event. In fact, this function calls the previous ones in the following order: `disable`, `config`, `enableOnly`.
 
+* void **pulse ()**
+
+Same as `enableOnly()` for One Pulse Mode. The recommended sequence for OPM is: `setOnePulse(1)`, set other needed registers, `config()`, then `pulse()`.
+
 * uint16_t **read ()**
 
 Returns the current counter value.
 
-#### Setup member functions
+### Setup member functions
 
-All the setup functions set the internal class variables. They don't write anything into the actual registers; `config` or `enable` must be called after them.
+All the setup functions `setSomething(uint16_t val [,...])` *set* the internal class variables. They don't write anything into the actual registers; `config` or `enable` must be called to activate all the *set* values at once.
 
 * void **setMode (uint16_t mode)**
 
@@ -271,13 +274,17 @@ OCM_PWM2	|	0x0007 | PWM mode 2: active when CNT>CCR
 
 * void **setPreload(uint16_t pre)**
 
-Sets/resets the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event.
+Enables/disables the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event. ARR is enabled in class constructor.
+
+* void **void setOnePulse(uint16_t opm)**
+
+Enables/disables the One Pulse Mode.
 
 * void **setUpdateRequest(uint16_t ov_only)**
 
 Sets/resets the update interrupt/DMA request source. When set (`ov_only == 1`) only the actual counter overflow/underflow will generate an update request; software and slave mode generation won't work.
 
-* void **master (uint16_t mms [, uint16_t ccmr = 0])**
+* void **setMaster (uint16_t mms [, uint16_t ccmr = 0])**
 
 Sets up the master mode. `mms` corresponds to the three MMS bits of the CR2 register and may contain a value 0..7. The following defined constants may be used:
 
@@ -295,7 +302,7 @@ MMS_COMP4	|0x0007 | Compare 4, OC4REF acts as a trigger
 The optional `ccmr` argument sets up the Output compare mode (three OCXM bits of the CCMRX registers, values 1..7) for Compare modes 1-4. The defines from the `setCCmode()` function can be used here, see above.
 
 
-* void **slave (uint16_t sms, uint16_t ts)**
+* void **setSlave (uint16_t sms, uint16_t ts)**
 
 Sets up the slave mode. `sms` corresponds to the three SMS bits (0..7) and `ts` to the two TS bits (0..3) of the SMCR register. `ts` argument has an alternative set of values, see below.
 
@@ -337,6 +344,9 @@ ITR_TIM4 | Timer4 is the master
 
 The library will provide the correct ITR value for the TS bits according to the slave/master timer configuration.
 
+* void **setMasterOutput(uint16_t moe)**
+
+Enables/disables Master Output mode. MOE bit is set by the class constructor, use this to reset it back to default (`moe == 0`).
 
 * void **setCC1value (uint16_t val)**
 * void **setCC2value (uint16_t val)**
@@ -345,7 +355,7 @@ The library will provide the correct ITR value for the TS bits according to the 
 
 Set the capture/compare value for channels 1..4 (CCRX).
 
-#### PWM control member functions
+### PWM control member functions
 
 * void **pwmSetup (uint8_t center, uint8_t dir)**
 
@@ -367,7 +377,7 @@ Enables the PWM channel output. This function writes both into the internal vari
 
 Disables the PWM channel output. This function writes both into the internal variable CCER and the timer CCER register (thus physically disabling the output).
 
-#### DMA control member functions
+### DMA control member functions
 
 * void **DMACOMenable()**
 
@@ -400,9 +410,10 @@ Set the DMA burst length to `burst`, where `0` is one transfer and the maximum v
 
 Set the base address for DMA-to-timer transfer. This governs transfers done via TIMx_DMAR register that allows bursts; `base` is the number of the timer register to be written to first: `0` is for CR1, `1` for CR2, etc, as they're listed in the Reference Manual RM0008 section 14.4. CCR1 register that is the most likely target here is `13` (`0xE`)
 
-#### Interrupts
+### IRQ control member functions
+#### Cortex(tm) Core interrupt setup
 
-The following access the timer and/or ARM core registers directly without modifying the internal class variables.
+The following access the timer and/or Cortex core registers directly without modifying the internal class variables.
 
 * void **IRQenable ()**
 * void **IRQdisable ()**
@@ -419,7 +430,7 @@ Enables/disables Timer IRQ for timers 2, 3 and 4 (ARM core). For timer1 this ena
 * void **IRQ_TRG_COM_disable ()**
 * void **IRQ_CC_disable ()**
 
-Enable/disable specific Timer1 interrupts in ARM core.
+Enable/disable specific Timer1 interrupts in Cortex core.
 
 * void **priority(uint8_t pri)**
 
@@ -433,7 +444,7 @@ Set IRQ priority to `pri`. `pri` is 0..15, 0 is highest priority.
 
 Set advanced timer's priorities (break, update, trigger/commutation, capture/compare). Basic `priority` member function, if used with an advanced timer, sets all four to the same `pri`.
 
-#### Direct register manipulation member functions
+#### STM32 register manipulations
 
 * void **writeCC1 (uint16_t val)**
 * void **writeCC2 (uint16_t val)**
