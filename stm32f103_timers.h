@@ -161,7 +161,7 @@ class timer
 {
 protected:
 	timer(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
-			 CR1	(0x0000), //basic configuration and enable (bit 0)
+			 CR1	(0x0080), //basic configuration and enable (bit 0)
 			 CR2	(0x0000), //master mode and Hall sensor
 			 SMCR	(0x0000), //slave mode control
 			 //DIER	(0x0000), //interrupt enable
@@ -474,6 +474,7 @@ public:
 
 	void master(uint16_t mms, uint16_t ccmr = 0);
 	void slave(uint16_t sms, uint16_t ts);
+	void setMasterOutput(uint16_t moe) {BDTR &= ~TIMX_BDTR_MOE; BDTR |= (moe << 15);}
 
 	//void setCOMIRQ(uint8_t bit=1)		{DIER &= ~0x0020; DIER |= bit<<5;} //tim1 only
 	//void setBreakIRQ(uint8_t bit=1)		{DIER &= ~0x0080; DIER |= bit<<7;} //tim1 only

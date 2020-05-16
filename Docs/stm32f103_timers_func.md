@@ -172,7 +172,7 @@ The object has several `public` variables corresponding to the number of settabl
 
 *One doesn't have to change these variables manually, as most of them can be set up with setup member functions.*
 
-The call to constructor initializes all these variables to the corresponding register reset value (`0` for all except `ARR` that resets at `0xFFFF`) except `BDTR` for Timer1.
+The call to constructor initializes all these variables to the corresponding register reset values except `CR` and `BDTR`. `CR` is initialized with Auto Reload Preload enabled (`ARPE` set) and `BDTR` is initialized with Master Output enabled (`MOE` set). Use corresponding `set` member functions to disable these.
 
 `ARR` (`depth`) and `PSC` (`prsclr`) values can be assigned in the constructor.
 
