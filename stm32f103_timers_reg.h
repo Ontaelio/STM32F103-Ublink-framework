@@ -190,7 +190,11 @@
 #define BB_TIM3_CR1_UDIS	*(volatile uint32_t *) 0x42008004
 #define BB_TIM4_CR1_UDIS	*(volatile uint32_t *) 0x42010004
 
-//cr1
+//one pulse mode
+#define BB_TIM1_CR1_OPM     *(volatile uint32_t *) 0x4225800C
+#define BB_TIM2_CR1_OPM     *(volatile uint32_t *) 0x4200000C
+#define BB_TIM3_CR1_OPM     *(volatile uint32_t *) 0x4200800C
+#define BB_TIM4_CR1_OPM     *(volatile uint32_t *) 0x4201000C
 
 //Capture/Compare output enables
 #define BB_TIM1_CCER_CC1E	*(volatile uint32_t *) 0x42258400

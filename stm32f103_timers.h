@@ -196,11 +196,10 @@ public:
 	virtual void enableOnly() =0;
 	virtual void enable(uint16_t count = 0)  =0;
 	virtual void disable() =0;
+	void pulse() {enableOnly();}
 	virtual uint16_t read() =0;
 	//operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
-	virtual void master(uint16_t mms, uint16_t ccmr = 0) =0;
-	virtual void slave(uint16_t sms, uint16_t ts) =0;
 
 	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
 	void setCC1mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
@@ -209,6 +208,7 @@ public:
 	void setCC4mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
 	void setPreload(uint16_t pre) {CR1 &= ~TIMX_CR1_ARPE; CR1 |= (pre << 7);}
 	void setUpdateRequest(uint16_t cc_only) {CR1 &= ~TIMX_CR1_URS; CR1 |= (cc_only << 2);}
+	void setOnePulse(uint16_t opm) {CR1 &= ~TIMX_CR1_OPM; CR1 |= (opm << 3);}
 
 	//void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
 	//void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
@@ -230,6 +230,11 @@ public:
 	virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
 	virtual void pwmEnable(uint8_t ch_num) =0;
 	virtual void pwmDisable(uint8_t ch_num) =0;
+
+	void setMaster(uint16_t mms, uint16_t ccmr = 0);
+	virtual void setSlave(uint16_t sms, uint16_t ts) =0;
+	void master(uint16_t mms, uint16_t ccmr = 0) {setMaster(mms, ccmr);}
+	void slave(uint16_t mms, uint16_t ccmr = 0) {setSlave(mms, ccmr);}
 
 	virtual void IRQenable() =0;
 	virtual void IRQdisable() =0;
@@ -472,8 +477,8 @@ public:
 	uint16_t read() {return _TIM1_(TIMX_CNT);}
 	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
-	void master(uint16_t mms, uint16_t ccmr = 0);
-	void slave(uint16_t sms, uint16_t ts);
+	//void master(uint16_t mms, uint16_t ccmr = 0);
+	void setSlave(uint16_t sms, uint16_t ts);
 	void setMasterOutput(uint16_t moe) {BDTR &= ~TIMX_BDTR_MOE; BDTR |= (moe << 15);}
 
 	//void setCOMIRQ(uint8_t bit=1)		{DIER &= ~0x0020; DIER |= bit<<5;} //tim1 only
@@ -592,8 +597,8 @@ public:
 	uint16_t read() {return _TIM2_(TIMX_CNT);}
 	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
-	void master(uint16_t mms, uint16_t ccmr = 0);
-	void slave(uint16_t sms, uint16_t ts);
+	//void master(uint16_t mms, uint16_t ccmr = 0);
+	void setSlave(uint16_t sms, uint16_t ts);
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
@@ -685,8 +690,8 @@ public:
 	uint16_t read() {return _TIM3_(TIMX_CNT);}
 	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
-	void master(uint16_t mms, uint16_t ccmr = 0);
-	void slave(uint16_t sms, uint16_t ts);
+	//void master(uint16_t mms, uint16_t ccmr = 0);
+	void setSlave(uint16_t sms, uint16_t ts);
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
@@ -776,8 +781,8 @@ public:
 	uint16_t read() {return _TIM4_(TIMX_CNT);}
 	operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
-	void master(uint16_t mms, uint16_t ccmr = 0);
-	void slave(uint16_t sms, uint16_t ts);
+	//void master(uint16_t mms, uint16_t ccmr = 0);
+	void setSlave(uint16_t sms, uint16_t ts);
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
 	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}

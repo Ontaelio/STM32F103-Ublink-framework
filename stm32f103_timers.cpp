@@ -75,6 +75,18 @@ void irq_disable(uint8_t irq)
 	}
 }
 
+void timer::setMaster(uint16_t mms, uint16_t ccmr)
+{
+	CR2 &= ~TIMX_CR2_MMS; CR2 |= mms<<4;
+	switch (mms)
+	{
+	case 4: CCMR1 &= ~0x00FF; CCMR1 |= ccmr<<4; break;
+	case 5: CCMR1 &= ~0xFF00; CCMR1 |= ccmr<<12; break;
+	case 6: CCMR2 &= ~0x00FF; CCMR2 |= ccmr<<4; break;
+	case 7: CCMR2 &= ~0xFF00; CCMR2 |= ccmr<<12; break;
+	default: break;
+	}
+}
 
 void timer::setCC1mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
@@ -445,8 +457,8 @@ void timer1::config()
 	//_TIM1_(TIMX_DMAR) = DMAR;
 	//_TIM1_(TIMX_DCR) = DCR;
 	_TIM1_(TIMX_BDTR) = BDTR; //tim1 only
-	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM1_(TIMX_CCR4) = CCR4;
-	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM1_(TIMX_CCR3) = CCR3;
+	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM1_(TIMX_CCR4) = CCR4;
+	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM1_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM1_(TIMX_CCR2) = CCR2;
 	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM1_(TIMX_CCR1) = CCR1;
 	_TIM1_(TIMX_RCR) = RCR;
@@ -472,6 +484,7 @@ void timer1::enable(uint16_t count)
 	timer1::enableOnly();
 }
 
+/*
 void timer1::master(uint16_t mms, uint16_t ccmr)
 {
 	CR2 &= ~TIMX_CR2_MMS; CR2 |= mms<<4;
@@ -484,8 +497,9 @@ void timer1::master(uint16_t mms, uint16_t ccmr)
 	default: break;
 	}
 }
+*/
 
-void timer1::slave(uint16_t sms, uint16_t ts)
+void timer1::setSlave(uint16_t sms, uint16_t ts)
 {
 	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
@@ -552,8 +566,8 @@ void timer2::config()
 {
 	//_TIM2_(TIMX_DMAR) = DMAR;
 	//_TIM2_(TIMX_DCR) = DCR;
-	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM2_(TIMX_CCR4) = CCR4;
-	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM2_(TIMX_CCR3) = CCR3;
+	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM2_(TIMX_CCR4) = CCR4;
+	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM2_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM2_(TIMX_CCR2) = CCR2;
 	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM2_(TIMX_CCR1) = CCR1;
 	_TIM2_(TIMX_ARR) = ARR;
@@ -578,6 +592,7 @@ void timer2::enable(uint16_t count)
 	timer2::enableOnly();
 }
 
+/*
 void timer2::master(uint16_t mms, uint16_t ccmr)
 {
 	CR2 &= ~TIMX_CR2_MMS; CR2 |= mms<<4;
@@ -590,8 +605,9 @@ void timer2::master(uint16_t mms, uint16_t ccmr)
 	default: break;
 	}
 }
+*/
 
-void timer2::slave(uint16_t sms, uint16_t ts)
+void timer2::setSlave(uint16_t sms, uint16_t ts)
 {
 	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
@@ -651,8 +667,8 @@ void timer3::config()
 {
 	//_TIM3_(TIMX_DMAR) = DMAR;
 	//_TIM3_(TIMX_DCR) = DCR;
-	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM3_(TIMX_CCR4) = CCR4;
-	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM3_(TIMX_CCR3) = CCR3;
+	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM3_(TIMX_CCR4) = CCR4;
+	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM3_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM3_(TIMX_CCR2) = CCR2;
 	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM3_(TIMX_CCR1) = CCR1;
 	_TIM3_(TIMX_ARR) = ARR;
@@ -677,6 +693,7 @@ void timer3::enable(uint16_t count)
 	timer3::enableOnly();
 }
 
+/*
 void timer3::master(uint16_t mms, uint16_t ccmr)
 {
 	CR2 &= ~TIMX_CR2_MMS; CR2 |= mms<<4;
@@ -689,8 +706,9 @@ void timer3::master(uint16_t mms, uint16_t ccmr)
 	default: break;
 	}
 }
+*/
 
-void timer3::slave(uint16_t sms, uint16_t ts)
+void timer3::setSlave(uint16_t sms, uint16_t ts)
 {
 	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
@@ -750,8 +768,8 @@ void timer4::config()
 {
 	//_TIM4_(TIMX_DMAR) = DMAR;
 	//_TIM4_(TIMX_DCR) = DCR;
-	if (!(CCMR1 & TIMX_CCMR2_CC4S)) _TIM4_(TIMX_CCR4) = CCR4;
-	if (!(CCMR1 & TIMX_CCMR2_CC3S)) _TIM4_(TIMX_CCR3) = CCR3;
+	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM4_(TIMX_CCR4) = CCR4;
+	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM4_(TIMX_CCR3) = CCR3;
 	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM4_(TIMX_CCR2) = CCR2;
 	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM4_(TIMX_CCR1) = CCR1;
 	_TIM4_(TIMX_ARR) = ARR;
@@ -776,6 +794,7 @@ void timer4::enable(uint16_t count)
 	timer4::enableOnly();
 }
 
+/*
 void timer4::master(uint16_t mms, uint16_t ccmr)
 {
 	CR2 &= ~TIMX_CR2_MMS; CR2 |= mms<<4;
@@ -788,8 +807,9 @@ void timer4::master(uint16_t mms, uint16_t ccmr)
 	default: break;
 	}
 }
+*/
 
-void timer4::slave(uint16_t sms, uint16_t ts)
+void timer4::setSlave(uint16_t sms, uint16_t ts)
 {
 	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)

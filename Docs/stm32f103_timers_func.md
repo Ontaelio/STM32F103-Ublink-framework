@@ -353,7 +353,7 @@ Enables/disables Master Output mode. MOE bit is set by the class constructor, us
 * void **setCC3value (uint16_t val)**
 * void **setCC4value (uint16_t val)**
 
-Set the capture/compare value for channels 1..4 (CCRX).
+Set the capture/compare value for channels 1..4 (CCRX). Again, this *sets* the value in the member variable, not the register. Check `writeCCX()` below.
 
 ### PWM control member functions
 
