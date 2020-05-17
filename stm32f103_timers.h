@@ -32,11 +32,11 @@ inline uint32_t sysTick_read()
 {
 	return SYSTICK_CURVAL;
 }
-inline void sysTick_intEnable()
+inline void sysTick_IRQenable()
 {
 	SYSTICK_CSR |= SYSTICK_CSR_TICKINT;
 }
-inline void sysTick_intDisable()
+inline void sysTick_IRQdisable()
 {
 	SYSTICK_CSR &= ~SYSTICK_CSR_TICKINT;
 }

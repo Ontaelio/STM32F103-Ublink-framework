@@ -3,8 +3,11 @@
 The timer_func library provides some basic means to deal with timers, PWMs and interrupts. This guide consists of the following sections:
 
 [SysTick timer](#systick-timer) - dealing with the ARM core timer
+
 [Timer initialization](#timer-initialization) - Timer init() function
+
 [PWM pin class](#pwm-pin-class) - a simple way to create PWM pins
+
 [Timer class](#timer-class) - more comprehensive timers and interrupts control class
 * [Timer :: Constructor](#constructor)
 * [Timer :: Timer control](#timer-control-member-functions)
@@ -44,7 +47,7 @@ SYSTICK_CSR_ENABLE      = 0x00000001
 
 *Note: `delays` shouldn't be used along with the SysTick interrupt*
 
-* void **sysTick_start (uint32_t val, uint8_t intext = 1)**
+* void **sysTick_start (uint32_t val [, uint8_t intext = 1])**
 
 (Re)starts the SysTick timer counting from `val` to 0. `val` is 24-bit (0x00FFFFFF max). `intext` refers to the clock source selection: 1 = HCLK (72 MHz); 0 = 'external' clock source (9 MHz); defaults to HCLK if omitted.
 
@@ -56,11 +59,11 @@ Stops the SysTick timer.
 
 Returns the current SysTick timer value.
 
-* void **sysTick_intEnable ()**
+* void **sysTick_IRQenable ()**
 
 Enables SysTick interrupt. The interrupt happens each time the SysTick counter reaches zero and underflows.
 
-* void **sysTick_intDisable ()**
+* void **sysTick_IRQdisable ()**
 
 Disables SysTick interrupt.
 
