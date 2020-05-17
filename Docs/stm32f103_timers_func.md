@@ -269,12 +269,19 @@ OCM_LOW		|	0x0002 | Channel inactive on match
 OCM_TOGGLE	|	0x0003 | Toggle channel output on match
 OCM_FORCELOW |	0x0004 | Force inactive level
 OCM_FORCEHIGH |	0x0005 | Force active level
-OCM_PWM1	|	0x0006 | PWM mode 1: active when CNT<CCR
-OCM_PWM2	|	0x0007 | PWM mode 2: active when CNT>CCR
+OCM_PWM1	|	0x0006 | PWM mode 1: active while CNT<CCR
+OCM_PWM2	|	0x0007 | PWM mode 2: inactive while CNT<CCR
+
+* void **setCC1output(uint8_t oe)**
+* void **setCC2output(uint8_t oe)**
+* void **setCC3output(uint8_t oe)**
+* void **setCC4output(uint8_t oe)**
+
+Enable/disable (oe == `1` for on, `0` for off) CC outputs. This function sets the interval class variable prior to timer enabling, not the registers; check `CCXoutput()` function for actual output toggling.
 
 * void **setPreload(uint16_t pre)**
 
-Enables/disables the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event. ARR is enabled in class constructor.
+Enable/disable the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event. ARR is enabled in class constructor.
 
 * void **void setOnePulse(uint16_t opm)**
 
@@ -357,13 +364,9 @@ Set the capture/compare value for channels 1..4 (CCRX). Again, this *sets* the v
 
 ### PWM control member functions
 
-* void **pwmSetup (uint8_t center, uint8_t dir)**
+* void **setPWMchannel (uint8_t ch_num, uint8_t mode, uint8_t plrty [, uint8_t opendrain = 1])**
 
-Sets up PWM mode. `center` corresponds to the CMS bits in CR1; `dir` is the DIR bit. `center == 1` selects center-aligned mode, while `dir` selects the counter direction if `center` is zero (`0` for up, `1` for down). Sets the ARPE (auto reload preload enable) bit in CR1. This function doesn't write into the actual register and is similar to the `setMode` function.
-
-* void **pwmChannel (uint8_t ch_num, uint8_t mode, uint8_t plrty [, uint8_t opendrain = 1])**
-
-Sets up the PWM channel `ch_num`. `mode` is the PWM mode (1 or 2), `plrty` is polarity (0 or 1), check `setCCXmode()` above for values. Optional `opendrain` argument will configure the output pin into the push-pull mode (`PUSHPULL` or `0`); default is open-drain. This function will initialize the output pin, but won't write anything into the timer registers.
+Sets up the PWM channel `ch_num`. `mode` is the PWM mode (1 or 2), `plrty` is polarity (0 or 1), check `setCCXmode()` above for values. Optional `opendrain` argument will configure the output pin into the push-pull mode (`PUSHPULL` or `0`); default is open-drain. Output enable bit is set by this, use `pwmDisable` prior to timer enabling if needed. This function will initialize the output pin, but won't write anything into the timer registers.
 
 * void **pwmWrite (uint8_t ch_num, uint16_t val)**
 
@@ -456,9 +459,9 @@ Write `val` into the CCRX register (capture/compare value).
 *Most of the following functions are atomic, i.e. they use bit-band aliases for maximum speed*
 
 * void **CC1output (uint8_t bit)**
-* void **CC1output (uint8_t bit)**
-* void **CC1output (uint8_t bit)**
-* void **CC1output (uint8_t bit)**
+* void **CC2output (uint8_t bit)**
+* void **CC3output (uint8_t bit)**
+* void **CC4output (uint8_t bit)**
 
 Enable (`bit == 1`) or disable (`bit == 0`) capture/compare channel output.
 
