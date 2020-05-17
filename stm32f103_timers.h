@@ -172,12 +172,12 @@ protected:
 			 CCER	(0x0000), //capture/compare enable
 			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
 			 PSC	(prsclr), //prescaler
-			 ARR	(depth),  //depth of the counter aka auto-reload
+			 ARR	(depth)  //depth of the counter aka auto-reload
 			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
-			 CCR1	(0x0000), //capture/compare value. Read-only in input
-			 CCR2	(0x0000),
-			 CCR3	(0x0000),
-			 CCR4	(0x0000)
+			 //CCR1	(0x0000), //capture/compare value. Read-only in input
+			 //CCR2	(0x0000),
+			 //CCR3	(0x0000),
+			 //CCR4	(0x0000)
 			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
 			 //DCR	(0x0000), //dma control
 			 //DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
@@ -186,8 +186,8 @@ protected:
 public:
 
     uint16_t CR1, CR2, SMCR, //DIER, // SR, EGR,
-			CCMR1, CCMR2, CCER, PSC, ARR, RCR, // CNT,
-			CCR1, CCR2, CCR3, CCR4; //, DCR; //,BDTR;
+			CCMR1, CCMR2, CCER, PSC, ARR, RCR; // CNT,
+			//CCR1, CCR2, CCR3, CCR4; //, DCR; //,BDTR;
 	//uint32_t DMAR; //32 bits in tim1 only
 
 	virtual ~timer() {}
@@ -206,6 +206,10 @@ public:
 	void setCC2mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
 	void setCC3mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
 	void setCC4mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
+	void setCC1output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= oe;}
+	void setCC2output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 4);}
+	void setCC3output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 8);}
+	void setCC4output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 12);}
 	void setPreload(uint16_t pre) {CR1 &= ~TIMX_CR1_ARPE; CR1 |= (pre << 7);}
 	void setUpdateRequest(uint16_t cc_only) {CR1 &= ~TIMX_CR1_URS; CR1 |= (cc_only << 2);}
 	void setOnePulse(uint16_t opm) {CR1 &= ~TIMX_CR1_OPM; CR1 |= (opm << 3);}
@@ -217,16 +221,16 @@ public:
 	//void setCC4IRQ(uint8_t bit=1)		{DIER &= ~0x0010; DIER |= bit<<4;}
 	//void setTriggerIRQ(uint8_t bit=1)	{DIER &= ~0x0040; DIER |= bit<<6;}
 
-	void setCC1value(uint16_t val) {CCR1 = val;}
-	void setCC2value(uint16_t val) {CCR2 = val;}
-	void setCC3value(uint16_t val) {CCR3 = val;}
-	void setCC4value(uint16_t val) {CCR4 = val;}
+	//void setCC1value(uint16_t val) {CCR1 = val;}
+	//void setCC2value(uint16_t val) {CCR2 = val;}
+	//void setCC3value(uint16_t val) {CCR3 = val;}
+	//void setCC4value(uint16_t val) {CCR4 = val;}
 
 	void setDepth(uint16_t val) {ARR = val;}
 	void setPrescaler(uint16_t val) {PSC = val;}
 
-	void pwmSetup(uint8_t center, uint8_t dir);
-	virtual void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
+	//void pwmSetup(uint8_t center, uint8_t dir);
+	virtual void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
 	virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
 	virtual void pwmEnable(uint8_t ch_num) =0;
 	virtual void pwmDisable(uint8_t ch_num) =0;
@@ -485,7 +489,7 @@ public:
 	//void setBreakIRQ(uint8_t bit=1)		{DIER &= ~0x0080; DIER |= bit<<7;} //tim1 only
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
+	void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM1_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
@@ -601,7 +605,7 @@ public:
 	void setSlave(uint16_t sms, uint16_t ts);
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
+	void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM2_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
@@ -694,7 +698,7 @@ public:
 	void setSlave(uint16_t sms, uint16_t ts);
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
+	void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM3_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);
@@ -785,7 +789,7 @@ public:
 	void setSlave(uint16_t sms, uint16_t ts);
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
-	void pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
+	void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1);// {tim2_pwm a(ch_num); a.init();}
 	void pwmWrite(uint8_t ch_num, uint16_t val) {_TIM4_(ch_num*4 + 0x30) = val;}
 	void pwmEnable(uint8_t ch_num);
 	void pwmDisable(uint8_t ch_num);

@@ -120,6 +120,7 @@ void timer::setCC4mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe
 	if (oe) CCER |= TIMX_CCER_CC4E; else CCER &= ~(TIMX_CCER_CC4E);
 }
 
+/*
 void timer::pwmSetup(uint8_t center, uint8_t dir)
 {
 	CR1 &= ~TIMX_CR1_CMS;
@@ -127,6 +128,7 @@ void timer::pwmSetup(uint8_t center, uint8_t dir)
 	if (dir) CR1 |= TIMX_CR1_DIR; else CR1 &= ~TIMX_CR1_DIR;
     CR1 |= TIMX_CR1_ARPE;
 }
+*/
 
 void tim1_pwm::init(uint8_t opendrain)
 {
@@ -457,10 +459,10 @@ void timer1::config()
 	//_TIM1_(TIMX_DMAR) = DMAR;
 	//_TIM1_(TIMX_DCR) = DCR;
 	_TIM1_(TIMX_BDTR) = BDTR; //tim1 only
-	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM1_(TIMX_CCR4) = CCR4;
-	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM1_(TIMX_CCR3) = CCR3;
-	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM1_(TIMX_CCR2) = CCR2;
-	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM1_(TIMX_CCR1) = CCR1;
+	//if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM1_(TIMX_CCR4) = CCR4;
+	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM1_(TIMX_CCR3) = CCR3;
+	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM1_(TIMX_CCR2) = CCR2;
+	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM1_(TIMX_CCR1) = CCR1;
 	_TIM1_(TIMX_RCR) = RCR;
 	_TIM1_(TIMX_ARR) = ARR;
 	_TIM1_(TIMX_PSC) = PSC;
@@ -515,7 +517,7 @@ void timer1::setSlave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-void timer1::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
+void timer1::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim1_pwm a(ch_num);
 	uint16_t CCMR_clr;
@@ -566,10 +568,10 @@ void timer2::config()
 {
 	//_TIM2_(TIMX_DMAR) = DMAR;
 	//_TIM2_(TIMX_DCR) = DCR;
-	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM2_(TIMX_CCR4) = CCR4;
-	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM2_(TIMX_CCR3) = CCR3;
-	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM2_(TIMX_CCR2) = CCR2;
-	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM2_(TIMX_CCR1) = CCR1;
+	//if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM2_(TIMX_CCR4) = CCR4;
+	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM2_(TIMX_CCR3) = CCR3;
+	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM2_(TIMX_CCR2) = CCR2;
+	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM2_(TIMX_CCR1) = CCR1;
 	_TIM2_(TIMX_ARR) = ARR;
 	_TIM2_(TIMX_PSC) = PSC;
 	//_TIM2_(TIMX_CNT) = CNT;
@@ -623,7 +625,7 @@ void timer2::setSlave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-void timer2::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
+void timer2::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim2_pwm a(ch_num);
 	uint16_t CCMR_clr;
@@ -667,10 +669,10 @@ void timer3::config()
 {
 	//_TIM3_(TIMX_DMAR) = DMAR;
 	//_TIM3_(TIMX_DCR) = DCR;
-	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM3_(TIMX_CCR4) = CCR4;
-	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM3_(TIMX_CCR3) = CCR3;
-	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM3_(TIMX_CCR2) = CCR2;
-	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM3_(TIMX_CCR1) = CCR1;
+	//if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM3_(TIMX_CCR4) = CCR4;
+	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM3_(TIMX_CCR3) = CCR3;
+	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM3_(TIMX_CCR2) = CCR2;
+	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM3_(TIMX_CCR1) = CCR1;
 	_TIM3_(TIMX_ARR) = ARR;
 	_TIM3_(TIMX_PSC) = PSC;
 	//_TIM3_(TIMX_CNT) = CNT;
@@ -724,7 +726,7 @@ void timer3::setSlave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-void timer3::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
+void timer3::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim3_pwm a(ch_num);
 	uint16_t CCMR_clr;
@@ -768,10 +770,10 @@ void timer4::config()
 {
 	//_TIM4_(TIMX_DMAR) = DMAR;
 	//_TIM4_(TIMX_DCR) = DCR;
-	if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM4_(TIMX_CCR4) = CCR4;
-	if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM4_(TIMX_CCR3) = CCR3;
-	if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM4_(TIMX_CCR2) = CCR2;
-	if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM4_(TIMX_CCR1) = CCR1;
+	//if (!(CCMR2 & TIMX_CCMR2_CC4S)) _TIM4_(TIMX_CCR4) = CCR4;
+	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM4_(TIMX_CCR3) = CCR3;
+	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM4_(TIMX_CCR2) = CCR2;
+	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM4_(TIMX_CCR1) = CCR1;
 	_TIM4_(TIMX_ARR) = ARR;
 	_TIM4_(TIMX_PSC) = PSC;
 	//_TIM4_(TIMX_CNT) = CNT;
@@ -825,7 +827,7 @@ void timer4::setSlave(uint16_t sms, uint16_t ts)
 	SMCR |= (ts<<4) | sms;
 }
 
-void timer4::pwmChannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
+void timer4::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
 {
 	tim4_pwm a(ch_num);
 	uint16_t CCMR_clr;
