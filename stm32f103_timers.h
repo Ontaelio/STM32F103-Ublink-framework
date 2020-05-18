@@ -210,6 +210,11 @@ public:
 	void setCC2output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 4);}
 	void setCC3output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 8);}
 	void setCC4output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 12);}
+	void setCC1preload(uint8_t pe) {CCMR1 &= ~TIMX_CCMR1_OC1PE; CCMR1 |= (pe << 3);}
+	void setCC2preload(uint8_t pe) {CCMR1 &= ~TIMX_CCMR1_OC2PE; CCMR1 |= (pe << 11);}
+	void setCC3preload(uint8_t pe) {CCMR2 &= ~TIMX_CCMR2_OC3PE; CCMR2 |= (pe << 3);}
+	void setCC4preload(uint8_t pe) {CCMR2 &= ~TIMX_CCMR2_OC4PE; CCMR2 |= (pe << 11);}
+
 	void setPreload(uint16_t pre) {CR1 &= ~TIMX_CR1_ARPE; CR1 |= (pre << 7);}
 	void setUpdateRequest(uint16_t cc_only) {CR1 &= ~TIMX_CR1_URS; CR1 |= (cc_only << 2);}
 	void setOnePulse(uint16_t opm) {CR1 &= ~TIMX_CR1_OPM; CR1 |= (opm << 3);}

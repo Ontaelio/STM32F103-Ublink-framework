@@ -282,6 +282,14 @@ OCM_PWM2	|	0x0007 | PWM mode 2: inactive while CNT<CCR
 
 Enable/disable (oe == `1` for on, `0` for off) CC outputs. This function sets the interval class variable prior to timer enabling, not the registers; check `CCXoutput()` function for actual output toggling.
 
+* void **setCC1preload(uint8_t pe)**
+* void **setCC2preload(uint8_t pe)**
+* void **setCC3preload(uint8_t pe)**
+* void **setCC4preload(uint8_t pe)**
+
+Enable/disable (`1` or `0` respectfully) output compare preload.
+
+
 * void **setPreload(uint16_t pre)**
 
 Enable/disable the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event. ARR is enabled in class constructor.
@@ -357,13 +365,6 @@ The library will provide the correct ITR value for the TS bits according to the 
 * void **setMasterOutput(uint16_t moe)**
 
 Enables/disables Master Output mode. MOE bit is set by the class constructor, use this to reset it back to default (`moe == 0`).
-
-* void **setCC1value (uint16_t val)**
-* void **setCC2value (uint16_t val)**
-* void **setCC3value (uint16_t val)**
-* void **setCC4value (uint16_t val)**
-
-Set the capture/compare value for channels 1..4 (CCRX). Again, this *sets* the value in the member variable, not the register. Check `writeCCX()` below.
 
 ### PWM control member functions
 
