@@ -289,7 +289,6 @@ Enable/disable (oe == `1` for on, `0` for off) CC outputs. This function sets th
 
 Enable/disable (`1` or `0` respectfully) output compare preload.
 
-
 * void **setPreload(uint16_t pre)**
 
 Enable/disable the auto reload preload (`1` for on, `0` for off). When ARR is enabled, a new value for the counter auto reload (aka depth) will be buffered and become active only at the next update event. ARR is enabled in class constructor.

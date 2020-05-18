@@ -13,9 +13,9 @@
  * The timers library is needed for the delay to work.
  */
 
-#include <stm32f103_adc_func.h>
-#include <stm32f103_gpio_func.h>
-#include <stm32f103_timers_func.h>
+#include <stm32f103_adc.h>
+#include <stm32f103_gpio.h>
+#include <stm32f103_timers.h>
 
 gpioC_pin C13(13);
 analog_cont A3(1, 3);
