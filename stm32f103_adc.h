@@ -60,7 +60,7 @@ public:
 			cnum (cha), adc ((volatile uint32_t *)(0x40012400 + 0x0000400 * (adg - 1))) {}
 	void init(uint8_t cycles = 0);
 	void start();
-	void stop() {*(adc + ADC_CR2/4) &= ~ADC_CR2_ADON;}
+	void stop() {*(adc + ADC_CR2/4) &= ~ADC_CR2_CONT;}
 	uint16_t read() {return *(adc + 19);}
 	operator uint16_t() {return *(adc + 19);}
 
