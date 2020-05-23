@@ -136,7 +136,7 @@ void analog_scan::init(uint16_t* targ, uint_fast8_t num, ...)
 	_DMA1_(DMA_CCR1) |= DMA_CCR_EN;
 }
 
-void analog_scan::external(uint8_t regtrig)
+void analog_scan::exti(uint8_t regtrig)
 {
 	_ADC1_(ADC_CR2) &= ~(ADC_CR2_EXTSEL); //clear
 	_ADC1_(ADC_CR2) |= ADC_CR2_EXTTRIG | regtrig << 17;

@@ -108,7 +108,7 @@ Initializes the object. No arguments.
 
 * void **init (uint16_t\* targ, uint_fast8_t num, ...)**
 
-Initializes DMA1 and binds it via DMA channel 1 to an array at `targ` (where `targ` is a pointer to an array). `num` is the number of channels to scan, and the channels' numbers themselves follow (up to 16, channels can repeat). Thus:
+Initializes ADC1, initializes DMA1 and binds it via DMA channel 1 to an array at `targ` (where `targ` is a pointer to an array). `num` is the number of channels to scan, and the channels' numbers themselves follow (up to 16, channels can repeat). Thus:
 
 ```c++
 uint16_t arr[8];
@@ -142,11 +142,11 @@ Sets the DMA priority level (`pri` is 0..3, where 0 == low, 3 == very high).
 
 *For the external triggers and injected functions check sections below*
 
-### External triggers on regular channels
+#### External triggers on regular channels
 
 Regular channels of the *Analog Scan* class object can start a conversion on an external trigger (a certain event). External triggers allow avoiding the continuous scanning that consumes power and DMA resources, requesting ADC data at timed intervals instead. For example, using a timer event as an external trigger you can make scans happen every second.
 
-* void **external (uint8_t regtrig)**
+* void **exti (uint8_t regtrig)**
 
 Makes triggering of the object's analog data conversion dependant on the external trigger instead of the ADON bit that forces it manually.
 
@@ -165,11 +165,11 @@ value | macro | event
 
 When an external event occurs, it will force a single conversion, the results will be stored in the `targ` array provided during initialization.
 
-* void **externalStart ()**
+* void **extiStart ()**
 
 If `regtrig` in the previous function call was `7`, this function will start a continuous conversion (same as `start()`, but using the SWSTART bit instead of the ADON bit). This continuous conversion can be stopped with `stop()`.
 
-* void **externalRead ()**
+* void **extiRead ()**
 
 If the external trigger is set to `7` (SWSTART), this will force a single conversion (same as `read()`, but using the SWSTART bit instead of the ADON bit).
 

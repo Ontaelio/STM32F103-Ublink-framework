@@ -98,10 +98,10 @@ public:
 	void priority(uint8_t pri) {_DMA1_(DMA_CCR1) &= ~DMA_CCR_PL; _DMA1_(DMA_CCR1) |= (pri << 12);}
 
 	//external trigger on regular channels
-	void external(uint8_t regtrig);
+	void exti(uint8_t regtrig);
 	//these for use only in mode 7 (SWSTART)
-	void externalStart() {_ADC1_(ADC_CR2) |= ADC_CR2_CONT; _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
-	void externalRead() { _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
+	void extiStart() {_ADC1_(ADC_CR2) |= ADC_CR2_CONT; _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
+	void extiRead() { _ADC1_(ADC_CR2) |= ADC_CR2_SWSTART;}
 
 	void injectInit(uint8_t jtrigger = 7); //start triggered
 	void injectAuto() {_ADC1_(ADC_CR2) &= ~(ADC_CR2_JEXTTRIG); _ADC1_(ADC_CR1) |= ADC_CR1_JAUTO;} //start auto
