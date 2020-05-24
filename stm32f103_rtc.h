@@ -17,6 +17,7 @@
 #include <stm32f103_rtc_reg.h>
 #include <stm32f103_bkp_reg.h>
 #include <stm32f103_pwr_reg.h>
+#include <stm32f103_timers_reg.h>
 
 
 #ifndef STM32F103_TIMERS_REG_H_
@@ -86,12 +87,12 @@ void pwr_standBy();
 
 void wakeUpFromStandby();
 
-inline void IRQ_RTC_enable() {IRQ_0TO31_SER |= IRQ_RTC;}
-inline void IRQ_RTC_disable() {IRQ_0TO31_CER |= IRQ_RTC;}
-inline void IRQ_RTCAlarm_enable() {IRQ_32TO63_SER |= IRQ_RTCAlarm;}
-inline void IRQ_RTCAlarm_disable() {IRQ_32TO63_CER |= IRQ_RTCAlarm;}
-inline void IRQ_TAMPER_enable() {IRQ_0TO31_SER |= IRQ_TAMPER;}
-inline void IRQ_TAMPER_disable() {IRQ_0TO31_CER |= IRQ_TAMPER;}
+inline void IRQ_RTC_enable() {IRQ_0TO31_SER |= IRQ_BITMASK_RTC;}
+inline void IRQ_RTC_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_RTC;}
+inline void IRQ_RTCAlarm_enable() {IRQ_32TO63_SER |= IRQ_BITMASK_RTCAlarm;}
+inline void IRQ_RTCAlarm_disable() {IRQ_32TO63_CER |= IRQ_BITMASK_RTCAlarm;}
+inline void IRQ_TAMPER_enable() {IRQ_0TO31_SER |= IRQ_BITMASK_TAMPER;}
+inline void IRQ_TAMPER_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_TAMPER;}
 
 //fast functions, using bit-band aliases
 inline void clearAlarm() {BB_RTC_CRL_ALRF = 0;}
