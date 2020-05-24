@@ -93,7 +93,7 @@ void analog_cont::injectStart(uint_fast8_t dowait)
 
 uint16_t analog_cont::injectRead(uint_fast8_t jcha)
 {
-	uint16_t res = *(adc + 0x38/4 + jcha*4);
+	uint16_t res = *(adc + 0x38/4 + jcha);
 	return res;
 }
 
