@@ -20,9 +20,9 @@ Each DMA of STM32F103 (only one on Blue Pill) has 7 channels; each peripheral is
 
 Each DMA channel can be set up independently, but it's a bad idea to use different peripherals tied to the same channel (e.g. SPI1_TX and USART3_RX) *as active DMA request sources* at the same time. This applies to timer-controlled channels too. Memory-to-memory transfers should be done on an unused channel.
 
-Generally it is possible to sort the DMA peripherals so that each request source has its own channel. In the rare cases that's not so, you can either use the `init()` function of the `dma` class to re-initialize the DMA channel before each transfer, or use the `DMAenable/DMAdisable` functions of the peripheral classes (not that this will work only if the direction of the trabsfer is the same; if not use `init()`).
+Generally it is possible to sort the DMA peripherals so that each request source has its own channel. In the rare cases that's not so, you can either use the `init()` function of the `dma` class to re-initialize the DMA channel before each transfer, or use the `DMAenable/DMAdisable` functions of the peripheral classes (note that this will work only if the direction of the transfer is the same; if not use `init()`).
 
-While there are seven DMA channels, only one DMA request is handles at any given time by each DMA unit. Thus there are priority levels to sort this out; if a higher priority DMA request happens while a lower priority one is being processed, the lower transfer will be paused and the higher one will start. These levels can be set to *very high*, *high*, *medium* and *low* manually. In case of the same manual priority, the channel with the lowest number gets priority over a channel with a higher number.
+While there are seven DMA channels, only one DMA request is handled at any given time by each DMA unit. Thus there are priority levels to sort this out; if a higher priority DMA request happens while a lower priority one is being processed, the lower transfer will be paused and the higher one will start. These levels can be set to *very high*, *high*, *medium* and *low* manually. In case of the same manual priority, the channel with the lowest number gets priority.
 
 ## Higher level: DMA class with default initializations
 
