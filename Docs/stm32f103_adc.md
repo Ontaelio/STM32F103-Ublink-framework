@@ -338,8 +338,8 @@ Clear the corresponding status bit after the event.
 
 This basic example turns the Blue Pill in-built LED at pin C13 on and off depending on the position of a potentiometer connected to pin A1.
 ```cpp
-#include <stm32f103_adc_func.h>
-#include <stm32f103_gpio_func.h>
+#include <stm32f103_adc.h>
+#include <stm32f103_gpio.h>
 
 gpioC_pin C13(13);
 analog_pin A1(1);
@@ -364,9 +364,9 @@ In this example, the brightness of the Blue Pill in-built LED (C13) is controlle
 
 Note that `(A3+A4)` is the same as `(A3.read() + A4.read())`. The timers library is needed for the delay to work.
 ```cpp
-#include <stm32f103_adc_func.h>
-#include <stm32f103_gpio_func.h>
-#include <stm32f103_timers_func.h>
+#include <stm32f103_adc.h>
+#include <stm32f103_gpio.h>
+#include <stm32f103_timers.h>
 
 gpioC_pin C13(13);
 analog_cont A3(1, 3);
@@ -396,8 +396,8 @@ int main()
 Four potentiometers are connected to pins A0 .. A3. If the sum of the readings on pins A2 and A3 is more than the sum of the readings on pins A0 and A1, the in-built Blue Pill LED (C13) lights up and goes dark otherwise.
 
 ```cpp
-#include <stm32f103_adc_func.h>
-#include <stm32f103_gpio_func.h>
+#include <stm32f103_adc.h>
+#include <stm32f103_gpio.h>
 
 gpioC_pin C13(13);
 analog_scan fourPots;
@@ -422,10 +422,10 @@ int main()
 Four potentiometers are connected to pins A0 .. A3. Two pots are scanned constantly, two are injected and scanned on external event from Timer1 every 5 seconds. The output goes to a serial console (TX is on pin B6, alternative pinout used).
 
 ```cpp
-#include <stm32f103_usart_func.h>
-#include <stm32f103_adc_func.h>
-#include <stm32f103_gpio_func.h>
-#include <stm32f103_timers_func.h>
+#include <stm32f103_usart.h>
+#include <stm32f103_adc.h>
+#include <stm32f103_gpio.h>
+#include <stm32f103_timers.h>
 
 analog_scan twoPots; //analog scan object
 uint16_t arr[2]; // array for analog scan values
@@ -461,8 +461,8 @@ int main()
 Two potentiometers are connected to pins A2 and A3 (*Analog Continuous* objects). When A2 goes above the `wdhigh` value, the in-built led at C13 lights up. When it goes below the `wdlow` value, the led turns off. The `wdhigh` and `wdlow` values are set to mid-point initially. A3 is being constantly updated but does nothing else.
 
 ```cpp
-#include <stm32f103_adc_func.h>
-#include <stm32f103_gpio_func.h>
+#include <stm32f103_adc.h>
+#include <stm32f103_gpio.h>
 
 gpioC_pin C13(13);
 analog_cont A2(1, 2), A3(2, 3);
