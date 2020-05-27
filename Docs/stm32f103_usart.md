@@ -105,7 +105,7 @@ Initiates a sending of `size` number of bytes from an array `dat` using DMA. DMA
 
 Initiates a receiving of `size` number of bytes from an array `dat` using DMA. DMA here has high priority. Note that this function doesn't wait for the transfer to complete.
 
-*Note: check the transfer complete flag in the DMA_ISR register (`dmaX_transfercomplete()` function) to know that the data was transferred. More on this in the DMA library manual.*
+*Note: check the transfer complete flag in the DMA_ISR register (`dma1_transfercomplete()` function) to know that the data was transferred. More on this in the DMA library manual.*
 
 * void **startTX (uint8_t\* dat, uint16_t size, uint16_t pri = 0x1000)**
 
