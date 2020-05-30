@@ -91,9 +91,9 @@ The following object pairs can be used; the `<-->` arrows show the possible tran
 * `uint32_t* --> gpioA` [5]
 * `uint32_t* --> gpioB` [5]
 * `uint32_t* --> gpioC` [5]
-* `uint8_t <--> uint8_t`
-* `uint16_t <--> uint16_t`
-* `uint32_t <--> uint32_t`
+* `uint8_t <--> uint8_t` [6]
+* `uint16_t <--> uint16_t` [6]
+* `uint32_t <--> uint32_t` [6]
 
 
 [1] This `init` takes two source `analog_cont` objects, ADC1 and ADC2. The reading is transferred as a 32-bit word, where the most significant 16 bits contain ADC2 data and least significant 16 bits contain ADC1 data.
@@ -104,7 +104,9 @@ The following object pairs can be used; the `<-->` arrows show the possible tran
 
 [4] Writes 16-bit data into the port output, overwriting anything present there (i.e. all 16 outputs change their value according to the data received).
 
-[5] Writes 32-bit data into the port bit set/reset register; 16 upper bits for set to 1, 16 lower bits for reset to 0; the setting and resetting is achieved by writing `1` to the corresponding bit (e.g. 0x00010000 will reset pin 0; 0x00000001 will set pin 0). This allows other GPIO pins not to be affected by the DMA transfers by keeping both their bits at 0.
+[5] Writes 32-bit data into the port bit set/reset register; 16 upper bits for set to 1, 16 lower bits for reset to 0; the setting and resetting is achieved by writing `1` to the corresponding bit (e.g. 0x00010000 will reset pin 0; 0x00000001 will set pin 0). This allows other GPIO pins not to be affected by the DMA transfers by keeping both their bits at 0. The GPIO `dma` objects must be bound to a timer in the constructor.
+
+[6] `void init(uint32_t* src, uint32_t* targ, uint8_t c = 0, uint16_t pri = DMA_PLHIGH)` where the optional `c` parameter stands for the channel number if the `dma` object was not bound to a timer in the constructor. If it was, leave blank or at `0`. 
 
 Once the `dma` object is set up and initialized, the following functions can be used to do the actual data transfers:
 
@@ -114,7 +116,7 @@ Do one transfer, then stop. Optional `num` argument specifies the number of data
 
 * void **start([uint16_t num = 1])**
 
-Start continuous (circular) transfer. Optional `num` argument specifies the number of data to be transferred before starting over. Circular mode is not available for memory-to-memory transfers.
+Start continuous (circular) transfer. Optional `num` argument specifies the number of data to be transferred before starting over. Circular mode is not available for memory-to-memory and GPIO transfers.
 
 * void **stop()**
 

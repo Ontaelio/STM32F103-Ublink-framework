@@ -105,10 +105,10 @@ void dma1::init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr)
 	_DMA1_(DMA_CCR + cha*20) = ccr;
 }
 
-void dma1::init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri)
+void dma1::init(uint8_t* src, uint8_t* targ, uint8_t c, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
-	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
+	if (cha == 0) cha = c-1; else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
@@ -117,10 +117,10 @@ void dma1::init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
 }
 
-void dma1::init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri)
+void dma1::init(uint16_t* src, uint16_t* targ, uint8_t c, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
-	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
+	if (cha == 0) cha = c-1; else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
@@ -129,10 +129,10 @@ void dma1::init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri)
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
 }
 
-void dma1::init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri)
+void dma1::init(uint32_t* src, uint32_t* targ, uint8_t c, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
-	if (cha == 0) cha = c; else setDMAtimerChannel(cha);
+	if (cha == 0) cha = c-1; else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)

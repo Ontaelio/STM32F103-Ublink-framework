@@ -163,9 +163,9 @@ public:
 
 	void init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr); //generic
 
-	void init(uint8_t c, uint8_t* src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // mem2mem 8bits
-	void init(uint8_t c, uint16_t* src, uint16_t* targ, uint16_t pri = DMA_PLHIGH);  // mem2mem 16bits
-	void init(uint8_t c, uint32_t* src, uint32_t* targ, uint16_t pri = DMA_PLHIGH);  // mem2mem 32bits
+	void init(uint8_t* src, uint8_t* targ, uint8_t c = 0, uint16_t pri = DMA_PLHIGH); // mem2mem 8bits
+	void init(uint16_t* src, uint16_t* targ, uint8_t c = 0, uint16_t pri = DMA_PLHIGH);  // mem2mem 16bits
+	void init(uint32_t* src, uint32_t* targ, uint8_t c = 0, uint16_t pri = DMA_PLHIGH);  // mem2mem 32bits
 
 	void init(uint16_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 16bit
 	void init(uint16_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 16bit
