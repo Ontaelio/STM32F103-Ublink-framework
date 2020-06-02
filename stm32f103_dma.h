@@ -221,8 +221,8 @@ public:
 
 	void reset() {dma1_reset((cha + 1), 0);}
 
-	void IRQenable() {IRQ_0TO31_SER |= (uint32_t)0x0000800<<cha;}
-	void IRQdisable() {IRQ_0TO31_CER |= (uint32_t)0x0000800<<cha;}
+	void IRQenable() {IRQ_0TO31_SER |= (uint32_t)(0x0000800<<cha);}
+	void IRQdisable() {IRQ_0TO31_CER |= (uint32_t)(0x0000800<<cha);}
 
 	void enableError() {dma1_errorenable(cha + 1);}
 	void enableHalf() {dma1_halfenable(cha + 1);}
