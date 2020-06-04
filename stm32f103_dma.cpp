@@ -108,42 +108,48 @@ void dma1::init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr)
 void dma1::init(uint8_t* src, uint8_t* targ, uint8_t c, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
-	if (cha == 0) cha = c-1; else setDMAtimerChannel(cha);
+	if (no_timer) cha = c-1; else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
 	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)src; //set peripheral address (from)
 	//priority, 8 bit mem, 8 bit periph, memory increments,
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE8 | DMA_PSIZE8 | DMA_CCR_MINC);
+	//if timer not connected, memory-to-memory
+	if (no_timer) _DMA1_(DMA_CCR + cha*20) |= DMA_MEM2MEM;
 }
 
 void dma1::init(uint16_t* src, uint16_t* targ, uint8_t c, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
-	if (cha == 0) cha = c-1; else setDMAtimerChannel(cha);
+	if (no_timer) cha = c-1; else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
 	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)src; //set peripheral address (from)
 	//priority, 16 bit mem, 16 bit periph, memory increments,
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE16 | DMA_PSIZE16 | DMA_CCR_MINC);
+	//if timer not connected, memory-to-memory
+	if (no_timer) _DMA1_(DMA_CCR + cha*20) |= DMA_MEM2MEM;
 }
 
 void dma1::init(uint32_t* src, uint32_t* targ, uint8_t c, uint16_t pri)
 {
 	//if timer was selected the c argument is discarded
-	if (cha == 0) cha = c-1; else setDMAtimerChannel(cha);
+	if (no_timer) cha = c-1; else setDMAtimerChannel(cha);
 
 	_DMA1_(DMA_CCR + cha*20) &= ~DMA_CCR_EN; //disable
 	_DMA1_(DMA_CMAR + cha*20) = (uint32_t)targ; //set memory address (to)
 	_DMA1_(DMA_CPAR + cha*20) = (uint32_t)src; //set peripheral address (from)
 	//priority, 32 bit mem, 32 bit periph, memory increments,
 	_DMA1_(DMA_CCR + cha*20) = (uint16_t)(pri | DMA_MSIZE32 | DMA_PSIZE32 | DMA_CCR_MINC);
+	//if timer not connected, memory-to-memory
+	if (no_timer) _DMA1_(DMA_CCR + cha*20) |= DMA_MEM2MEM;
 }
 
 void dma1::init(uint16_t* src, spi1_slave targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 3-1; //Subtract one to use later with CCR register; channel 3 (SPI1 TX)
 	targ.DMATXenable();
@@ -159,7 +165,7 @@ void dma1::init(uint16_t* src, spi1_slave targ, uint16_t pri)
 
 void dma1::init(uint16_t* src, spi2_slave targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 5-1; //Subtract one to use later with CCR register; channel 5 (SPI2 TX)
 	targ.DMATXenable();
@@ -175,7 +181,7 @@ void dma1::init(uint16_t* src, spi2_slave targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, spi1_slave targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 3-1; //Subtract one to use later with CCR register; channel 3 (SPI1 TX)
 	targ.DMATXenable();
@@ -191,7 +197,7 @@ void dma1::init(uint8_t* src, spi1_slave targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, spi2_slave targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 5-1; //Subtract one to use later with CCR register; channel 5 (SPI2 TX)
 	targ.DMATXenable();
@@ -207,7 +213,7 @@ void dma1::init(uint8_t* src, spi2_slave targ, uint16_t pri)
 
 void dma1::init(spi1_slave src, uint16_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 2-1; //Subtract one to use later with CCR register; channel 2 (SPI1 RX)
 	src.DMARXenable();
@@ -223,7 +229,7 @@ void dma1::init(spi1_slave src, uint16_t* targ, uint16_t pri)
 
 void dma1::init(spi2_slave src, uint16_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 4-1; //Subtract one to use later with CCR register; channel 4 (SPI2 RX)
 	src.DMARXenable();
@@ -239,7 +245,7 @@ void dma1::init(spi2_slave src, uint16_t* targ, uint16_t pri)
 
 void dma1::init(spi1_slave src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 2-1; //Subtract one to use later with CCR register; channel 2 (SPI1 RX)
 	src.DMARXenable();
@@ -255,7 +261,7 @@ void dma1::init(spi1_slave src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(spi2_slave src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 4-1; //Subtract one to use later with CCR register; channel 4 (SPI2 RX)
 	src.DMARXenable();
@@ -271,7 +277,7 @@ void dma1::init(spi2_slave src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, i2c1_slave targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 6-1; //Subtract one to use later with CCR register; channel 6 (I2C1 TX)
 	targ.DMAenable();
@@ -287,7 +293,7 @@ void dma1::init(uint8_t* src, i2c1_slave targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, i2c2_slave targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 4-1; //Subtract one to use later with CCR register; channel 4 (I2C2 TX)
 	targ.DMAenable();
@@ -303,7 +309,7 @@ void dma1::init(uint8_t* src, i2c2_slave targ, uint16_t pri)
 
 void dma1::init(i2c1_slave src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 7-1; //Subtract one to use later with CCR register; channel 7 (I2C1 RX)
 	src.DMAenable();
@@ -321,7 +327,7 @@ void dma1::init(i2c1_slave src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(i2c2_slave src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 5-1; //Subtract one to use later with CCR register; channel 5 (I2C2 RX)
 	src.DMAenable();
@@ -339,7 +345,7 @@ void dma1::init(i2c2_slave src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, usart1 targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 4-1; //Subtract one to use later with CCR register; channel 4 (TX)
 	targ.DMATXenable();
@@ -355,7 +361,7 @@ void dma1::init(uint8_t* src, usart1 targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, usart2 targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 7-1; //Subtract one to use later with CCR register; channel 7 (TX)
 	targ.DMATXenable();
@@ -371,7 +377,7 @@ void dma1::init(uint8_t* src, usart2 targ, uint16_t pri)
 
 void dma1::init(uint8_t* src, usart3 targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 2-1; //Subtract one to use later with CCR register; channel 2 (TX)
 	targ.DMATXenable();
@@ -387,7 +393,7 @@ void dma1::init(uint8_t* src, usart3 targ, uint16_t pri)
 
 void dma1::init(usart1 src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 5-1; //Subtract one to use later with CCR register; channel 5 (RX)
 	src.DMARXenable();
@@ -404,7 +410,7 @@ void dma1::init(usart1 src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(usart2 src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 6-1; //Subtract one to use later with CCR register; channel 6 (RX)
 	src.DMARXenable();
@@ -420,7 +426,7 @@ void dma1::init(usart2 src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(usart3 src, uint8_t* targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 3-1; //Subtract one to use later with CCR register; channel 3 (RX)
 	src.DMARXenable();
@@ -436,7 +442,7 @@ void dma1::init(usart3 src, uint8_t* targ, uint16_t pri)
 
 void dma1::init(analog_cont src, uint16_t targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 1-1; //Subtract one to use later with CCR register; channel 1 (ADC)
 	src.DMAenable();
@@ -452,7 +458,7 @@ void dma1::init(analog_cont src, uint16_t targ, uint16_t pri)
 
 void dma1::init(analog_cont src1, analog_cont src2, uint32_t targ, uint16_t pri)
 {
-	if (cha == 0)
+	if (no_timer)
 	{
 	cha = 1-1; //Subtract one to use later with CCR register; channel 1 (ADC)
 	src1.DMAenable();

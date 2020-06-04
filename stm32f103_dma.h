@@ -158,8 +158,8 @@ class analog_cont;
 class dma1
 {
 public:
-	dma1(): cha (0){}
-	dma1(uint8_t tmr): cha(tmr){}
+	dma1(): cha (0), no_timer(1){}
+	dma1(uint8_t tmr): cha(tmr), no_timer(0){}
 
 	void init(uint8_t c, uint32_t paddr, uint32_t maddr, uint16_t ccr); //generic
 
@@ -246,6 +246,7 @@ public:
 	//uint32_t* baza = _DMA1_(0);
 private:
 	void setDMAtimerChannel(uint8_t &c);
+	uint8_t no_timer;
 };
 
 typedef dma1 dma;
