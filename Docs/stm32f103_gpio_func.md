@@ -83,9 +83,9 @@ Any number of these values can be or-ed or added as an argument for `exti()`. In
 
 ### Configuration class
 
-The library provides the `gpioX_config` class (X corresponds to the GPIO) that holds the pin configuration in three member variables: `crl`, `crh` and `odr`. A variable of the `gpioX_config` class can be used to set up the GPIO and save its current setup. It is used in some of the static member functions.
+The library provides the `gpioX_config` class (X corresponds to the GPIO) that holds the pin configuration in three member variables: `crl`, `crh` and `odr`. A variable of the `gpioX_config` class can be used to set up the GPIO and save its current setup. It is used in the static member functions above.
 
-*Note: `gpio_config` can be used to set up GPIO quickly with a single `init` member function, see above.*
+*Note: `gpio_config` can also be used to set up GPIO quickly with an `init` member function, see above.*
 
 ### Type conversions
 
@@ -123,7 +123,7 @@ int main()
 
 `void gpioX_init()` - enables the GPIOX clock.
 
-The following were machine-generated.
+The following are machine-generated.
 
 _X is A, B or C for GPIOA, GPIOB and GPIOC_; _N is the pin number, 0..15_; _PU = Pull Up_; _PD = Pull Down_; _OD = Open Drain_; _PP = Push Pull_; _AF = Alternate Function_; _2, 10 and 50 is the speed in MHz_.
 
