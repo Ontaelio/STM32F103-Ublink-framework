@@ -1,6 +1,7 @@
-# GPIO Func
+# GPIO Library
 
 ## Higher abstraction level, classes
+
 ### Constructors
 
 There are three constructors for the class gpioX:
@@ -31,6 +32,7 @@ void debugLed()
 ### Public variables and functions
 * `uint8_t pin` the # of the GPIOX pin the object operates on
 * `void init()` enables the corresponding GPIO clock; can be called from any `gpioX` or `gpioX_pin` object
+* `static void init(gpio_config conf)` enables the GPIO clock and sets the control registers according to the provided `gpio_config` (see below)
 * `void mode(mode [,cnf])` sets the pin operating mode. Possible values:
 
 |mode|cnf|result|
@@ -74,12 +76,16 @@ Any number of these values can be or-ed or added as an argument for `exti()`. In
 * `void clear()` Clears the EXTI pending bit.
 * `void interrupt()` Call the EXTI interrupt.
 
+* `static void disableAll()` sets all pins to analog mode (clock disabled).
+* `static void disablePins(uint16_t pins)` sets selected pins to analog mode. `pins` argument is a bitmask, with MSB being pin 15 and LSB pin 0. `1` in this mask means the pin is turned off (analog mode).
+* `static gpio_config saveConfig()` saves the current pin configuration into a `gpio_config` object.
+* `static void setConfig(gpio_config conf)` sets all pins to the setup provided in the `gpio_config` object.
 
-The following variables are commented out in the source code because they produce warnings from the compiler, although they _do_ work:
+### Configuration class
 
-* `volatile uint32_t* BRR` points at the BRR register.
-* `volatile uint32_t* BSRR` points at the BSRR register.
-* `volatile uint32_t* IDR` points at the IDR register.
+The library provides the `gpioX_config` class (X corresponds to the GPIO) that holds the pin configuration in three member variables: `crl`, `crh` and `odr`. A variable of the `gpioX_config` class can be used to set up the GPIO and save its current setup. It is used in some of the static member functions.
+
+*Note: `gpio_config` can be used to set up GPIO quickly with a single `init` member function, see above.*
 
 ### Type conversions
 

@@ -57,6 +57,14 @@ gpioA::gpioA()
 	pincount++;
 }
 
+void gpioA::init(gpio_config conf)
+{
+	gpioA_init();
+	_GPIOA_(GPIOX_CRL) = conf.crl;
+	_GPIOA_(GPIOX_CRH) = conf.crh;
+	_GPIOA_(GPIOX_ODR) = conf.odr;
+}
+
 void gpioA::set()
 {
 	_GPIOA_(GPIOX_BSRR) = 1<<pin;
@@ -120,7 +128,37 @@ void gpioA::exti(uint8_t crbits)
 	if (crbits & EXTI_FALLING) exti_falling(pin); else exti_fallingdisable(pin);
 }
 
+void gpioA::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOA_(GPIOX_CRL) &= ~crl;
+	_GPIOA_(GPIOX_CRH) &= ~crh;
+}
 
+gpio_config gpioA::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOA_(GPIOX_CRL);
+	res.crh = _GPIOA_(GPIOX_CRH);
+	res.odr = _GPIOA_(GPIOX_ODR);
+	return res;
+}
+
+void gpioA::setConfig(gpio_config conf)
+{
+	_GPIOA_(GPIOX_CRL) = conf.crl;
+	_GPIOA_(GPIOX_CRH) = conf.crh;
+	_GPIOA_(GPIOX_ODR) = conf.odr;
+}
 
 gpioB::gpioB(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
@@ -140,6 +178,13 @@ gpioB::gpioB()
 	pincount++;
 }
 
+void gpioB::init(gpio_config conf)
+{
+	gpioB_init();
+	_GPIOB_(GPIOX_CRL) = conf.crl;
+	_GPIOB_(GPIOX_CRH) = conf.crh;
+	_GPIOB_(GPIOX_ODR) = conf.odr;
+}
 
 void gpioB::set()
 {
@@ -205,6 +250,37 @@ void gpioB::exti(uint8_t crbits)
 	if (crbits & EXTI_FALLING) exti_falling(pin); else exti_fallingdisable(pin);
 }
 
+void gpioB::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOB_(GPIOX_CRL) &= ~crl;
+	_GPIOB_(GPIOX_CRH) &= ~crh;
+}
+
+gpio_config gpioB::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOB_(GPIOX_CRL);
+	res.crh = _GPIOB_(GPIOX_CRH);
+	res.odr = _GPIOB_(GPIOX_ODR);
+	return res;
+}
+
+void gpioB::setConfig(gpio_config conf)
+{
+	_GPIOB_(GPIOX_CRL) = conf.crl;
+	_GPIOB_(GPIOX_CRH) = conf.crh;
+	_GPIOB_(GPIOX_ODR) = conf.odr;
+}
 
 gpioC::gpioC(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
@@ -222,6 +298,14 @@ gpioC::gpioC()
 	static uint8_t pincount;
 	pin = pincount;
 	pincount++;
+}
+
+void gpioC::init(gpio_config conf)
+{
+	gpioC_init();
+	_GPIOC_(GPIOX_CRL) = conf.crl;
+	_GPIOC_(GPIOX_CRH) = conf.crh;
+	_GPIOC_(GPIOX_ODR) = conf.odr;
 }
 
 void gpioC::set()
@@ -288,6 +372,38 @@ void gpioC::exti(uint8_t crbits)
 	if (crbits & EXTI_FALLING) exti_falling(pin); else exti_fallingdisable(pin);
 }
 
+void gpioC::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOC_(GPIOX_CRL) &= ~crl;
+	_GPIOC_(GPIOX_CRH) &= ~crh;
+}
+
+gpio_config gpioC::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOC_(GPIOX_CRL);
+	res.crh = _GPIOC_(GPIOX_CRH);
+	res.odr = _GPIOC_(GPIOX_ODR);
+	return res;
+}
+
+void gpioC::setConfig(gpio_config conf)
+{
+	_GPIOC_(GPIOX_CRL) = conf.crl;
+	_GPIOC_(GPIOX_CRH) = conf.crh;
+	_GPIOC_(GPIOX_ODR) = conf.odr;
+}
+
 gpioD::gpioD(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
 	pin = pinnum;
@@ -304,6 +420,14 @@ gpioD::gpioD()
 	static uint8_t pincount;
 	pin = pincount;
 	pincount++;
+}
+
+void gpioD::init(gpio_config conf)
+{
+	gpioD_init();
+	_GPIOD_(GPIOX_CRL) = conf.crl;
+	_GPIOD_(GPIOX_CRH) = conf.crh;
+	_GPIOD_(GPIOX_ODR) = conf.odr;
 }
 
 void gpioD::set()
@@ -359,6 +483,38 @@ void gpioD::mode(uint8_t speed, uint8_t cnf)
 	}
 }
 
+void gpioD::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOD_(GPIOX_CRL) &= ~crl;
+	_GPIOD_(GPIOX_CRH) &= ~crh;
+}
+
+gpio_config gpioD::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOD_(GPIOX_CRL);
+	res.crh = _GPIOD_(GPIOX_CRH);
+	res.odr = _GPIOD_(GPIOX_ODR);
+	return res;
+}
+
+void gpioD::setConfig(gpio_config conf)
+{
+	_GPIOD_(GPIOX_CRL) = conf.crl;
+	_GPIOD_(GPIOX_CRH) = conf.crh;
+	_GPIOD_(GPIOX_ODR) = conf.odr;
+}
+
 
 gpioE::gpioE(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
@@ -376,6 +532,14 @@ gpioE::gpioE()
 	static uint8_t pincount;
 	pin = pincount;
 	pincount++;
+}
+
+void gpioE::init(gpio_config conf)
+{
+	gpioE_init();
+	_GPIOE_(GPIOX_CRL) = conf.crl;
+	_GPIOE_(GPIOX_CRH) = conf.crh;
+	_GPIOE_(GPIOX_ODR) = conf.odr;
 }
 
 void gpioE::set()
@@ -431,6 +595,39 @@ void gpioE::mode(uint8_t speed, uint8_t cnf)
 	}
 }
 
+void gpioE::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOE_(GPIOX_CRL) &= ~crl;
+	_GPIOE_(GPIOX_CRH) &= ~crh;
+}
+
+gpio_config gpioE::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOE_(GPIOX_CRL);
+	res.crh = _GPIOE_(GPIOX_CRH);
+	res.odr = _GPIOE_(GPIOX_ODR);
+	return res;
+}
+
+void gpioE::setConfig(gpio_config conf)
+{
+	_GPIOE_(GPIOX_CRL) = conf.crl;
+	_GPIOE_(GPIOX_CRH) = conf.crh;
+	_GPIOE_(GPIOX_ODR) = conf.odr;
+}
+
+
 gpioF::gpioF(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
 	pin = pinnum;
@@ -449,6 +646,13 @@ gpioF::gpioF()
 	pincount++;
 }
 
+void gpioF::init(gpio_config conf)
+{
+	gpioF_init();
+	_GPIOF_(GPIOX_CRL) = conf.crl;
+	_GPIOF_(GPIOX_CRH) = conf.crh;
+	_GPIOF_(GPIOX_ODR) = conf.odr;
+}
 void gpioF::set()
 {
 	_GPIOF_(GPIOX_BSRR) = 1<<pin;
@@ -502,6 +706,39 @@ void gpioF::mode(uint8_t speed, uint8_t cnf)
 	}
 }
 
+void gpioF::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOF_(GPIOX_CRL) &= ~crl;
+	_GPIOF_(GPIOX_CRH) &= ~crh;
+}
+
+gpio_config gpioF::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOF_(GPIOX_CRL);
+	res.crh = _GPIOF_(GPIOX_CRH);
+	res.odr = _GPIOF_(GPIOX_ODR);
+	return res;
+}
+
+void gpioF::setConfig(gpio_config conf)
+{
+	_GPIOF_(GPIOX_CRL) = conf.crl;
+	_GPIOF_(GPIOX_CRH) = conf.crh;
+	_GPIOF_(GPIOX_ODR) = conf.odr;
+}
+
+
 gpioG::gpioG(uint8_t pinnum, uint8_t dir, uint8_t cnfod)
 {
 	pin = pinnum;
@@ -518,6 +755,14 @@ gpioG::gpioG()
 	static uint8_t pincount;
 	pin = pincount;
 	pincount++;
+}
+
+void gpioG::init(gpio_config conf)
+{
+	gpioG_init();
+	_GPIOG_(GPIOX_CRL) = conf.crl;
+	_GPIOG_(GPIOX_CRH) = conf.crh;
+	_GPIOG_(GPIOX_ODR) = conf.odr;
 }
 
 void gpioG::set()
@@ -573,44 +818,34 @@ void gpioG::mode(uint8_t speed, uint8_t cnf)
 	}
 }
 
+void gpioG::disablePins(uint16_t pins)
+{
+	uint32_t crl = 0;
+	uint32_t crh = 0;
+	uint8_t cnt = 0;
+	while(pins)
+	{
+		crl |= (0xF * (pins&1)) << cnt;
+		crh |= (0xF * ((pins>>8)&1)) << cnt;
+		pins >>= 1;
+		cnt+=4;
+	}
+	_GPIOG_(GPIOX_CRL) &= ~crl;
+	_GPIOG_(GPIOX_CRH) &= ~crh;
+}
 
-//pins:
-//1 = MODEX_0
-//2 = MODEX_1
-//4 = CNFX_0
-//8 = CNFX_1
-// << (4*pinNum)
+gpio_config gpioG::saveConfig()
+{
+	gpio_config res;
+	res.crl = _GPIOG_(GPIOX_CRL);
+	res.crh = _GPIOG_(GPIOX_CRH);
+	res.odr = _GPIOG_(GPIOX_ODR);
+	return res;
+}
 
-//#define PB5_INPUT {_GPIOC_(GPIOX_CRL) &= ~((1+2+8)<<20)); _GPIOC_(GPIOX_CRL) |= 4<<20;}
-//#define PB5_OUTPUT_OD {_GPIOC_(GPIOX_CRL) &= ~((8+1)<<20); _GPIOC_(GPIOX_CRL) |= (2+4)<<20;}
-
-
-
-
-
-
-/*
-PB6_INPUT_PU //odr = 1
-PB6_INPUT_PD // odr = 0
-PB6_ANALOG
-
-PB6_OUTPUT
-PB6_OUTPUT_OD
-
-PB6_OUT_PP_2
-PB6_OUT_PP_10
-PB6_OUT_PP_50
-PB6_OUT_OD_2
-PB6_OUT_OD_10
-PB6_OUT_OD_50
-
-PB6_OUT_AFPP_2
-PB6_OUT_AFPP_10
-PB6_OUT_AFPP_50
-
-PB6_OUT_AFOD_2
-PB6_OUT_AFOD_10
-PB6_OUT_AFOD_50
-
-
-*/
+void gpioG::setConfig(gpio_config conf)
+{
+	_GPIOG_(GPIOX_CRL) = conf.crl;
+	_GPIOG_(GPIOX_CRH) = conf.crh;
+	_GPIOG_(GPIOX_ODR) = conf.odr;
+}

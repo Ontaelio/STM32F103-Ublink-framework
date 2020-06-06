@@ -81,12 +81,17 @@ inline void jtag_release()
 	_AFIO_(AFIO_MAPR) |= 1<<25;
 }
 
+struct gpio_config
+{
+	uint32_t crl, crh, odr;
+};
+
 class gpio_pin
 {
 public:
-//	gpio_pin(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
-//	gpio_pin(uint8_t pinnum);
-//	gpio_pin();
+	//gpio_pin(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
+	//gpio_pin(uint8_t pinnum);
+	//~gpio_pin();
 	//virtual void init() =0;
 	//virtual void set() =0;
 	virtual void high() =0;
@@ -117,10 +122,10 @@ public:
 	gpioA(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioA(uint8_t pinnum);
 	gpioA();
-	void init()
-	{
-		gpioA_init();
-	}
+
+	void init() {gpioA_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -133,18 +138,38 @@ public:
 
 	//these functions are to avoid compiler warnings
 
-	void setAll(uint32_t BSRR_value)
+	static void setAll(uint32_t BSRR_value)
 	{
 		_GPIOA_(GPIOX_BSRR) = BSRR_value;
 	}
-	void resetAll(uint32_t BRR_value)
+	static void resetAll(uint32_t BRR_value)
 	{
 		_GPIOA_(GPIOX_BRR) = BRR_value;
 	}
-	uint32_t readAll()
+	static uint32_t readAll()
 	{
 		return(_GPIOA_(GPIOX_IDR));
 	}
+
+	// these below are better and work; but produce c++11 warnings from the compiler
+	//volatile uint32_t* BRR = (uint32_t*)  (0x40010814);
+	//volatile uint32_t* BSRR = (uint32_t*) (0x40010810);
+	//volatile uint32_t* IDR = (uint32_t*)  (0x40010808);
+
+	/*
+	static uint32_t crl, crh;
+	static void saveState() {crl = _GPIOA_(GPIOX_CRL); crh = _GPIOA_(GPIOX_CRH);}
+	static void saveState(uint32_t &crl_out, uint32_t &crh_out) {crl_out = _GPIOA_(GPIOX_CRL); crh_out = _GPIOA_(GPIOX_CRH);}
+	static void restoreState() {_GPIOA_(GPIOX_CRL) = crl; _GPIOA_(GPIOX_CRH) = crh;}
+	static void setState(uint32_t &crl_in, uint32_t &crh_in) {_GPIOA_(GPIOX_CRL) = crl_in; _GPIOA_(GPIOX_CRH) = crh_in;}
+
+	*/
+
+	static void disableAll() {_GPIOA_(GPIOX_CRL) = 0; _GPIOA_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
 
 	void exti(uint8_t crbits);
 	//the rest of the exti functions in the parent class
@@ -152,12 +177,8 @@ public:
 	operator uint8_t() {return read();}
 	gpioA& operator= (const uint8_t& a) {write(a); return *this;}
 
-	// these below are better and work; but produce warnings from the compiler
-	/*
-	volatile uint32_t* BRR = (uint32_t*)  (0x40010814);
-	volatile uint32_t* BSRR = (uint32_t*) (0x40010810);
-	volatile uint32_t* IDR = (uint32_t*)  (0x40010808);
-	*/
+
+
 };
 
 class gpioB : public gpio_pin
@@ -166,10 +187,9 @@ public:
 	gpioB(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioB(uint8_t pinnum);
 	gpioB();
-	void init()
-	{
-		gpioB_init();
-	}
+	void init()	{gpioB_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -192,16 +212,21 @@ public:
 		return(_GPIOB_(GPIOX_IDR));
 	}
 
-	void exti(uint8_t crbits);
-
-	operator uint8_t() {return (_GPIOB_(GPIOX_IDR) >> pin) & 1;} //read();}
-	gpioB& operator= (const uint8_t& a) {write(a); return *this;}
-
 	/*
 	volatile uint32_t* BRR = (uint32_t*)  (0x40010C14);
 	volatile uint32_t* BSRR = (uint32_t*) (0x40010C10);
 	volatile uint32_t* IDR = (uint32_t*)  (0x40010C08);
 	*/
+
+	void exti(uint8_t crbits);
+
+	static void disableAll() {_GPIOB_(GPIOX_CRL) = 0; _GPIOB_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
+	operator uint8_t() {return (_GPIOB_(GPIOX_IDR) >> pin) & 1;} //read();}
+	gpioB& operator= (const uint8_t& a) {write(a); return *this;}
 };
 
 class gpioC : public gpio_pin
@@ -210,10 +235,9 @@ public:
 	gpioC(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioC(uint8_t pinnum);
 	gpioC();
-	void init()
-	{
-		gpioC_init();
-	}
+	void init()	{gpioC_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -237,6 +261,11 @@ public:
 		return(_GPIOC_(GPIOX_IDR));
 	}
 
+	static void disableAll() {_GPIOC_(GPIOX_CRL) = 0; _GPIOC_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
 	void exti(uint8_t crbits);
 
 	operator uint8_t() {return read();}
@@ -255,10 +284,9 @@ public:
 	gpioD(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioD(uint8_t pinnum);
 	gpioD();
-	void init()
-	{
-		gpioD_init();
-	}
+	void init() {gpioD_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -282,14 +310,15 @@ public:
 		return(_GPIOD_(GPIOX_IDR));
 	}
 
+	static void disableAll() {_GPIOD_(GPIOX_CRL) = 0; _GPIOD_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
 	operator uint8_t() {return read();}
 	gpioD& operator= (const uint8_t& a) {write(a); return *this;}
 
-	/*
-	volatile uint32_t* BRR = (uint32_t*)  (0x40011014);
-	volatile uint32_t* BSRR = (uint32_t*) (0x40011010);
-	volatile uint32_t* IDR = (uint32_t*)  (0x40011008);
-	*/
+
 };
 
 class gpioE : public gpio_pin
@@ -298,10 +327,9 @@ public:
 	gpioE(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioE(uint8_t pinnum);
 	gpioE();
-	void init()
-	{
-		gpioE_init();
-	}
+	void init()	{gpioE_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -325,14 +353,13 @@ public:
 		return(_GPIOE_(GPIOX_IDR));
 	}
 
+	static void disableAll() {_GPIOE_(GPIOX_CRL) = 0; _GPIOE_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
 	operator uint8_t() {return read();}
 	gpioE& operator= (const uint8_t& a) {write(a); return *this;}
-
-	/*
-	volatile uint32_t* BRR = (uint32_t*)  (0x40011014);
-	volatile uint32_t* BSRR = (uint32_t*) (0x40011010);
-	volatile uint32_t* IDR = (uint32_t*)  (0x40011008);
-	*/
 };
 
 class gpioF : public gpio_pin
@@ -341,10 +368,9 @@ public:
 	gpioF(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioF(uint8_t pinnum);
 	gpioF();
-	void init()
-	{
-		gpioF_init();
-	}
+	void init()	{gpioF_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -368,14 +394,13 @@ public:
 		return(_GPIOF_(GPIOX_IDR));
 	}
 
+	static void disableAll() {_GPIOF_(GPIOX_CRL) = 0; _GPIOF_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
 	operator uint8_t() {return read();}
 	gpioF& operator= (const uint8_t& a) {write(a); return *this;}
-
-	/*
-	volatile uint32_t* BRR = (uint32_t*)  (0x40011014);
-	volatile uint32_t* BSRR = (uint32_t*) (0x40011010);
-	volatile uint32_t* IDR = (uint32_t*)  (0x40011008);
-	*/
 };
 
 class gpioG : public gpio_pin
@@ -384,10 +409,9 @@ public:
 	gpioG(uint8_t pinnum, uint8_t dir, uint8_t cnfod = 4);
 	gpioG(uint8_t pinnum);
 	gpioG();
-	void init()
-	{
-		gpioG_init();
-	}
+	void init()	{gpioG_init();}
+	static void init(gpio_config conf);
+
 	void set();
 	void high();
 	void reset();
@@ -411,14 +435,13 @@ public:
 		return(_GPIOG_(GPIOX_IDR));
 	}
 
+	static void disableAll() {_GPIOG_(GPIOX_CRL) = 0; _GPIOG_(GPIOX_CRH) = 0;}
+	static void disablePins(uint16_t pins);
+	static gpio_config saveConfig();
+	static void setConfig(gpio_config conf);
+
 	operator uint8_t() {return read();}
 	gpioG& operator= (const uint8_t& a) {write(a); return *this;}
-
-	/*
-	volatile uint32_t* BRR = (uint32_t*)  (0x40011014);
-	volatile uint32_t* BSRR = (uint32_t*) (0x40011010);
-	volatile uint32_t* IDR = (uint32_t*)  (0x40011008);
-	*/
 };
 
 typedef gpioA gpioA_pin;
