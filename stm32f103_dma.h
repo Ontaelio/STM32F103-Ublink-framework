@@ -167,50 +167,50 @@ public:
 	void init(uint16_t* src, uint16_t* targ, uint8_t c = 0, uint16_t pri = DMA_PLHIGH);  // mem2mem 16bits
 	void init(uint32_t* src, uint32_t* targ, uint8_t c = 0, uint16_t pri = DMA_PLHIGH);  // mem2mem 32bits
 
-	void init(uint16_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 16bit
-	void init(uint16_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 16bit
-	void init(uint8_t* src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 8bit
-	void init(uint8_t* src, spi2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 8bit
-	void init(spi1_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 16bit
-	void init(spi2_slave src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 16bit
-	void init(spi1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 8bit
-	void init(spi2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 8bit
+	void init(uint16_t* src, spi1_slave& targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 16bit
+	void init(uint16_t* src, spi2_slave& targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 16bit
+	void init(uint8_t* src, spi1_slave& targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi1 8bit
+	void init(uint8_t* src, spi2_slave& targ, uint16_t pri = DMA_PLHIGH); // mem 2 spi2 8bit
+	void init(spi1_slave& src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 16bit
+	void init(spi2_slave& src, uint16_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 16bit
+	void init(spi1_slave& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi1 2 mem 8bit
+	void init(spi2_slave& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // spi2 2 mem 8bit
 
-	void init(uint8_t* src, i2c1_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 i2c1
-	void init(uint8_t* src, i2c2_slave targ, uint16_t pri = DMA_PLHIGH); // mem 2 i2c2
-	void init(i2c1_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // i2c1 2 mem
-	void init(i2c2_slave src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // i2c2 2 mem
+	void init(uint8_t* src, i2c1_slave& targ, uint16_t pri = DMA_PLHIGH); // mem 2 i2c1
+	void init(uint8_t* src, i2c2_slave& targ, uint16_t pri = DMA_PLHIGH); // mem 2 i2c2
+	void init(i2c1_slave& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // i2c1 2 mem
+	void init(i2c2_slave& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); // i2c2 2 mem
 
-	void init(uint8_t* src, usart1 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart1 							ok
-	void init(uint8_t* src, usart2 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart2
-	void init(uint8_t* src, usart3 targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart3
-	void init(usart1 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart1 2 mem 							ok
-	void init(usart2 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart2 2 mem
-	void init(usart3 src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart3 2 mem
+	void init(uint8_t* src, usart1& targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart1 							ok
+	void init(uint8_t* src, usart2& targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart2
+	void init(uint8_t* src, usart3& targ, uint16_t pri = DMA_PLHIGH); //mem 2 usart3
+	void init(usart1& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart1 2 mem 							ok
+	void init(usart2& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart2 2 mem
+	void init(usart3& src, uint8_t* targ, uint16_t pri = DMA_PLHIGH); //usart3 2 mem
 
-	void init(analog_cont src, uint16_t targ, uint16_t pri = DMA_PLHIGH); //adc1 2 mem
-	void init(analog_cont src1, analog_cont src2, uint32_t targ, uint16_t pri = DMA_PLHIGH); //adc1&2 2 mem
+	void init(analog_cont& src, uint16_t targ, uint16_t pri = DMA_PLHIGH); //adc1 2 mem
+	void init(analog_cont& src1, analog_cont& src2, uint32_t targ, uint16_t pri = DMA_PLHIGH); //adc1&2 2 mem
 
-	void init(usart1 src, spi1_slave targ, uint16_t pri = DMA_PLHIGH); //will write the rest once tested
+	void init(usart1& src, spi1_slave& targ, uint16_t pri = DMA_PLHIGH); //will write the rest once tested
 
-	void init(uint16_t* src, tim1_pwm targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH); //copy pwm value at the CC event		ok
-	void init(uint16_t* src, tim2_pwm targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH);
-	void init(uint16_t* src, tim3_pwm targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH);
-	void init(uint16_t* src, tim4_pwm targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH);
+	void init(uint16_t* src, tim1_pwm& targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH); //copy pwm value at the CC event		ok
+	void init(uint16_t* src, tim2_pwm& targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH);
+	void init(uint16_t* src, tim3_pwm& targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH);
+	void init(uint16_t* src, tim4_pwm& targ, uint8_t uedma = 0, uint16_t pri = DMA_PLVHIGH);
 
-	void init(uint16_t* src, timer1 targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH); // copy one-four CC values at UE		ok
-	void init(uint16_t* src, timer2 targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH);
-	void init(uint16_t* src, timer3 targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH);
-	void init(uint16_t* src, timer4 targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH);
+	void init(uint16_t* src, timer1& targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH); // copy one-four CC values at UE		ok
+	void init(uint16_t* src, timer2& targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH);
+	void init(uint16_t* src, timer3& targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH);
+	void init(uint16_t* src, timer4& targ, uint8_t numofch = 4, uint16_t pri = DMA_PLVHIGH);
 
 
-	void init(uint16_t* src, gpioA targ, int16_t pri = DMA_PLHIGH);	// use ODR, overwrite all 16 pins			ok
-	void init(uint16_t* src, gpioB targ, int16_t pri = DMA_PLHIGH);
-	void init(uint16_t* src, gpioC targ, int16_t pri = DMA_PLHIGH);
+	void init(uint16_t* src, gpioA& targ, int16_t pri = DMA_PLHIGH);	// use ODR, overwrite all 16 pins			ok
+	void init(uint16_t* src, gpioB& targ, int16_t pri = DMA_PLHIGH);
+	void init(uint16_t* src, gpioC& targ, int16_t pri = DMA_PLHIGH);
 
-	void init(uint32_t* src, gpioA targ, int16_t pri = DMA_PLHIGH); // use BSRR (atomic write)					ok
-	void init(uint32_t* src, gpioB targ, int16_t pri = DMA_PLHIGH);
-	void init(uint32_t* src, gpioC targ, int16_t pri = DMA_PLHIGH);
+	void init(uint32_t* src, gpioA& targ, int16_t pri = DMA_PLHIGH); // use BSRR (atomic write)					ok
+	void init(uint32_t* src, gpioB& targ, int16_t pri = DMA_PLHIGH);
+	void init(uint32_t* src, gpioC& targ, int16_t pri = DMA_PLHIGH);
 
 
 	void transfer(uint16_t num = 1); //do one transfer
