@@ -134,6 +134,36 @@ inline void timer4_init()
 
 // abstract classes
 
+struct timer_config
+{
+	uint16_t CR1, CR2, SMCR, DIER, // SR, EGR,
+			CCMR1, CCMR2, CCER, PSC, ARR, RCR; // CNT,
+			//CCR1, CCR2, CCR3, CCR4; //, DCR; //,BDTR;
+	//uint32_t DMAR; //32 bits in tim1 only
+	timer_config():
+		CR1	(0x0080), //basic configuration and enable (bit 0)
+		CR2	(0x0000), //master mode and Hall sensor
+		SMCR	(0x0000), //slave mode control
+		DIER	(0x0000), //interrupt enable
+			 //SR	(0x0000), //status, non-configurable, bits must be cleared inside ISRs.
+			 //EGR	(0x0000), //event generator. UG here, the rest emulates events (non-configurable)
+		CCMR1	(0x0000), //capture/compare mode
+		CCMR2	(0x0000),
+		CCER	(0x0000), //capture/compare enable
+			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
+		PSC	(0x0000), //prescaler
+		ARR	(0xFFFF)  //depth of the counter aka auto-reload
+			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
+			 //CCR1	(0x0000), //capture/compare value. Read-only in input
+			 //CCR2	(0x0000),
+			 //CCR3	(0x0000),
+			 //CCR4	(0x0000)
+			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
+			 //DCR	(0x0000), //dma control
+			 //DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
+		{};
+};
+
 class tim_pwm
 {
 protected:
@@ -159,34 +189,20 @@ protected:
 
 class timer
 {
+public: timer_config cfg;
 protected:
-	timer(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF):
-			 CR1	(0x0080), //basic configuration and enable (bit 0)
-			 CR2	(0x0000), //master mode and Hall sensor
-			 SMCR	(0x0000), //slave mode control
-			 //DIER	(0x0000), //interrupt enable
-			 //SR	(0x0000), //status, non-configurable, bits must be cleared inside ISRs.
-			 //EGR	(0x0000), //event generator. UG here, the rest emulates events (non-configurable)
-			 CCMR1	(0x0000), //capture/compare mode
-			 CCMR2	(0x0000),
-			 CCER	(0x0000), //capture/compare enable
-			 //CNT	(0x0000), //counter itself. Can be written to start at specific value
-			 PSC	(prsclr), //prescaler
-			 ARR	(depth)  //depth of the counter aka auto-reload
-			 //RCR	(0x0000), //tim1 only, repeat counter, only one byte
-			 //CCR1	(0x0000), //capture/compare value. Read-only in input
-			 //CCR2	(0x0000),
-			 //CCR3	(0x0000),
-			 //CCR4	(0x0000)
-			 //BDTR	(0x0000), //tim1 only. MOE here. Break, dead time, locks here.
-			 //DCR	(0x0000), //dma control
-			 //DMAR	(0x0000)  //dma burst stuff, 32 bits for tim1
-			 {};
+	timer(uint16_t prsclr = 0x0000, uint16_t depth = 0xFFFF)
+		{
+			cfg.ARR = depth;
+			cfg.PSC = prsclr;
+		}
+
 
 public:
 
-    uint16_t CR1, CR2, SMCR, //DIER, // SR, EGR,
-			CCMR1, CCMR2, CCER, PSC, ARR, RCR; // CNT,
+
+	//uint16_t CR1, CR2, SMCR, //DIER, // SR, EGR,
+	//			CCMR1, CCMR2, CCER, PSC, ARR, RCR; // CNT,
 			//CCR1, CCR2, CCR3, CCR4; //, DCR; //,BDTR;
 	//uint32_t DMAR; //32 bits in tim1 only
 
@@ -201,23 +217,23 @@ public:
 	//operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
 
-	void setMode(uint16_t mode) {CR1 &= ~0x0070; CR1 |= mode<<4;}
+	void setMode(uint16_t mode) {cfg.CR1 &= ~0x0070; cfg.CR1 |= mode<<4;}
 	void setCC1mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
 	void setCC2mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
 	void setCC3mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
 	void setCC4mode(uint16_t mode, uint8_t prld_en = 1, uint8_t plrty = 0, uint8_t oe = 1);
-	void setCC1output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= oe;}
-	void setCC2output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 4);}
-	void setCC3output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 8);}
-	void setCC4output(uint8_t oe) {CCER &= ~TIMX_CCER_CC1E; CCER |= (oe << 12);}
-	void setCC1preload(uint8_t pe) {CCMR1 &= ~TIMX_CCMR1_OC1PE; CCMR1 |= (pe << 3);}
-	void setCC2preload(uint8_t pe) {CCMR1 &= ~TIMX_CCMR1_OC2PE; CCMR1 |= (pe << 11);}
-	void setCC3preload(uint8_t pe) {CCMR2 &= ~TIMX_CCMR2_OC3PE; CCMR2 |= (pe << 3);}
-	void setCC4preload(uint8_t pe) {CCMR2 &= ~TIMX_CCMR2_OC4PE; CCMR2 |= (pe << 11);}
+	void setCC1output(uint8_t oe) {cfg.CCER &= ~TIMX_CCER_CC1E; cfg.CCER |= oe;}
+	void setCC2output(uint8_t oe) {cfg.CCER &= ~TIMX_CCER_CC1E; cfg.CCER |= (oe << 4);}
+	void setCC3output(uint8_t oe) {cfg.CCER &= ~TIMX_CCER_CC1E; cfg.CCER |= (oe << 8);}
+	void setCC4output(uint8_t oe) {cfg.CCER &= ~TIMX_CCER_CC1E; cfg.CCER |= (oe << 12);}
+	void setCC1preload(uint8_t pe) {cfg.CCMR1 &= ~TIMX_CCMR1_OC1PE; cfg.CCMR1 |= (pe << 3);}
+	void setCC2preload(uint8_t pe) {cfg.CCMR1 &= ~TIMX_CCMR1_OC2PE; cfg.CCMR1 |= (pe << 11);}
+	void setCC3preload(uint8_t pe) {cfg.CCMR2 &= ~TIMX_CCMR2_OC3PE; cfg.CCMR2 |= (pe << 3);}
+	void setCC4preload(uint8_t pe) {cfg.CCMR2 &= ~TIMX_CCMR2_OC4PE; cfg.CCMR2 |= (pe << 11);}
 
-	void setPreload(uint16_t pre) {CR1 &= ~TIMX_CR1_ARPE; CR1 |= (pre << 7);}
-	void setUpdateRequest(uint16_t cc_only) {CR1 &= ~TIMX_CR1_URS; CR1 |= (cc_only << 2);}
-	void setOnePulse(uint16_t opm) {CR1 &= ~TIMX_CR1_OPM; CR1 |= (opm << 3);}
+	void setPreload(uint16_t pre) {cfg.CR1 &= ~TIMX_CR1_ARPE; cfg.CR1 |= (pre << 7);}
+	void setUpdateRequest(uint16_t cc_only) {cfg.CR1 &= ~TIMX_CR1_URS; cfg.CR1 |= (cc_only << 2);}
+	void setOnePulse(uint16_t opm) {cfg.CR1 &= ~TIMX_CR1_OPM; cfg.CR1 |= (opm << 3);}
 
 	//void setUpdateIRQ(uint8_t bit=1) 	{DIER &= ~0x0001; DIER |= bit;}
 	//void setCC1IRQ(uint8_t bit=1)		{DIER &= ~0x0002; DIER |= bit<<1;}
@@ -231,8 +247,8 @@ public:
 	//void setCC3value(uint16_t val) {CCR3 = val;}
 	//void setCC4value(uint16_t val) {CCR4 = val;}
 
-	void setDepth(uint16_t val) {ARR = val;}
-	void setPrescaler(uint16_t val) {PSC = val;}
+	void setDepth(uint16_t val) {cfg.ARR = val;}
+	void setPrescaler(uint16_t val) {cfg.PSC = val;}
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
 	virtual void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
@@ -250,7 +266,7 @@ public:
 
 	virtual void priority(uint8_t pri) =0;
 
-	virtual void writeCC1(uint16_t val) =0;
+	//virtual void writeCC1(uint16_t val) =0;
 	virtual void writeCC2(uint16_t val) =0;
 	virtual void writeCC3(uint16_t val) =0;
 	virtual void writeCC4(uint16_t val) =0;
@@ -266,7 +282,7 @@ public:
 	virtual void updateEnable() =0;
 
 	//fast interrupt enable/disable (1 or 0)
-	virtual void updateInterrupt(uint8_t bit) =0;
+	//virtual void updateInterrupt(uint8_t bit) =0;
 	virtual void CC1interrupt(uint8_t bit) =0;
 	virtual void CC2interrupt(uint8_t bit) =0;
 	virtual void CC3interrupt(uint8_t bit) =0;
@@ -514,7 +530,7 @@ public:
 	void IRQ_CC_disable() {IRQ_0TO31_CER |= IRQ_BITMASK_TIM1_CC;}
 
 	//capture/compare channels
-	void writeCC1(uint16_t val) {_TIM1_(TIMX_CCR1) = val;}
+	static void writeCC1(uint16_t val) {_TIM1_(TIMX_CCR1) = val;}
 	void writeCC2(uint16_t val) {_TIM1_(TIMX_CCR2) = val;}
 	void writeCC3(uint16_t val) {_TIM1_(TIMX_CCR3) = val;}
 	void writeCC4(uint16_t val) {_TIM1_(TIMX_CCR4) = val;}
@@ -865,6 +881,18 @@ public:
 	void DMAbase(uint8_t base) {_TIM4_(TIMX_DCR) &= ~TIMX_DCR_DBA; _TIM4_(TIMX_DCR) |= base;}
 
 private:
+};
+
+class timer1_s
+{
+public:
+	timer1_s() {};
+	void init();
+	void init (uint16_t depth, uint16_t prescaler = 0);
+	void init (uint16_t depth, uint16_t prescaler = 0, uint16_t cc1 = 0, uint16_t cc2 = 0, uint16_t cc3 = 0, uint16_t cc4 = 0);
+	void enable();
+	void disable();
+
 };
 
 #endif /* STM32F103_TIMERS_H_ */

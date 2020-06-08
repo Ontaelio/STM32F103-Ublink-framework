@@ -77,47 +77,47 @@ void irq_disable(uint8_t irq)
 
 void timer::setMaster(uint16_t mms, uint16_t ccmr)
 {
-	CR2 &= ~TIMX_CR2_MMS; CR2 |= mms<<4;
+	cfg.CR2 &= ~TIMX_CR2_MMS; cfg.CR2 |= mms<<4;
 	switch (mms)
 	{
-	case 4: CCMR1 &= ~0x00FF; CCMR1 |= ccmr<<4; break;
-	case 5: CCMR1 &= ~0xFF00; CCMR1 |= ccmr<<12; break;
-	case 6: CCMR2 &= ~0x00FF; CCMR2 |= ccmr<<4; break;
-	case 7: CCMR2 &= ~0xFF00; CCMR2 |= ccmr<<12; break;
+	case 4: cfg.CCMR1 &= ~0x00FF; cfg.CCMR1 |= ccmr<<4; break;
+	case 5: cfg.CCMR1 &= ~0xFF00; cfg.CCMR1 |= ccmr<<12; break;
+	case 6: cfg.CCMR2 &= ~0x00FF; cfg.CCMR2 |= ccmr<<4; break;
+	case 7: cfg.CCMR2 &= ~0xFF00; cfg.CCMR2 |= ccmr<<12; break;
 	default: break;
 	}
 }
 
 void timer::setCC1mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
-	CCMR1 &= ~TIMX_CCMR1_OC1M; //clear
-	CCMR1 |= (mode<<4) | (prld_en<<3); //set CC1 mode
-	if (plrty) CCER |= TIMX_CCER_CC1P; else CCER &= ~(TIMX_CCER_CC1P);
-	if (oe) CCER |= TIMX_CCER_CC1E; else CCER &= ~(TIMX_CCER_CC1E);
+	cfg.CCMR1 &= ~TIMX_CCMR1_OC1M; //clear
+	cfg.CCMR1 |= (mode<<4) | (prld_en<<3); //set CC1 mode
+	if (plrty) cfg.CCER |= TIMX_CCER_CC1P; else cfg.CCER &= ~(TIMX_CCER_CC1P);
+	if (oe) cfg.CCER |= TIMX_CCER_CC1E; else cfg.CCER &= ~(TIMX_CCER_CC1E);
 }
 
 void timer::setCC2mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
-	CCMR1 &= ~TIMX_CCMR1_OC2M; //clear
-	CCMR1 |= mode<<12 | (prld_en<<11); //set CC1 mode
-	if (plrty) CCER |= TIMX_CCER_CC2P; else CCER &= ~(TIMX_CCER_CC2P);
-	if (oe) CCER |= TIMX_CCER_CC2E; else CCER &= ~(TIMX_CCER_CC2E);
+	cfg.CCMR1 &= ~TIMX_CCMR1_OC2M; //clear
+	cfg.CCMR1 |= mode<<12 | (prld_en<<11); //set CC1 mode
+	if (plrty) cfg.CCER |= TIMX_CCER_CC2P; else cfg.CCER &= ~(TIMX_CCER_CC2P);
+	if (oe) cfg.CCER |= TIMX_CCER_CC2E; else cfg.CCER &= ~(TIMX_CCER_CC2E);
 }
 
 void timer::setCC3mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
-	CCMR2 &= ~TIMX_CCMR2_OC3M; //clear
-	CCMR2 |= mode<<4 | (prld_en<<3); //set CC1 mode
-	if (plrty) CCER |= TIMX_CCER_CC3P; else CCER &= ~(TIMX_CCER_CC3P);
-	if (oe) CCER |= TIMX_CCER_CC3E; else CCER &= ~(TIMX_CCER_CC3E);
+	cfg.CCMR2 &= ~TIMX_CCMR2_OC3M; //clear
+	cfg.CCMR2 |= mode<<4 | (prld_en<<3); //set CC1 mode
+	if (plrty) cfg.CCER |= TIMX_CCER_CC3P; else cfg.CCER &= ~(TIMX_CCER_CC3P);
+	if (oe) cfg.CCER |= TIMX_CCER_CC3E; else cfg.CCER &= ~(TIMX_CCER_CC3E);
 }
 
 void timer::setCC4mode(uint16_t mode, uint8_t prld_en, uint8_t plrty, uint8_t oe)
 {
-	CCMR2 &= ~TIMX_CCMR2_OC4M; //clear
-	CCMR2 |= mode<<12 | (prld_en<<11); //set CC1 mode
-	if (plrty) CCER |= TIMX_CCER_CC4P; else CCER &= ~(TIMX_CCER_CC4P);
-	if (oe) CCER |= TIMX_CCER_CC4E; else CCER &= ~(TIMX_CCER_CC4E);
+	cfg.CCMR2 &= ~TIMX_CCMR2_OC4M; //clear
+	cfg.CCMR2 |= mode<<12 | (prld_en<<11); //set CC1 mode
+	if (plrty) cfg.CCER |= TIMX_CCER_CC4P; else cfg.CCER &= ~(TIMX_CCER_CC4P);
+	if (oe) cfg.CCER |= TIMX_CCER_CC4E; else cfg.CCER &= ~(TIMX_CCER_CC4E);
 }
 
 /*
@@ -463,19 +463,19 @@ void timer1::config()
 	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM1_(TIMX_CCR3) = CCR3;
 	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM1_(TIMX_CCR2) = CCR2;
 	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM1_(TIMX_CCR1) = CCR1;
-	_TIM1_(TIMX_RCR) = RCR;
-	_TIM1_(TIMX_ARR) = ARR;
-	_TIM1_(TIMX_PSC) = PSC;
+	_TIM1_(TIMX_RCR) = cfg.RCR;
+	_TIM1_(TIMX_ARR) = cfg.ARR;
+	_TIM1_(TIMX_PSC) = cfg.PSC;
 	//_TIM1_(TIMX_CNT) = CNT;
-	_TIM1_(TIMX_CCER) = CCER;
-	_TIM1_(TIMX_CCMR2) = CCMR2;
-	_TIM1_(TIMX_CCMR1) = CCMR1;
+	_TIM1_(TIMX_CCER) = cfg.CCER;
+	_TIM1_(TIMX_CCMR2) = cfg.CCMR2;
+	_TIM1_(TIMX_CCMR1) = cfg.CCMR1;
 	//_TIM1_(TIMX_DIER) = DIER;
-	_TIM1_(TIMX_SMCR) = SMCR;
-	_TIM1_(TIMX_CR2) = CR2;
+	_TIM1_(TIMX_SMCR) = cfg.SMCR;
+	_TIM1_(TIMX_CR2) = cfg.CR2;
 	_TIM1_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
 	timer1::updateEvent();
-	_TIM1_(TIMX_CR1) = CR1;
+	_TIM1_(TIMX_CR1) = cfg.CR1;
 }
 
 void timer1::enable(uint16_t count)
@@ -503,7 +503,7 @@ void timer1::master(uint16_t mms, uint16_t ccmr)
 
 void timer1::setSlave(uint16_t sms, uint16_t ts)
 {
-	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
+	cfg.SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
 		switch (ts>>8)
 		{
@@ -514,7 +514,7 @@ void timer1::setSlave(uint16_t sms, uint16_t ts)
 		case 8: break;
 		default: break;
 		}
-	SMCR |= (ts<<4) | sms;
+	cfg.SMCR |= (ts<<4) | sms;
 }
 
 void timer1::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
@@ -525,23 +525,23 @@ void timer1::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t 
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
 	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
-	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
-				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
-	CCER &= ~(3<< ((ch_num-1)*4));
-	CCER |= CCER_tmp;
+	if (ch_num & 2) {cfg.CCMR2 &= ~CCMR_clr; cfg.CCMR2 |= CCMR_tmp;}
+				else {cfg.CCMR1 &= ~CCMR_clr; cfg.CCMR1 |= CCMR_tmp;}
+	cfg.CCER &= ~(3<< ((ch_num-1)*4));
+	cfg.CCER |= CCER_tmp;
 }
 
 void timer1::pwmEnable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM1_(TIMX_CCER) |= tmp;
-	CCER |= tmp;
+	cfg.CCER |= tmp;
 }
 void timer1::pwmDisable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM1_(TIMX_CCER) &= ~tmp;
-	CCER &= ~tmp;
+	cfg.CCER &= ~tmp;
 }
 
 void timer1::DMACCenable(uint8_t ch_num)
@@ -572,18 +572,18 @@ void timer2::config()
 	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM2_(TIMX_CCR3) = CCR3;
 	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM2_(TIMX_CCR2) = CCR2;
 	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM2_(TIMX_CCR1) = CCR1;
-	_TIM2_(TIMX_ARR) = ARR;
-	_TIM2_(TIMX_PSC) = PSC;
+	_TIM2_(TIMX_ARR) = cfg.ARR;
+	_TIM2_(TIMX_PSC) = cfg.PSC;
 	//_TIM2_(TIMX_CNT) = CNT;
-	_TIM2_(TIMX_CCER) = CCER;
-	_TIM2_(TIMX_CCMR2) = CCMR2;
-	_TIM2_(TIMX_CCMR1) = CCMR1;
+	_TIM2_(TIMX_CCER) = cfg.CCER;
+	_TIM2_(TIMX_CCMR2) = cfg.CCMR2;
+	_TIM2_(TIMX_CCMR1) = cfg.CCMR1;
 	//_TIM2_(TIMX_DIER) = DIER;
-	_TIM2_(TIMX_SMCR) = SMCR;
-	_TIM2_(TIMX_CR2) = CR2;
+	_TIM2_(TIMX_SMCR) = cfg.SMCR;
+	_TIM2_(TIMX_CR2) = cfg.CR2;
 	_TIM2_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
 	timer2::updateEvent();
-	_TIM2_(TIMX_CR1) = CR1;
+	_TIM2_(TIMX_CR1) = cfg.CR1;
 }
 
 void timer2::enable(uint16_t count)
@@ -611,7 +611,7 @@ void timer2::master(uint16_t mms, uint16_t ccmr)
 
 void timer2::setSlave(uint16_t sms, uint16_t ts)
 {
-	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
+	cfg.SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
 		switch (ts>>8)
 		{
@@ -622,7 +622,7 @@ void timer2::setSlave(uint16_t sms, uint16_t ts)
 		case 8: ts = 1; break;
 		default: break;
 		}
-	SMCR |= (ts<<4) | sms;
+	cfg.SMCR |= (ts<<4) | sms;
 }
 
 void timer2::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
@@ -633,23 +633,23 @@ void timer2::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t 
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
 	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
-	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
-				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
-	CCER &= ~(3<< ((ch_num-1)*4));
-	CCER |= CCER_tmp;
+	if (ch_num & 2) {cfg.CCMR2 &= ~CCMR_clr; cfg.CCMR2 |= CCMR_tmp;}
+				else {cfg.CCMR1 &= ~CCMR_clr; cfg.CCMR1 |= CCMR_tmp;}
+	cfg.CCER &= ~(3<< ((ch_num-1)*4));
+	cfg.CCER |= CCER_tmp;
 }
 
 void timer2::pwmEnable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM2_(TIMX_CCER) |= tmp;
-	CCER |= tmp;
+	cfg.CCER |= tmp;
 }
 void timer2::pwmDisable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM2_(TIMX_CCER) &= ~tmp;
-	CCER &= ~tmp;
+	cfg.CCER &= ~tmp;
 }
 
 void timer2::DMACCenable(uint8_t ch_num)
@@ -673,18 +673,18 @@ void timer3::config()
 	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM3_(TIMX_CCR3) = CCR3;
 	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM3_(TIMX_CCR2) = CCR2;
 	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM3_(TIMX_CCR1) = CCR1;
-	_TIM3_(TIMX_ARR) = ARR;
-	_TIM3_(TIMX_PSC) = PSC;
+	_TIM3_(TIMX_ARR) = cfg.ARR;
+	_TIM3_(TIMX_PSC) = cfg.PSC;
 	//_TIM3_(TIMX_CNT) = CNT;
-	_TIM3_(TIMX_CCER) = CCER;
-	_TIM3_(TIMX_CCMR2) = CCMR2;
-	_TIM3_(TIMX_CCMR1) = CCMR1;
+	_TIM3_(TIMX_CCER) = cfg.CCER;
+	_TIM3_(TIMX_CCMR2) = cfg.CCMR2;
+	_TIM3_(TIMX_CCMR1) = cfg.CCMR1;
 	//_TIM3_(TIMX_DIER) = DIER;
-	_TIM3_(TIMX_SMCR) = SMCR;
-	_TIM3_(TIMX_CR2) = CR2;
+	_TIM3_(TIMX_SMCR) = cfg.SMCR;
+	_TIM3_(TIMX_CR2) = cfg.CR2;
 	_TIM3_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
 	timer3::updateEvent();
-	_TIM3_(TIMX_CR1) = CR1;
+	_TIM3_(TIMX_CR1) = cfg.CR1;
 }
 
 void timer3::enable(uint16_t count)
@@ -712,7 +712,7 @@ void timer3::master(uint16_t mms, uint16_t ccmr)
 
 void timer3::setSlave(uint16_t sms, uint16_t ts)
 {
-	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
+	cfg.SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
 		switch (ts>>8)
 		{
@@ -723,7 +723,7 @@ void timer3::setSlave(uint16_t sms, uint16_t ts)
 		case 8: break;
 		default: break;
 		}
-	SMCR |= (ts<<4) | sms;
+	cfg.SMCR |= (ts<<4) | sms;
 }
 
 void timer3::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
@@ -734,23 +734,23 @@ void timer3::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t 
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
 	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
-	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
-				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
-	CCER &= ~(3<< ((ch_num-1)*4));
-	CCER |= CCER_tmp;
+	if (ch_num & 2) {cfg.CCMR2 &= ~CCMR_clr; cfg.CCMR2 |= CCMR_tmp;}
+				else {cfg.CCMR1 &= ~CCMR_clr; cfg.CCMR1 |= CCMR_tmp;}
+	cfg.CCER &= ~(3<< ((ch_num-1)*4));
+	cfg.CCER |= CCER_tmp;
 }
 
 void timer3::pwmEnable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM3_(TIMX_CCER) |= tmp;
-	CCER |= tmp;
+	cfg.CCER |= tmp;
 }
 void timer3::pwmDisable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM3_(TIMX_CCER) &= ~tmp;
-	CCER &= ~tmp;
+	cfg.CCER &= ~tmp;
 }
 
 void timer3::DMACCenable(uint8_t ch_num)
@@ -774,18 +774,18 @@ void timer4::config()
 	//if (!(CCMR2 & TIMX_CCMR2_CC3S)) _TIM4_(TIMX_CCR3) = CCR3;
 	//if (!(CCMR1 & TIMX_CCMR1_CC2S)) _TIM4_(TIMX_CCR2) = CCR2;
 	//if (!(CCMR1 & TIMX_CCMR1_CC1S)) _TIM4_(TIMX_CCR1) = CCR1;
-	_TIM4_(TIMX_ARR) = ARR;
-	_TIM4_(TIMX_PSC) = PSC;
+	_TIM4_(TIMX_ARR) = cfg.ARR;
+	_TIM4_(TIMX_PSC) = cfg.PSC;
 	//_TIM4_(TIMX_CNT) = CNT;
-	_TIM4_(TIMX_CCER) = CCER;
-	_TIM4_(TIMX_CCMR2) = CCMR2;
-	_TIM4_(TIMX_CCMR1) = CCMR1;
+	_TIM4_(TIMX_CCER) = cfg.CCER;
+	_TIM4_(TIMX_CCMR2) = cfg.CCMR2;
+	_TIM4_(TIMX_CCMR1) = cfg.CCMR1;
 	//_TIM4_(TIMX_DIER) = DIER;
-	_TIM4_(TIMX_SMCR) = SMCR;
-	_TIM4_(TIMX_CR2) = CR2;
+	_TIM4_(TIMX_SMCR) = cfg.SMCR;
+	_TIM4_(TIMX_CR2) = cfg.CR2;
 	_TIM4_(TIMX_CR1) |= TIMX_CR1_UDIS; //update event disable to avoid IRQ
 	timer4::updateEvent();
-	_TIM4_(TIMX_CR1) = CR1;
+	_TIM4_(TIMX_CR1) = cfg.CR1;
 }
 
 void timer4::enable(uint16_t count)
@@ -813,7 +813,7 @@ void timer4::master(uint16_t mms, uint16_t ccmr)
 
 void timer4::setSlave(uint16_t sms, uint16_t ts)
 {
-	SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
+	cfg.SMCR &= ~(TIMX_SMCR_SMS | TIMX_SMCR_TS);
 	if (ts & 0xFF00)
 		switch (ts>>8)
 		{
@@ -824,7 +824,7 @@ void timer4::setSlave(uint16_t sms, uint16_t ts)
 		case 8: ts = 3; break;
 		default: break;
 		}
-	SMCR |= (ts<<4) | sms;
+	cfg.SMCR |= (ts<<4) | sms;
 }
 
 void timer4::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain)
@@ -835,23 +835,23 @@ void timer4::setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t 
 	uint16_t CCER_tmp = ((plrty << 1) | 1) << ((ch_num-1)*4);
 	a.init(opendrain);
 	if (ch_num & 1) CCMR_clr = 0x00FF; else {CCMR_clr = 0xFF00; CCMR_tmp <<= 8;}
-	if (ch_num & 2) {CCMR2 &= ~CCMR_clr; CCMR2 |= CCMR_tmp;}
-				else {CCMR1 &= ~CCMR_clr; CCMR1 |= CCMR_tmp;}
-	CCER &= ~(3<< ((ch_num-1)*4));
-	CCER |= CCER_tmp;
+	if (ch_num & 2) {cfg.CCMR2 &= ~CCMR_clr; cfg.CCMR2 |= CCMR_tmp;}
+				else {cfg.CCMR1 &= ~CCMR_clr; cfg.CCMR1 |= CCMR_tmp;}
+	cfg.CCER &= ~(3<< ((ch_num-1)*4));
+	cfg.CCER |= CCER_tmp;
 }
 
 void timer4::pwmEnable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM4_(TIMX_CCER) |= tmp;
-	CCER |= tmp;
+	cfg.CCER |= tmp;
 }
 void timer4::pwmDisable(uint8_t ch_num)
 {
 	uint16_t tmp = (1 << (ch_num-1)*4);
 	_TIM4_(TIMX_CCER) &= ~tmp;
-	CCER &= ~tmp;
+	cfg.CCER &= ~tmp;
 }
 
 void timer4::DMACCenable(uint8_t ch_num)

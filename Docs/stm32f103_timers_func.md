@@ -8,6 +8,8 @@ The timer_func library provides some basic means to deal with timers, PWMs and i
 
 [PWM pin class](#pwm-pin-class) - a simple way to create PWM pins
 
+[Timer configuration class](#timer-config) - a ulility class that holds timer setups
+
 [Timer class](#timer-class) - more comprehensive timers and interrupts control class
 * [Timer :: Constructor](#constructor)
 * [Timer :: Timer control](#timer-control-member-functions)
@@ -164,21 +166,23 @@ Clear the corresponding interrupt flag.
 
 Generate an update or capture/compare event.
 
+## Timer config
+
+`timer_config` objects hold a number of 16-bit values corresponding to certain timer control registers: `CR1, CR2, SMCR, DIER, CCMR1, CCMR2, CCER, PSC, ARR, CCR1, CCR2, CCR3, CCR4`. It is constructed with default values (all `0`s and `0xFFFF` in `ARR`) except `CR1` that has the Auto Reload Preload bit set (`0x0080`). These values can be accessed directly, the current timer settings can be saved into a variable of `timer_config` class and restored from it. The class is used by the `timerX` class to hold its setup.
+
 ## Timer class
 
 `timerX` objects hold all the settable register values and provide functions for the most common timer operations and register bits assignments. Multiple `timerX` objects with different configs for the same timer allow quick operation mode switching with `enable` member function.
 
-The object has several `public` variables corresponding to the number of settable timer registers. These variables can be assigned with values (16-bit half words, except Timer1 DMAR register that is 32-bit); these values are written into the corresponding registers with `config` or `enable` member functions. The variables are named according to the registers they represent:
+The settable register values are held in the `cfg` member variable of the `timer_config` class; each 16-bit value can be accessed directly. These settings are written into the corresponding registers with `config` or `enable` member functions. The variables are named according to the registers they represent.
 
-`CR1, CR2, SMCR, CCMR1, CCMR2, CCER, PSC, ARR, RCR, CCR1, CCR2, CCR3, CCR4, BDTR` *(RCR and BDTR are Timer1 only)*
+In addition, Timer1 has its own configuration variables `RCR` and `BDTR`.
 
 *One doesn't have to change these variables manually, as most of them can be set up with setup member functions.*
 
-The call to constructor initializes all these variables to the corresponding register reset values except `CR` and `BDTR`. `CR` is initialized with Auto Reload Preload enabled (`ARPE` set) and `BDTR` is initialized with Master Output enabled (`MOE` set). Use `setPreload(0)` and `setMasterOutput(0)` member functions to disable these.
+The call to constructor initializes all these variables to the corresponding register reset values except `cfg.CR1` and `BDTR`. `cfg.CR1` is initialized with Auto Reload Preload enabled (`ARPE` set) and `BDTR` is initialized with Master Output enabled (`MOE` set). Use `setPreload(0)` and `setMasterOutput(0)` member functions to disable these.
 
-`ARR` (`depth`) and `PSC` (`prsclr`) values can be assigned in the constructor.
-
-Timer1 register `BDTR` is initialized with `MOE` (Master Output Enable) bit **set** to avoid confusion. If it's not needed, it must be reset manually (`timer.BDTR = 0`) before the call to `enable()`.
+`cfg.ARR` (`depth`) and `cfg.PSC` (`prsclr`) values can be assigned in the constructor.
 
 ### Constructor
 
@@ -191,7 +195,7 @@ Creates a `timerX` object and assigns default values to the internal register va
 
 ### Timer control member functions
 
-* void **init ())**
+* void **init ()**
 
 Calls `timerX_init()`, initializing the timerX. Included for possible convenience.
 
