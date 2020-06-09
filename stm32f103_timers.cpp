@@ -478,13 +478,14 @@ void timer1::config()
 	_TIM1_(TIMX_CR1) = cfg.CR1;
 }
 
-void timer1::enable(uint16_t count)
+/*void timer1::enable(uint16_t count)
 {
 	timer1::disable();
 	timer1::config();
 	if (count) _TIM1_(TIMX_CNT) = count;
 	timer1::enableOnly();
 }
+*/
 
 /*
 void timer1::master(uint16_t mms, uint16_t ccmr)
@@ -586,13 +587,13 @@ void timer2::config()
 	_TIM2_(TIMX_CR1) = cfg.CR1;
 }
 
-void timer2::enable(uint16_t count)
+/*void timer2::enable(uint16_t count)
 {
 	timer2::disable();
 	timer2::config();
 	if (count) _TIM2_(TIMX_CNT) = count;
 	timer2::enableOnly();
-}
+}*/
 
 /*
 void timer2::master(uint16_t mms, uint16_t ccmr)
@@ -687,13 +688,13 @@ void timer3::config()
 	_TIM3_(TIMX_CR1) = cfg.CR1;
 }
 
-void timer3::enable(uint16_t count)
+/*void timer3::enable(uint16_t count)
 {
 	timer3::disable();
 	timer3::config();
 	if (count) _TIM3_(TIMX_CNT) = count;
 	timer3::enableOnly();
-}
+}*/
 
 /*
 void timer3::master(uint16_t mms, uint16_t ccmr)
@@ -788,13 +789,13 @@ void timer4::config()
 	_TIM4_(TIMX_CR1) = cfg.CR1;
 }
 
-void timer4::enable(uint16_t count)
+/*void timer4::enable(uint16_t count)
 {
 	timer4::disable();
 	timer4::config();
 	if (count) _TIM4_(TIMX_CNT) = count;
 	timer4::enableOnly();
-}
+}*/
 
 /*
 void timer4::master(uint16_t mms, uint16_t ccmr)

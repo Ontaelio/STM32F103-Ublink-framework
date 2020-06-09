@@ -206,13 +206,21 @@ public:
 			//CCR1, CCR2, CCR3, CCR4; //, DCR; //,BDTR;
 	//uint32_t DMAR; //32 bits in tim1 only
 
-	virtual ~timer() {}
+	//virtual ~timer() {}
  	virtual void init() =0;
 	virtual void config() =0;
 	virtual void enableOnly() =0;
-	virtual void enable(uint16_t count = 0)  =0;
+	void enable()
+	{
+
+		disable();
+		config();
+		//if (count) _TIM1_(TIMX_CNT) = count;
+		enableOnly();
+	}
+
 	virtual void disable() =0;
-	void pulse() {enableOnly();}
+	//void pulse() {enableOnly();}
 	virtual uint16_t read() =0;
 	//operator uint16_t() {return _TIM1_(TIMX_CNT);}
 
@@ -251,80 +259,78 @@ public:
 	void setPrescaler(uint16_t val) {cfg.PSC = val;}
 
 	//void pwmSetup(uint8_t center, uint8_t dir);
-	virtual void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
-	virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
-	virtual void pwmEnable(uint8_t ch_num) =0;
-	virtual void pwmDisable(uint8_t ch_num) =0;
+	//virtual void setPWMchannel(uint8_t ch_num, uint8_t mode, uint8_t plrty, uint8_t opendrain = 1) =0;// {tim2_pwm a(ch_num); a.init();}
+	//virtual void pwmWrite(uint8_t ch_num, uint16_t val) =0;
+	//virtual void pwmEnable(uint8_t ch_num) =0;
+	//virtual void pwmDisable(uint8_t ch_num) =0;
 
 	void setMaster(uint16_t mms, uint16_t ccmr = 0);
-	virtual void setSlave(uint16_t sms, uint16_t ts) =0;
+	//virtual void setSlave(uint16_t sms, uint16_t ts) =0;
 	void master(uint16_t mms, uint16_t ccmr = 0) {setMaster(mms, ccmr);}
-	void slave(uint16_t mms, uint16_t ccmr = 0) {setSlave(mms, ccmr);}
+	//void slave(uint16_t mms, uint16_t ccmr = 0) {setSlave(mms, ccmr);}
 
-	virtual void IRQenable() =0;
-	virtual void IRQdisable() =0;
+	//virtual void IRQenable() =0;
+	//virtual void IRQdisable() =0;
 
-	virtual void priority(uint8_t pri) =0;
+	//virtual void priority(uint8_t pri) =0;
 
 	//virtual void writeCC1(uint16_t val) =0;
-	virtual void writeCC2(uint16_t val) =0;
-	virtual void writeCC3(uint16_t val) =0;
-	virtual void writeCC4(uint16_t val) =0;
+	//virtual void writeCC2(uint16_t val) =0;
+	//virtual void writeCC3(uint16_t val) =0;
+	//virtual void writeCC4(uint16_t val) =0;
 
-	virtual void CC1output(uint8_t bit) =0;
-	virtual void CC2output(uint8_t bit) =0;
-	virtual void CC3output(uint8_t bit) =0;
-	virtual void CC4output(uint8_t bit) =0;
+	//virtual void CC1output(uint8_t bit) =0;
+	//virtual void CC2output(uint8_t bit) =0;
+	//virtual void CC3output(uint8_t bit) =0;
+	//virtual void CC4output(uint8_t bit) =0;
 
 	//BB (atomic) stuff
 	//update event enable/disable (CR1->UDIS)
-	virtual void updateDisable() =0;
-	virtual void updateEnable() =0;
+	//virtual void updateDisable() =0;
+	//virtual void updateEnable() =0;
 
 	//fast interrupt enable/disable (1 or 0)
 	//virtual void updateInterrupt(uint8_t bit) =0;
-	virtual void CC1interrupt(uint8_t bit) =0;
-	virtual void CC2interrupt(uint8_t bit) =0;
-	virtual void CC3interrupt(uint8_t bit) =0;
-	virtual void CC4interrupt(uint8_t bit) =0;
-	virtual void triggerInterrupt(uint8_t bit) =0;
+	//virtual void CC1interrupt(uint8_t bit) =0;
+	//virtual void CC2interrupt(uint8_t bit) =0;
+	//virtual void CC3interrupt(uint8_t bit) =0;
+	//virtual void CC4interrupt(uint8_t bit) =0;
+	//virtual void triggerInterrupt(uint8_t bit) =0;
 
 	//check status flags
-	virtual uint8_t checkUpdate() =0;
-	virtual uint8_t checkCC1() =0;
-	virtual uint8_t checkCC2() =0;
-	virtual uint8_t checkCC3() =0;
-	virtual uint8_t checkCC4() =0;
-	virtual uint8_t checkTrigger() =0;
+	//virtual uint8_t checkUpdate() =0;
+	//virtual uint8_t checkCC1() =0;
+	//virtual uint8_t checkCC2() =0;
+	//virtual uint8_t checkCC3() =0;
+	//virtual uint8_t checkCC4() =0;
+	//virtual uint8_t checkTrigger() =0;
 
 	//event generators
-	virtual void updateEvent() =0;
-	virtual void CC1event() =0;
-	virtual void CC2event() =0;
-	virtual void CC3event() =0;
-	virtual void CC4event() =0;
-	virtual void triggerEvent() =0;
+	//virtual void updateEvent() =0;
+	//virtual void CC1event() =0;
+	//virtual void CC2event() =0;
+	//virtual void CC3event() =0;
+	//virtual void CC4event() =0;
+	//virtual void triggerEvent() =0;
 
 	//interrupt flag cleaners, should use BB for these most certainly
-	virtual void clearUpdate() =0;
-	virtual void clearCC1() =0;
-	virtual void clearCC2() =0;
-	virtual void clearCC3() =0;
-	virtual void clearCC4() =0;
-	virtual void clearTrigger() =0;
-	virtual void clearAll() =0;
+	//virtual void clearUpdate() =0;
+	//virtual void clearCC1() =0;
+	//virtual void clearCC2() =0;
+	//virtual void clearCC3() =0;
+	//virtual void clearCC4() =0;
+	//virtual void clearTrigger() =0;
+	//virtual void clearAll() =0;
 
 	//DMA stuff
-	virtual void DMATRGenable() =0;
-	virtual void DMACCenable(uint8_t ch_num) =0;
-	virtual void DMAUPenable() =0;
-	virtual void DMATRGdisable() =0;
-	virtual void DMACCdisable(uint8_t ch_num) =0;
-	virtual void DMAUPdisable() =0;
-	virtual void DMAburst(uint8_t burst) =0;
-	virtual void DMAbase(uint8_t base) =0;
-
-
+	//virtual void DMATRGenable() =0;
+	//virtual void DMACCenable(uint8_t ch_num) =0;
+	//virtual void DMAUPenable() =0;
+	//virtual void DMATRGdisable() =0;
+	//virtual void DMACCdisable(uint8_t ch_num) =0;
+	//virtual void DMAUPdisable() =0;
+	//virtual void DMAburst(uint8_t burst) =0;
+	//virtual void DMAbase(uint8_t base) =0;
 };
 
 // inherited classes
@@ -497,10 +503,12 @@ public:
 	void init() {timer1_init();}
 	void config();
 	void enableOnly() {BB_TIM1_CR1_CEN = 1;}
-	void enable(uint16_t count = 0);
+	//void enable(uint16_t count = 0);
 	void disable() {BB_TIM1_CR1_CEN = 0;}
 	uint16_t read() {return _TIM1_(TIMX_CNT);}
-	operator uint16_t() {return _TIM1_(TIMX_CNT);}
+	operator uint16_t() {return read();}
+	void write(uint16_t val) {_TIM1_(TIMX_CNT) = val;}
+	timer1& operator= (const uint16_t& val) {write(val); return *this;}
 
 	//void master(uint16_t mms, uint16_t ccmr = 0);
 	void setSlave(uint16_t sms, uint16_t ts);
@@ -617,10 +625,12 @@ public:
  	void init() {timer2_init();}
 	void config();
 	void enableOnly() {BB_TIM2_CR1_CEN = 1;}
-	void enable(uint16_t count = 0);
+	//void enable(uint16_t count = 0);
 	void disable() {BB_TIM2_CR1_CEN = 0;}
 	uint16_t read() {return _TIM2_(TIMX_CNT);}
-	operator uint16_t() {return _TIM1_(TIMX_CNT);}
+	operator uint16_t() {return read();}
+	void write(uint16_t val) {_TIM2_(TIMX_CNT) = val;}
+	timer2& operator= (const uint16_t& val) {write(val); return *this;}
 
 	//void master(uint16_t mms, uint16_t ccmr = 0);
 	void setSlave(uint16_t sms, uint16_t ts);
@@ -710,10 +720,12 @@ public:
  	void init() {timer3_init();}
 	void config();
 	void enableOnly() {BB_TIM3_CR1_CEN = 1;}
-	void enable(uint16_t count = 0);
+	//void enable(uint16_t count = 0);
 	void disable() {BB_TIM3_CR1_CEN = 0;}
 	uint16_t read() {return _TIM3_(TIMX_CNT);}
-	operator uint16_t() {return _TIM1_(TIMX_CNT);}
+	operator uint16_t() {return read();}
+	void write(uint16_t val) {_TIM3_(TIMX_CNT) = val;}
+	timer3& operator= (const uint16_t& val) {write(val); return *this;}
 
 	//void master(uint16_t mms, uint16_t ccmr = 0);
 	void setSlave(uint16_t sms, uint16_t ts);
@@ -801,10 +813,12 @@ public:
  	void init() {timer4_init();}
 	void config();
 	void enableOnly() {BB_TIM4_CR1_CEN = 1;}
-	void enable(uint16_t count = 0);
+	//void enable(uint16_t count = 0);
 	void disable() {BB_TIM4_CR1_CEN = 0;}
 	uint16_t read() {return _TIM4_(TIMX_CNT);}
-	operator uint16_t() {return _TIM1_(TIMX_CNT);}
+	operator uint16_t() {return read();}
+	void write(uint16_t val) {_TIM4_(TIMX_CNT) = val;}
+	timer4& operator= (const uint16_t& val) {write(val); return *this;}
 
 	//void master(uint16_t mms, uint16_t ccmr = 0);
 	void setSlave(uint16_t sms, uint16_t ts);
