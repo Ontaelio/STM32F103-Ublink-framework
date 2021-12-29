@@ -301,7 +301,7 @@ Uncomment this macro to enable the correct output for IEEE 754 `NaN` (not a numb
 
 ## Examples
 
-Example programs suppose you use some terminal software on the connected computer (I'm using [CoolTerm](https://freeware.the-meiers.org/). Also, unless you can somehow connect directly to the COM port, a USART-USB converter is needed (in my case it's a CP210x module).
+Example programs suppose you use some terminal software on the connected computer (I'm using [CoolTerm](https://freeware.the-meiers.org/)). Also, unless you can somehow connect directly to the COM port, a USART-USB converter is needed (in my case it's a CP210x module).
 
 ### USART Hello World
 
@@ -338,19 +338,20 @@ In this example two numbers (doubles) are requested, then their sum is printed, 
 usart2 term; //USART2, TX is PA2, RX is PA3
 double a, b;
 
+
 int main()
 {
-	term.init(9600) //setup baud rate
+	term.init(9600); //setup baud rate
 	term << "Starting...\r\n";
 
 	while (1)
 	{
-		term << "Enter two numbers: " >> a >> b <<"\r\n"
-				<<"entered: "<< a << " and "<< b <<"\r\n"
-				<<"The sum is: " << a + b << "\r\n";
-		term << "And the long version is: ";
-		term.printFloat(a+b, 10) //print the double with 10 decimals
-		term << "\r\n";
+    term << "Enter two numbers: " >> a >> b <<"\r\n";
+    term    <<"entered: "<< a << " and "<< b <<"\r\n";
+    term    <<"The sum is: " << a + b << "\r\n";
+    term << "And the long version is: ";
+    term.printFloat(a+b, 10); //print the double with 10 decimals
+	term << "\r\n";
 	}
 }
 ```
